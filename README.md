@@ -66,9 +66,11 @@ elmo-hikes/
 
 
 ## Contributors
+
 - **Emmanuel Tran** - BCIT CST Student, First term student with interest in software engineering and design. Fun fact: Spends most of his free time reading and doing art. Has an ECET diploma from BCIT. 
 - **Tonnam Tantikamnerdkul** - 
-- **Oliver Astel** - 
+- **Oliver Astell** - BCIT CST Student who likes transit and button up shirts. 
+
 
 ---
 
