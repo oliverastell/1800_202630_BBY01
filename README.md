@@ -75,11 +75,8 @@ elmo-hikes/
 ## Contributors
 
 - **Emmanuel Tran** - BCIT CST Student, First term student with interest in software engineering and design. Fun fact: Spends most of his free time reading and doing art. Has an ECET diploma from BCIT. 
-
-- **Tonnam Tantikamnerdkul** - BCIT CST Student with passion in computer science. Fun fact: He is a professional speedcuber! He ranked 2nd in BC for the event skewb.
-
+- **Tonnam Tantikamnerdkul** - 
 - **Oliver Astell** - BCIT CST Student who likes transit and button up shirts. 
-
 
 \---
 
