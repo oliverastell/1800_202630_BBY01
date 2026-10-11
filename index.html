@@ -10,11 +10,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Other libraries go here -->
-
+    <link rel="stylesheet" href="./styles/style.css">
 </head>
 
 <body>
-
+    <!-- adding a navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="https://thecdm.ca/sites/default/files/images/logos/bcit-logo.png" alt="BCIT Logo black" width="70px">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">Bookmarks</a>
+                </li>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filters
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Washroom</a></li>
+                    <li><a class="dropdown-item" href="#">Parking Lot</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Food</a></li>
+                </ul>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search Location..." aria-label="Search"/>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            </div>
+        </div>
+    </nav>
     <!-- adding a welcome bannar-->
     <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-5">
@@ -32,7 +70,6 @@
         </div>
     </div>
     <script type="module" src="./src/main.js"></script>
-    <script type="styles" src="styles\style.css"></script>
 </body>
 
 </html>
