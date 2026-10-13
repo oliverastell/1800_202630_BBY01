@@ -4,9 +4,11 @@
 
 ## Overview
 
-Elmo Hikes is a client-side JavaScript web application that helps users discover and explore hiking trails. The app displays a curated list of hike trails, each with details such as name, location, difficulty, and an image. Users can browse the list and mark their favorite trails for easy access later.
 
-Developed for the COMP 1800 course, this project applies User-Centred Design practices and agile project management, and demonstrates integration with Firebase backend services for storing user favorites.
+
+[//]: <> (Elmo Hikes is a client-side JavaScript web application that helps users discover and explore hiking trails. The app displays a curated list of hike trails, each with details such as name, location, difficulty, and an image. Users can browse the list and mark their favorite trails for easy access later.)
+
+[//]: <> (Developed for the COMP 1800 course, this project applies User-Centred Design practices and agile project management, and demonstrates integration with Firebase backend services for storing user favorites.)
 
 \---
 
@@ -55,7 +57,7 @@ Once the application is running:
 
 ## Project Structure
 
-```
+[//]: <> (```
 elmo-hikes/
 ├── src/
 │   ├── main.js
@@ -65,8 +67,7 @@ elmo-hikes/
 ├── images/
 ├── index.html
 ├── package.json
-├── README.md
-```
+├── README.md```)
 
 \---
 
@@ -77,6 +78,7 @@ elmo-hikes/
 * **Emmanuel Tran** - BCIT CST Student, First term student with interest in software engineering and design. Fun fact: Spends most of his free time reading and doing art. Has an ECET diploma from BCIT.
 * **Tonnam Tantikamnerdkul** - BCIT CST Student with passion in computer science. Fun fact: He is a professional speedcuber! He ranked 2nd in BC for the event skewb.
 * **Oliver Astell** - BCIT CST Student who likes transit and button up shirts.
+* **Phone Thant Tayza** - BCIT CST Student with a passion for music production, videography and playing musical instruments
 
 
 \---
