@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>My BCIT Project</title>
+    <title>MyCampusMap 2026</title>
     <meta name="comp1800 template" content="My 1800 App">
 
     <!-- Required meta tags -->
@@ -14,6 +14,9 @@
 </head>
 
 <body>
+    <!-- Hidden top level heading for accessibility -->
+    <h1 class="d-none">MyCampusMap 2026</h1>
+
     <!-- adding a navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -53,22 +56,52 @@
             </div>
         </div>
     </nav>
+
     <!-- adding a welcome bannar-->
     <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-5">
 
-            <h1 class="display-5 fw-bold">Find your way around BCIT</h1>
+            <h2 class="display-5 fw-bold">Find your way around BCIT</h2>
 
             <p class="col-md-8 fs-4">
                 New to campus? Find buildings, classrooms, and essential facilities—all in one place.
             </p>
-
-            <button class="btn btn-primary btn-lg" type="button">
-                Login / Signup
-            </button>
-
         </div>
     </div>
+
+    <!-- adding a call to action -->
+    <div class="p-5 mb-4 bg-gradient rounded-3">
+        <div class="container-fluid d-flex flex-column gap-2">
+            <h2>Sign up today!</h2>
+
+            <div class="container-fluid p-0 gap-3 d-flex">
+                <button class="btn btn-primary btn-lg" type="button">
+                    Sign Up
+                </button>
+
+                <button class="btn btn-secondary btn-lg" type="button">
+                    Log In
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- adding a footer -->
+    <footer>
+        <div id="footer1">
+            <img src="https://thecdm.ca/sites/default/files/images/logos/bcit-logo.png" alt="BCIT Logo black" width="35px">
+            <p>BCIT COMP 1800</p>
+            <p>© Copyright 2026</p>
+        </div>
+        <div id="footer2">
+            <ul>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">Terms of use</a></li>
+            </ul>
+        </div>
+    </footer>
     <script type="module" src="./src/main.js"></script>
 </body>
 
