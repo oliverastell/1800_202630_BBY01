@@ -9,16 +9,24 @@
 
 </head>
 
-<body>
+<body class="m-0 overflow-hidden">
 
 
 
-  <main>
-    <canvas id="mapCanvas" width="600" height="800" style="border:1px solid black"></canvas>
-  </main>
+  <div id="content" class="position-relative full-size">
+    <div id="mapCanvasDiv" class="z-0 position-absolute full-size">
+      <canvas id="mapCanvas"></canvas>
+    </div>
+
+    <header class="z-1 position-absolute">
+      Example Header Text
+    </header>
+  </div>
 
   <!-- Post DOM Linking -->
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/index.css" />
+  <script src="/js/index.js"></script>
 
 </body>
 
