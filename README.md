@@ -57,17 +57,21 @@ Once the application is running:
 
 ## Project Structure
 
-[//]: <> (```
-elmo-hikes/
-├── src/
-│   ├── main.js
-├── styles/
-│   └── style.css
-├── public/
-├── images/
-├── index.html
+```
+1800_202630_BBY01/
+├── app/
+│   └── html/
+│       └── index.html <-- main page
+├── public/ <----- client data folder
+│   ├── css/
+|   ├── img/
+|   └── js/
+|       └── index.js <-- client main page script 
+├── src/ <--------- server scripts folder
+├── index.js <----- server index script
 ├── package.json
-├── README.md```)
+├── README.md
+```
 
 \---
 
