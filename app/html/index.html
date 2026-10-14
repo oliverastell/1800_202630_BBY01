@@ -12,9 +12,17 @@
   <script src="/js/bookmarks.js" defer></script>
 </head>
 
-<body>
-  <main>
-    <canvas id="mapCanvas" width="600" height="800" style="border:1px solid black"></canvas>
+<body class="m-0 overflow-hidden">
+
+  <div id="content" class="position-relative full-size">
+    <div id="mapCanvasDiv" class="z-0 position-absolute full-size">
+      <canvas id="mapCanvas"></canvas>
+    </div>
+
+    <header class="z-1 position-absolute">
+      Example Header Text
+    </header>
+
     <div class="bookmark-container">
       <button id="bookmark-button">
         <img src="/img/bookmark-icon.svg">
@@ -23,10 +31,12 @@
         <h1>Bookmarks</h1>
       </div>
     </div>
-  </main>
+  </div>
 
   <!-- Post DOM Linking -->
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/index.css" />
+  <script src="/js/index.js"></script>
 
 </body>
 
