@@ -19,7 +19,7 @@ app.use("/fonts", express.static("./public/fonts"));
 app.use('/css/bootstrap', express.static('./node_modules/bootstrap/dist/css'));
 
 app.get("/", function (req, res) {
-    let doc = fs.readFileSync("./app/html/index.html", "utf8");
+    let doc = fs.readFileSync("./app/html/old_index.html", "utf8");
     res.send(doc);
 });
 
