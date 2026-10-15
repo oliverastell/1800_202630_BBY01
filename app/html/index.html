@@ -3,15 +3,35 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Hello</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>BBY Campus Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/img/BCIT-logo.ico">
   <!-- Pre DOM Linking-->
+  <link rel="stylesheet" href="/css/style.css">
 
+  <script src="/js/bookmarks.js" defer></script>
 </head>
 
-<body>
+<body class="m-0 overflow-hidden">
 
+  <div id="content" class="position-relative full-size">
+    <div id="mapCanvasDiv" class="z-0 position-absolute full-size">
+      <canvas id="mapCanvas"></canvas>
+    </div>
 
+    <header class="z-1 position-absolute">
+      Example Header Text
+    </header>
+
+    <div class="bookmark-container">
+      <button id="bookmark-button">
+        <img src="/img/bookmark-icon.svg">
+      </button>
+      <div id="bookmark-popup" hidden>
+        <h1>Bookmarks</h1>
+      </div>
+    </div>
+  </div>
 
   <main>
     <canvas id="mapCanvas" width="450px" height="600px" style="border:1px solid black"></canvas>
@@ -20,7 +40,7 @@
     <div id="searchBar">
       <button id="searchBarButton" onclick="clickSearch()">Search</button>
     </div>
-    
+
     <div id="searchMenu">
       <form id="searchForm" role="search">
           <input id="searchField" class="form-control me-2" type="search" placeholder="Search Location..." aria-label="Search"/>
@@ -81,7 +101,10 @@
   <!-- Post DOM Linking -->
   <script  src="/js/main.js" defer></script>
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
-  
+  <link rel="stylesheet" href="/css/index.css" />
+  <script src="/js/index.js"></script>
+
+
 </body>
 
 </html>
