@@ -2,6 +2,49 @@ html body {
     margin: 15px;
 }
 
+#mapCanvas {
+    position: absolute;
+    z-index: 0;
+}
+
+#searchBarButton{
+    border-radius: 15px;
+    color: rgb(204, 204, 204);
+    text-decoration: none;
+    border: none;
+}
+
+#searchBarButton:hover {
+    color: rgb(204, 204, 204);
+    cursor: pointer;
+}
+
+#searchMenu {
+    position: relative;
+    z-index: 1;
+    display: none;
+    background-color: rgb(204, 204, 204);
+}
+
+#searchForm{
+    display: flex;
+    flex-direction: row;
+}
+
+#searchMenuIcons{
+    border-bottom: 1px solid black;
+}
+
+#searchMenu p{
+    border-bottom: 1px solid black;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+#searchMenuResults{
+    overflow-y: scroll;
+}
+
 footer {
     display: flex;
     flex-direction: row;

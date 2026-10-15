@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Hello</title>
-
+  <link rel="stylesheet" href="/css/style.css" />
   <!-- Pre DOM Linking-->
 
 </head>
@@ -14,12 +14,74 @@
 
 
   <main>
-    <canvas id="mapCanvas" width="600" height="800" style="border:1px solid black"></canvas>
+    <canvas id="mapCanvas" width="450px" height="600px" style="border:1px solid black"></canvas>
+
+    <!-- Search Bar -->
+    <div id="searchBar">
+      <button id="searchBarButton" onclick="clickSearch()">Search</button>
+    </div>
+    
+    <div id="searchMenu">
+      <form id="searchForm" role="search">
+          <input id="searchField" class="form-control me-2" type="search" placeholder="Search Location..." aria-label="Search"/>
+          <button class="btn btn-outline-success" onclick="search()">Search</button>
+      </form>
+      <div id="searchMenuIcons">
+        <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchRed" onclick="searchFilter('red')">
+            <circle cx ="25" cy="25" r="12" fill="red" />
+          </a>
+        </svg>
+                <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchBlue" onclick="searchFilter('blue')">
+            <circle cx ="25" cy="25" r="12" fill="blue" />
+          </a>
+        </svg>
+        <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchGreen" onclick="searchFilter('green')">
+            <circle cx ="25" cy="25" r="12" fill="green" />
+          </a>
+        </svg>
+                <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchYellow" onclick="searchFilter('yellow')">
+            <circle cx ="25" cy="25" r="12" fill="yellow" />
+          </a>
+        </svg>
+      </div>
+      <div id="searchMenuResults">
+        <p>Recent</p>
+        <div id="searchRecents" onclick="searchRecent('red square 1')">
+          <p>Red square 1</p>
+        </div>
+        <div id="searchRecents" onclick="searchRecent('green circle 1')">
+          <p>Green circle 1</p>
+        </div>
+        <div id="searchRecents" onclick="searchRecent('blue triangle 3')">
+          <p>Blue triangle 3</p>
+        </div>
+        <div id="searchRecents" onclick="searchRecent('yellow rectangle 2')">
+          <p>Yellow Rectangle 2</p>
+        </div>
+        <div id="searchRecents" onclick="searchRecent('red circle 1')">
+          <p>Red circle 1</p>
+        </div>
+        <div id="searchRecents" onclick="searchRecent('green square 1')">
+          <p>Green square 1</p>
+        </div>
+        <div id="searchRecents" onclick="searchRecent('blue square 3')">
+          <p>Blue square 3</p>
+        </div>
+        <div id="searchRecents" onclick="searchRecent('yellow circle 1')">
+          <p>Yellow circle 1</p>
+        </div>
+      </div>
+
+    </div>
   </main>
-
   <!-- Post DOM Linking -->
+  <script  src="/js/main.js" defer></script>
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
-
+  
 </body>
 
 </html>
