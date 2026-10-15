@@ -6,7 +6,9 @@ list.style.listStyle = "none";
 list.style.padding = "0";
 popup.appendChild(list);
 
-//AI did from this part
+////
+//// AI WRITTEN - TODO: Rewrite
+////
 let bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
 
 function save() {
@@ -42,7 +44,9 @@ function removeBookmark(id) {
   save();
   render();
 }
-// Until this part
+////
+//// END AI WRITTEN
+////
 
 button.addEventListener("click", () => {
   popup.hidden = !popup.hidden;

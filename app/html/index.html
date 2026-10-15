@@ -7,9 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="/img/BCIT-logo.ico">
   <!-- Pre DOM Linking-->
-  <link rel="stylesheet" href="/css/style.css">
-
-  <script src="/js/bookmarks.js" defer></script>
 </head>
 
 <body class="m-0 overflow-hidden">
@@ -31,13 +28,75 @@
         <h1>Bookmarks</h1>
       </div>
     </div>
+
+    <!-- Search Bar -->
+    <div id="searchBar">
+      <button id="searchBarButton" onclick="clickSearch()">Search</button>
+    </div>
+
+    <div id="searchMenu">
+      <form id="searchForm" role="search">
+          <input id="searchField" class="form-control me-2" type="search" placeholder="Search Location..." aria-label="Search"/>
+          <button class="btn btn-outline-success" onclick="search()">Search</button>
+      </form>
+      <div id="searchMenuIcons">
+        <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchRed" onclick="searchFilter('red')">
+            <circle cx ="25" cy="25" r="12" fill="red" />
+          </a>
+        </svg>
+                <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchBlue" onclick="searchFilter('blue')">
+            <circle cx ="25" cy="25" r="12" fill="blue" />
+          </a>
+        </svg>
+        <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchGreen" onclick="searchFilter('green')">
+            <circle cx ="25" cy="25" r="12" fill="green" />
+          </a>
+        </svg>
+                <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+          <a href="#" id="searchYellow" onclick="searchFilter('yellow')">
+            <circle cx ="25" cy="25" r="12" fill="yellow" />
+          </a>
+        </svg>
+      </div>
+      <div id="searchMenuResults">
+        <p>Recent</p>
+        <div class="searchRecents" onclick="searchRecent('red square 1')">
+          <p>Red square 1</p>
+        </div>
+        <div class="searchRecents" onclick="searchRecent('green circle 1')">
+          <p>Green circle 1</p>
+        </div>
+        <div class="searchRecents" onclick="searchRecent('blue triangle 3')">
+          <p>Blue triangle 3</p>
+        </div>
+        <div class="searchRecents" onclick="searchRecent('yellow rectangle 2')">
+          <p>Yellow Rectangle 2</p>
+        </div>
+        <div class="searchRecents" onclick="searchRecent('red circle 1')">
+          <p>Red circle 1</p>
+        </div>
+        <div class="searchRecents" onclick="searchRecent('green square 1')">
+          <p>Green square 1</p>
+        </div>
+        <div class="searchRecents" onclick="searchRecent('blue square 3')">
+          <p>Blue square 3</p>
+        </div>
+        <div class="searchRecents" onclick="searchRecent('yellow circle 1')">
+          <p>Yellow circle 1</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- Post DOM Linking -->
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
   <link rel="stylesheet" href="/css/index.css" />
+  <script src="/js/bookmarks.js"></script>
   <script src="/js/index.js"></script>
-
 </body>
 
 </html>
