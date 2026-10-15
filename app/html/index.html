@@ -7,9 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="/img/BCIT-logo.ico">
   <!-- Pre DOM Linking-->
-  <link rel="stylesheet" href="/css/style.css">
-
-  <script src="/js/bookmarks.js" defer></script>
 </head>
 
 <body class="m-0 overflow-hidden">
@@ -31,10 +28,6 @@
         <h1>Bookmarks</h1>
       </div>
     </div>
-  </div>
-
-  <main>
-    <canvas id="mapCanvas" width="450px" height="600px" style="border:1px solid black"></canvas>
 
     <!-- Search Bar -->
     <div id="searchBar">
@@ -70,41 +63,40 @@
       </div>
       <div id="searchMenuResults">
         <p>Recent</p>
-        <div id="searchRecents" onclick="searchRecent('red square 1')">
+        <div class="searchRecents" onclick="searchRecent('red square 1')">
           <p>Red square 1</p>
         </div>
-        <div id="searchRecents" onclick="searchRecent('green circle 1')">
+        <div class="searchRecents" onclick="searchRecent('green circle 1')">
           <p>Green circle 1</p>
         </div>
-        <div id="searchRecents" onclick="searchRecent('blue triangle 3')">
+        <div class="searchRecents" onclick="searchRecent('blue triangle 3')">
           <p>Blue triangle 3</p>
         </div>
-        <div id="searchRecents" onclick="searchRecent('yellow rectangle 2')">
+        <div class="searchRecents" onclick="searchRecent('yellow rectangle 2')">
           <p>Yellow Rectangle 2</p>
         </div>
-        <div id="searchRecents" onclick="searchRecent('red circle 1')">
+        <div class="searchRecents" onclick="searchRecent('red circle 1')">
           <p>Red circle 1</p>
         </div>
-        <div id="searchRecents" onclick="searchRecent('green square 1')">
+        <div class="searchRecents" onclick="searchRecent('green square 1')">
           <p>Green square 1</p>
         </div>
-        <div id="searchRecents" onclick="searchRecent('blue square 3')">
+        <div class="searchRecents" onclick="searchRecent('blue square 3')">
           <p>Blue square 3</p>
         </div>
-        <div id="searchRecents" onclick="searchRecent('yellow circle 1')">
+        <div class="searchRecents" onclick="searchRecent('yellow circle 1')">
           <p>Yellow circle 1</p>
         </div>
       </div>
 
     </div>
-  </main>
+  </div>
+
   <!-- Post DOM Linking -->
-  <script  src="/js/main.js" defer></script>
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
   <link rel="stylesheet" href="/css/index.css" />
+  <script src="/js/bookmarks.js"></script>
   <script src="/js/index.js"></script>
-
-
 </body>
 
 </html>
