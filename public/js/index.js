@@ -2,24 +2,32 @@
 const canvasDiv = document.getElementById("mapCanvasDiv")
 const canvas = document.getElementById("mapCanvas")
 const ctx = canvas.getContext("2d")
+const mapPlaceholder = new Image();
 
 function updateCanvasSize() {
     canvas.width = Math.ceil(canvasDiv.offsetWidth);
     canvas.height = Math.ceil(canvasDiv.offsetHeight);
 }
 
+//Temporary Image Placeholder for our map
 function redraw() {
-    let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
-    gradient.addColorStop(0, "#FF00FF")
-    gradient.addColorStop(1, "#00FF00")
-    ctx.fillStyle = gradient
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+        const scale = Math.max(
+            canvas.width / mapPlaceholder.naturalWidth,
+            canvas.height / mapPlaceholder.naturalHeight
+        )
+        const w = mapPlaceholder.naturalWidth * scale
+        const h = mapPlaceholder.naturalHeight * scale
+        ctx.drawImage(mapPlaceholder, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h)
 }
 
 function updateCanvas() {
     updateCanvasSize();
     redraw();
 }
+
+//Load map and call to update after it has been loaded
+mapPlaceholder.onload = updateCanvas
+mapPlaceholder.src = "/img/Map-Placeholder.png"
 
 let resizeObserver = new ResizeObserver((entries) => {
     updateCanvas()
@@ -50,30 +58,21 @@ const bluesquare3 = JSON.parse('{"name": "blue square 3","color": "blue", "x": 2
 const yellowcircle1 = JSON.parse('{"name": "yellow circle 1","color": "yellow", "x": 100, "y": 200}');
 
 shapes = [redsquare1, greencircle1, bluetriangle3, yellowrectangle2, redcircle1, greensquare1, bluesquare3, yellowcircle1];
+
+shapes = [redsquare1, greencircle1, bluetriangle3, yellowrectangle2, redcircle1, greensquare1, bluesquare3, yellowcircle1];
 //console.log(shapes);
 //console.log(shapes[0].name)
 
-//console.log(searchMenuIcons.offsetHeight);
-searchBar.style.position = "relative";
-searchBar.style.top = (canvas.offsetHeight) + "px";
-searchBarButton.style.width = (canvas.offsetWidth) + "px";
-searchMenu.style.width = (canvas.offsetWidth) + "px";
-
 function clickSearch(){
-    var searchMenu = document.getElementById("searchMenu");
-    if (searchMenu.style.display === "none" || searchMenu.style.display === "") {
-        searchMenu.style.display = "block";
-    } else {
-        searchMenu.style.display = "none";
-    }
-    //console.log(searchMenuIcons.offsetHeight);
-    searchMenuResults.style.height = (canvas.offsetHeight-searchMenuIcons.offsetHeight-searchForm.offsetHeight-searchBar.offsetHeight) + "px";
-
-    //searchBar.onclick = searchMenuPopup();
+    searchMenu.classList.toggle("d-none");
+    searchMenu.classList.toggle("d-flex");
 }
 
 function searchFilter(color){
-    ctx.clearRect(0, 0, canvas.width, canvasMap.height);
+    /*I'm going to ignore this line for now => ctx.clearRect(0, 0, canvas.width, canvas.height);
+    call redraw()  first so it draw on top of the existing canvas after
+    */
+    redraw()
     for (let i = 0; i < shapes.length; i++) {
         if (shapes[i].color === color) {
             console.log(shapes[i].name);
@@ -88,7 +87,10 @@ function searchFilter(color){
 }
 
 function searchRecent(target){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    /*I'm going to ignore this line for now => ctx.clearRect(0, 0, canvas.width, canvas.height);
+    call redraw()  first so it draw on top of the existing canvas after
+    */
+    redraw()
     for (let i = 0; i < shapes.length; i++) {
         if (shapes[i].name === target) {
             ctx.fillStyle = shapes[i].color;
@@ -100,10 +102,15 @@ function searchRecent(target){
 }
 
 function search(){
-    const searchText = document.getElementById("searchField").value;
+    const searchText = document.getElementById("searchField").value.trim().toLowerCase();
     searchRecent(searchText);
 }
 
+//prevent reload when button is submitted and call search()
+searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    search();
+});
 ////
 //// END PLACEHOLDER
 ////
