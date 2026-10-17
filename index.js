@@ -15,6 +15,7 @@ app.use("/css", express.static("./public/css"));
 app.use("/img", express.static("./public/img"));
 app.use("/fonts", express.static("./public/fonts"));
 
+
 // css/bootstrap/bootstrap.min.css
 app.use('/css/bootstrap', express.static('./node_modules/bootstrap/dist/css'));
 
@@ -29,6 +30,7 @@ app.get("/login", function(req,res){
     res.send(doc);
 })
 
+app.use(ViteExpress.static());
 
 // for resource not found (i.e., 404)
 app.use(function (req, res, next) {
