@@ -91,7 +91,7 @@ function searchFilter(color){
     clickSearch()
 }
 
-function searchRecent(target){
+function searchRecent(target, menuOn = false){
     /*I'm going to ignore this line for now => ctx.clearRect(0, 0, canvas.width, canvas.height);
     call redraw()  first so it draw on top of the existing canvas after
     */
@@ -103,7 +103,9 @@ function searchRecent(target){
             ctx.stroke();
         }
     }
-    clickSearch()
+    if (!menuOn) {
+        clickSearch() 
+    }
 }
 
 function search(){
