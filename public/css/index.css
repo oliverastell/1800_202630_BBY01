@@ -151,3 +151,36 @@ main {
   justify-content: space-between;
   margin-bottom: 4px;
 }
+
+/* login */
+
+.login-container {
+  display: flex;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 2;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+
+#login-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 50%;
+  background: white;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  box-sizing: border-box;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#login-button:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
