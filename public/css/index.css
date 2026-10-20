@@ -1,186 +1,28 @@
-
-
-/* this is magic */
-html, body {
-  height: 100%;
-  width: 100%;
-}
-
-.full-size {
-  width: 100%;
-  height: 100%;
-}
+/* Fix: use Bootstrap for most of the design */
 
 * {
   font-family: 'Roboto', sans-serif;
 }
 
-/* TODO: Replace a lot of this with bootstrap */
-
-html body {
-  margin: 15px;
-}
-
-#mapCanvas {
-  position: absolute;
-  z-index: 0;
-}
-
-#searchBarButton{
-  border-radius: 15px;
-  color: rgb(204, 204, 204);
-  text-decoration: none;
-  border: none;
-}
-
-#searchBarButton:hover {
-  color: rgb(204, 204, 204);
-  cursor: pointer;
-}
-
-#searchMenu {
-  position: relative;
-  z-index: 1;
-  display: none;
-  background-color: rgb(204, 204, 204);
-}
-
-#searchForm{
-  display: flex;
-  flex-direction: row;
-}
-
-#searchMenuIcons{
-  border-bottom: 1px solid black;
-}
-
-#searchMenu p{
-  border-bottom: 1px solid black;
-  padding-bottom: 10px;
-  padding-left: 10px;
-}
-
-#searchMenuResults{
-  overflow-y: scroll;
-}
-
-footer {
-  display: flex;
-  flex-direction: row;
-  background-color: rgb(18, 47, 110);
-  color: white;
-  padding-top: 10px;
-  padding-bottom: 20px;
-  margin: 0;
-}
-
-
-#footer1, #footer2 {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  align-items: start;
-  text-decoration: none;
-  padding-left: 100px;
-}
-
-
-#footer1 a, #footer2 a{
-  text-decoration: none;
-  color: white;
-}
-
-#footer2 li{
-  list-style-type: none;
-}
-
-#footer1 p{
-  margin: 0;
-}
-
-main {
-  position: relative;
-  width: fit-content;
-}
-
-.bookmark-container {
-  display: flex;
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  z-index: 2;
-  flex-direction: column-reverse;
-  align-items: flex-end;
-}
-
 #bookmark-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: none;
-  border-radius: 50%;
-  background: white;
   width: 60px;
   height: 60px;
-  padding: 0;
-  box-sizing: border-box;
+  margin-bottom: 30px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.bookmark-container img {
-  object-fit: contain;
-  width: 50%;
-  height: 50%;
 }
 
 #bookmark-button:hover {
   transform: scale(1.06);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-}
-
-#bookmark-popup h1 {
-  font-size: 18px;
-  margin: 0 0 8px;
-  font-weight: bold;
-}
-
-#bookmark-popup li {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 4px;
-}
-
-/* login */
-
-.login-container {
-  display: flex;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 2;
-  flex-direction: column-reverse;
-  align-items: flex-end;
 }
 
 #login-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: none;
-  border-radius: 50%;
-  background: white;
   width: 60px;
   height: 60px;
-  padding: 0;
-  box-sizing: border-box;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 #login-button:hover {
   transform: scale(1.06);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
+
+/* Make sure design is mobile-first and responsive */
