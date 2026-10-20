@@ -17,11 +17,19 @@
       </div>
 
       <!-- Search bar -->
-      <div id="searchBar" class="position-absolute top-0 start-0 end-0 z-1 p-3">
+      <div id="searchBar" class="position-absolute bottom-0 start-0 end-0 z-1 p-3">
         <button id="searchBarButton" type="button"
-          class="btn btn-light w-100 text-start text-secondary rounded-pill shadow border-0 px-4"
+          class="btn btn-light w-100 text-start text-secondary rounded-pill shadow border-0 px-4 py-2"
           onclick="clickSearch()">Search Location...</button>
       </div>
+      
+    <!--login  -->
+    <div class="position-absolute top-0 end-0 m-3 z-2 d-flex flex-column-reverse align-items-end">
+      <button id="login-button" type="button"
+        class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center">
+        <span>Login</span>
+      </button>
+    </div>
 
       <!-- Search menu -->
       <div id="searchMenu"
@@ -63,7 +71,7 @@
       </div>
 
       <!-- Bookmarks -->
-      <div class="position-absolute bottom-0 end-0 m-3 z-2 d-flex flex-column-reverse align-items-end">
+      <div class="position-absolute bottom-0 end-0 m-3 z-2 d-flex flex-column-reverse align-items-end mb-5">
         <button id="bookmark-button" type="button"
           class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center">
           <img src="/img/bookmark-icon.svg" class="object-fit-contain w-50 h-50" alt="Bookmarks">
@@ -74,11 +82,13 @@
       </div>
     </div>
 
-    <!-- Post DOM Linking -->
-    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/index.css" />
-    <script src="/js/bookmarks.js"></script>
-    <script src="/js/index.js"></script>
-  </body>
+  <!-- Post DOM Linking -->
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/index.css" />
+  <script src="/js/bookmarks.js"></script>
+  <script src="/js/index.js"></script>
+  <script type="module" src="/src/homeAuth.js"></script>
+
+</body>
 
 </html>

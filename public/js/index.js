@@ -4,9 +4,19 @@ const canvas = document.getElementById("mapCanvas")
 const ctx = canvas.getContext("2d")
 const mapPlaceholder = new Image();
 
+
+// ###############MOVED THE SEARCH PLACEHOLDERS UP HERE ###############
+const searchBar = document.getElementById("searchBar");
+const searchBarButton = document.getElementById("searchBarButton");
+const searchMenu = document.getElementById("searchMenu");
+const searchMenuResults = document.getElementById("searchMenuResults");
+const searchMenuIcons = document.getElementById("searchMenuIcons");
+const searchForm = document.getElementById("searchForm");
+
 function updateCanvasSize() {
     canvas.width = Math.ceil(canvasDiv.offsetWidth);
     canvas.height = Math.ceil(canvasDiv.offsetHeight);
+    //####### ADDED THE SEARCH BAR REDRAWING TO THE CANVAS UPDATING ########
 }
 
 //Temporary Image Placeholder for our map
@@ -21,6 +31,7 @@ function redraw() {
 }
 
 function updateCanvas() {
+    console.log(canvas.height)
     updateCanvasSize();
     redraw();
 }
@@ -41,12 +52,7 @@ updateCanvas()
 //// PLACEHOLDER: This stuff is placeholder, don't feel bad removing it if you have to
 ////
 
-var searchBar = document.getElementById("searchBar");
-var searchBarButton = document.getElementById("searchBarButton");
-var searchMenu = document.getElementById("searchMenu");
-var searchMenuResults = document.getElementById("searchMenuResults");
-var searchMenuIcons = document.getElementById("searchMenuIcons");
-var searchForm = document.getElementById("searchForm");
+
 
 const redsquare1 = JSON.parse('{"name": "red square 1","color": "red", "x": 50, "y": 100}');
 const greencircle1 = JSON.parse('{"name": "green circle 1","color": "green", "x": 150, "y": 150}');
@@ -56,8 +62,6 @@ const redcircle1 = JSON.parse('{"name": "red circle 1","color": "red", "x": 200,
 const greensquare1 = JSON.parse('{"name": "green square 1","color": "green", "x": 150, "y": 50}');
 const bluesquare3 = JSON.parse('{"name": "blue square 3","color": "blue", "x": 250, "y": 100}');
 const yellowcircle1 = JSON.parse('{"name": "yellow circle 1","color": "yellow", "x": 100, "y": 200}');
-
-shapes = [redsquare1, greencircle1, bluetriangle3, yellowrectangle2, redcircle1, greensquare1, bluesquare3, yellowcircle1];
 
 shapes = [redsquare1, greencircle1, bluetriangle3, yellowrectangle2, redcircle1, greensquare1, bluesquare3, yellowcircle1];
 //console.log(shapes);
@@ -73,6 +77,7 @@ function searchFilter(color){
     call redraw()  first so it draw on top of the existing canvas after
     */
     redraw()
+
     for (let i = 0; i < shapes.length; i++) {
         if (shapes[i].color === color) {
             console.log(shapes[i].name);
@@ -103,7 +108,9 @@ function searchRecent(target){
 
 function search(){
     const searchText = document.getElementById("searchField").value.trim().toLowerCase();
+    console.log("aaa")
     searchRecent(searchText);
+    console.log("bb")
 }
 
 //prevent reload when button is submitted and call search()

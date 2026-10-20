@@ -7,10 +7,21 @@
 #bookmark-button {
   width: 60px;
   height: 60px;
+  margin-bottom: 30px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 #bookmark-button:hover {
+  transform: scale(1.06);
+}
+
+#login-button {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#login-button:hover {
   transform: scale(1.06);
 }
 
