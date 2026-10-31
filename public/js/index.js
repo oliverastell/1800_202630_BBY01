@@ -1,10 +1,3 @@
-
-const canvasDiv = document.getElementById("mapCanvasDiv")
-const canvas = document.getElementById("mapCanvas")
-const ctx = canvas.getContext("2d")
-const mapPlaceholder = new Image();
-
-
 // ###############MOVED THE SEARCH PLACEHOLDERS UP HERE ###############
 const searchBar = document.getElementById("searchBar");
 const searchBarButton = document.getElementById("searchBarButton");
@@ -13,107 +6,80 @@ const searchMenuResults = document.getElementById("searchMenuResults");
 const searchMenuIcons = document.getElementById("searchMenuIcons");
 const searchForm = document.getElementById("searchForm");
 
-function updateCanvasSize() {
-    canvas.width = Math.ceil(canvasDiv.offsetWidth);
-    canvas.height = Math.ceil(canvasDiv.offsetHeight);
-    //####### ADDED THE SEARCH BAR REDRAWING TO THE CANVAS UPDATING ########
-}
-
-//Temporary Image Placeholder for our map
-function redraw() {
-        const scale = Math.max(
-            canvas.width / mapPlaceholder.naturalWidth,
-            canvas.height / mapPlaceholder.naturalHeight
-        )
-        const w = mapPlaceholder.naturalWidth * scale
-        const h = mapPlaceholder.naturalHeight * scale
-        ctx.drawImage(mapPlaceholder, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h)
-}
-
-function updateCanvas() {
-    console.log(canvas.height)
-    updateCanvasSize();
-    redraw();
-}
-
-//Load map and call to update after it has been loaded
-mapPlaceholder.onload = updateCanvas
-mapPlaceholder.src = "/img/Map-Placeholder.png"
-
-let resizeObserver = new ResizeObserver((entries) => {
-    updateCanvas()
-});
-resizeObserver.observe(canvasDiv)
-
-updateCanvas()
-
 
 ////
-//// PLACEHOLDER: This stuff is placeholder, don't feel bad removing it if you have to
+//// Leaflet Map
+////
+    const bounds = [[49.241451, -123.005848], [49.25551, -122.997222]]
+
+    const map = L.map('map',
+        {keyboard: true, 
+        maxBounds: bounds, 
+        fadeAnimation: false,
+        zoomAnimation: false,
+        markerZoomAnimation: false}).setView([49.248031, -123.000827], 18)
+    
+    L.maplibreGL({
+        style: "https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=aC0jlzAW19NtOohi12H0",
+        attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+    }).addTo(map)
+
+    map.on("click", (e) => {
+        L.marker(e.latlng).addTo(map).bindPopup("You clicked the map at " + e.latlng.toString()).openPopup()
+    })
+    
+    map.setMinZoom(map.getBoundsZoom(map.options.maxBounds))
+
+////
+//// Leaflet Map
 ////
 
+// Draw on leaflet map instead for now
+const shapes = [
+  { name: "red square 1",       color: "red",    lat: 49.2490, lng: -123.0020 },
+  { name: "green circle 1",     color: "green",  lat: 49.2485, lng: -123.0010 },
+  { name: "blue triangle 3",    color: "blue",   lat: 49.2480, lng: -123.0000 },
+  { name: "yellow rectangle 2", color: "yellow", lat: 49.2475, lng: -122.9995 },
+  { name: "red circle 1",       color: "red",    lat: 49.2488, lng: -123.0005 },
+  { name: "green square 1",     color: "green",  lat: 49.2492, lng: -123.0012 },
+  { name: "blue square 3",      color: "blue",   lat: 49.2478, lng: -123.0015 },
+  { name: "yellow circle 1",    color: "yellow", lat: 49.2483, lng: -122.9990 },
+]
 
+const markerLayer = L.layerGroup().addTo(map)
 
-const redsquare1 = JSON.parse('{"name": "red square 1","color": "red", "x": 50, "y": 100}');
-const greencircle1 = JSON.parse('{"name": "green circle 1","color": "green", "x": 150, "y": 150}');
-const bluetriangle3 = JSON.parse('{"name": "blue triangle 3","color": "blue", "x": 200, "y": 100}');
-const yellowrectangle2 = JSON.parse('{"name": "yellow rectangle 2","color": "yellow", "x": 300, "y": 200}');
-const redcircle1 = JSON.parse('{"name": "red circle 1","color": "red", "x": 200, "y": 200}');
-const greensquare1 = JSON.parse('{"name": "green square 1","color": "green", "x": 150, "y": 50}');
-const bluesquare3 = JSON.parse('{"name": "blue square 3","color": "blue", "x": 250, "y": 100}');
-const yellowcircle1 = JSON.parse('{"name": "yellow circle 1","color": "yellow", "x": 100, "y": 200}');
-
-shapes = [redsquare1, greencircle1, bluetriangle3, yellowrectangle2, redcircle1, greensquare1, bluesquare3, yellowcircle1];
-//console.log(shapes);
-//console.log(shapes[0].name)
+function showShape(shape) {
+    console.log("showing", shape)
+    L.circleMarker([shape.lat, shape.lng], {
+    color: shape.color, fillColor: shape.color, fillOpacity: 0.8, radius: 10,
+    }).addTo(markerLayer).bindPopup(shape.name)
+}
 
 function clickSearch(){
     searchMenu.classList.toggle("d-none");
     searchMenu.classList.toggle("d-flex");
 }
 
-function searchFilter(color){
-    /*I'm going to ignore this line for now => ctx.clearRect(0, 0, canvas.width, canvas.height);
-    call redraw()  first so it draw on top of the existing canvas after
-    */
-    redraw()
-
-    for (let i = 0; i < shapes.length; i++) {
-        if (shapes[i].color === color) {
-            console.log(shapes[i].name);
-            console.log(shapes[i].x);
-            console.log(shapes[i].y);
-            ctx.fillStyle = shapes[i].color;
-            ctx.fillRect(shapes[i].x, shapes[i].y, 25, 25);
-            ctx.stroke();
-        }
-    }
-    clickSearch()
+function searchFilter(color) {
+  markerLayer.clearLayers()
+  shapes.filter(s => s.color === color).forEach(showShape)
+  clickSearch()
 }
 
-function searchRecent(target, menuOn = false){
-    /*I'm going to ignore this line for now => ctx.clearRect(0, 0, canvas.width, canvas.height);
-    call redraw()  first so it draw on top of the existing canvas after
-    */
-    redraw()
-    for (let i = 0; i < shapes.length; i++) {
-        if (shapes[i].name === target) {
-            ctx.fillStyle = shapes[i].color;
-            ctx.fillRect(shapes[i].x, shapes[i].y, 25, 25);
-            ctx.stroke();
-        }
-    }
-    if (!menuOn) {
-        clickSearch() 
-    }
+function searchRecent(target, closeMenu = true) {
+  markerLayer.clearLayers()
+  shapes.filter(s => s.name === target).forEach(showShape)
+  if (closeMenu) clickSearch()
 }
 
-function search(){
-    const searchText = document.getElementById("searchField").value.trim().toLowerCase();
-    console.log("aaa")
-    searchRecent(searchText);
-    console.log("bb")
+function search() {
+  const text = document.getElementById("searchField").value.trim().toLowerCase()
+  searchRecent(text, false)
 }
+
+searchBarButton.addEventListener("click", clickSearch)
+
+Object.assign(window, {searchFilter, searchRecent })
 
 //prevent reload when button is submitted and call search()
 searchForm.addEventListener("submit", function (event) {
