@@ -6,6 +6,7 @@ const searchMenuResults = document.getElementById("searchMenuResults");
 const searchMenuIcons = document.getElementById("searchMenuIcons");
 const searchForm = document.getElementById("searchForm");
 
+const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
 ////
 //// Leaflet Map
@@ -20,7 +21,7 @@ const searchForm = document.getElementById("searchForm");
         markerZoomAnimation: false}).setView([49.248031, -123.000827], 18)
     
     L.maplibreGL({
-        style: "https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=aC0jlzAW19NtOohi12H0",
+        style: `https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=${mapTilerKey}`,
         attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     }).addTo(map)
 
