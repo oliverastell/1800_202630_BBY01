@@ -2,18 +2,29 @@
 <html lang="en" class="w-100 h-100">
 
   <head>
+    <!-- Pre DOM Linking-->
     <meta charset="UTF-8">
     <title>BBY Campus Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/img/BCIT-logo.ico">
-    <!-- Pre DOM Linking-->
+    <!-- leaflet linking -->
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     <!-- maptiler linking -->
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.css">
+    <script src="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
   </head>
 
   <body class="m-0 overflow-hidden w-100 h-100">
 
     <div id="content" class="position-relative w-100 h-100">
       <div id="mapCanvasDiv" class="z-0 position-absolute w-100 h-100 top-0 start-0">
-        <canvas id="mapCanvas"></canvas>
+        <div id="map" class="w-100 h-100"></div>
       </div>
 
       <!-- Search bar -->
@@ -135,7 +146,7 @@
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
   <link rel="stylesheet" href="/css/index.css" />
   <script src="/js/bookmarks.js"></script>
-  <script src="/js/index.js"></script>
+  <script type="module" src="/src/map.js"></script>
   <script type="module" src="/src/homeAuth.js"></script>
 
 </body>

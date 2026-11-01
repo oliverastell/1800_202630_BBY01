@@ -15,7 +15,6 @@ app.use("/css", express.static("./public/css"));
 app.use("/img", express.static("./public/img"));
 app.use("/fonts", express.static("./public/fonts"));
 
-
 // css/bootstrap/bootstrap.min.css
 app.use('/css/bootstrap', express.static('./node_modules/bootstrap/dist/css'));
 
