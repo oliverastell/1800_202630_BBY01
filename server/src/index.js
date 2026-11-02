@@ -18,13 +18,13 @@ app.use('/bootstrap', express.static('./node_modules/bootstrap/dist/css'));
 
 // main page
 app.get("/", function (req, res) {
-    let doc = fs.readFileSync("./client/html/index.html", "utf8");
+    let doc = fs.readFileSync(new URL("../../client/html/index.html", import.meta.url), "utf8");
     res.send(doc);
 });
 
 //login page
 app.get("/login", function(req,res){
-    let doc = fs.readFileSync("./client/html/login.html", "utf-8");
+    let doc = fs.readFileSync(new URL("../../client/html/login.html", import.meta.url), "utf-8");
     res.send(doc);
 })
 
