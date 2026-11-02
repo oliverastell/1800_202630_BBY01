@@ -1,7 +1,7 @@
 const button = document.getElementById("bookmark-button")
 const popup = document.getElementById("bookmark-popup")
-const offIconPath = "/img/bookmark-icon.svg"
-const onIconPath = "/img/bookmark-icon-filled.svg"
+const offIconPath = "/res/img/bookmark-icon.svg"
+const onIconPath = "/res/img/bookmark-icon-filled.svg"
 
 // create a list for bookmarked items
 const list = document.createElement("ul")
@@ -22,7 +22,7 @@ bookmarkButton.forEach (function(current){
     const icon = current.querySelector("img")
     const text = current.previousElementSibling.textContent
     
-    if (icon.getAttribute("src") === offIconPath){
+    if (item === null){
       icon.src = onIconPath
       item = document.createElement("li")
 
@@ -41,6 +41,7 @@ bookmarkButton.forEach (function(current){
     else{
       icon.src = offIconPath
       item.remove()
+      item = null
     }
   })
 })
