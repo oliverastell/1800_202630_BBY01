@@ -13,7 +13,6 @@ app.use(express.json());
 app.use("/res", express.static("./client/res"));
 
 
-
 // css/bootstrap/bootstrap.min.css
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist/css'));
 
