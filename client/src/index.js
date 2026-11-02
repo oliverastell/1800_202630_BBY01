@@ -38,7 +38,7 @@ function updateCanvas() {
 
 //Load map and call to update after it has been loaded
 mapPlaceholder.onload = updateCanvas
-mapPlaceholder.src = "/img/Map-Placeholder.png"
+mapPlaceholder.src = "/res/img/Map-Placeholder.png"
 
 let resizeObserver = new ResizeObserver((entries) => {
     updateCanvas()
