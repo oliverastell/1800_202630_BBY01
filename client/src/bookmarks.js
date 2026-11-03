@@ -16,9 +16,54 @@ popup.appendChild(list)
 
 //select every bookmark icon that is clickable
 const bookmarkButton = document.querySelectorAll(".bookmark-toggle")
+const bookmarkButtonArray = Array.from(bookmarkButton)
 
 // Track bookmarked items for each button
 const bookmarkItems = new Map()
+
+function bookmarkT(currentButton){
+  bookmarkButtonArray.push(currentButton)
+ 
+  currentButton.addEventListener("click", function() {
+    const icon = currentButton.querySelector("img")
+    const text = currentButton.previousElementSibling.textContent
+    const searchTarget = text.toLowerCase().trim()
+    
+    if (icon.getAttribute("src") === offIconPath){
+      icon.src = onIconPath
+      let item = document.createElement("li")
+      console.log(text)
+      console.log(item)
+      const anchor = document.createElement("a")
+      anchor.href = "#"
+      anchor.style.textDecoration = "none"
+      anchor.textContent = text
+      anchor.onclick = function (e){
+        e.preventDefault()
+        searchRecent(searchTarget, true)
+      }
+
+      item.appendChild(anchor)
+      list.appendChild(item)
+
+      // Track this bookmark
+      bookmarkItems.set(currentButton, { item, searchTarget, text })
+
+      // Save to Firestore if user is logged in
+      saveBookmarkToFirestore(searchTarget, text)
+    }
+    else{
+      icon.src = offIconPath
+      item.remove()
+      item = null
+
+      // Remove from tracking and Firestore
+      bookmarkItems.delete(current)
+      removeBookmarkFromFirestore(searchTarget)
+    }
+  },{ once: true });
+}
+
 
 // Use the same tracking map for clicks and bookmarks loaded from Firestore.
 bookmarkButton.forEach (function(current){

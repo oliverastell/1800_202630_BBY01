@@ -125,10 +125,62 @@ function showShape(shape) {
     }).addTo(markerLayer).bindPopup(shape.name)
 }
 
+
+function addToRecent(name){
+    checkRecentDupe(name);
+    let newRow = document.createElement("div");
+    newRow.setAttribute("class", "list-group-item p-0 position-relative");
+    let newSearch = document.createElement("button");
+    newSearch.setAttribute("type", "button");
+    newSearch.setAttribute("class", " btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 ");
+    newSearch.setAttribute("onclick", "searchRecent('" + name + "')");
+    newSearch.textContent = name;
+    newRow.appendChild(newSearch)
+    let bookmarkButton = document.createElement("button");
+    bookmarkButton.setAttribute("type", "button");
+    bookmarkButton.setAttribute("class", "btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
+    bookmarkButton.setAttribute("style", "padding-right:30px");
+    let bookmarkIcon = document.createElement("img");
+    bookmarkIcon.setAttribute("src", "/res/img/bookmark-icon.svg");
+    bookmarkIcon.setAttribute("alt", "Bookmark Icon");
+    bookmarkIcon.addEventListener("click", function() {
+        bookmarkT(bookmarkButton);
+    });
+    bookmarkButton.appendChild(bookmarkIcon);
+    newRow.append(bookmarkButton);
+    let xButton = document.createElement("button");
+    xButton.setAttribute("type", "button");
+    xButton.setAttribute("class", "btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
+    xButton.textContent = "X";
+    xButton.setAttribute("onclick", "removeFromRecent(this)");
+    newRow.append(xButton);
+    searchMenuResults.insertBefore(newRow, searchMenuResults.firstChild);
+    addtoRecentFS(name,name);
+}
+
+function checkRecentDupe(target){
+    const recentSearches = searchMenuResults.querySelectorAll(".list-group-item");
+    recentSearches.forEach((searches) => {
+        if (searches.firstChild.textContent === target) {
+            removeFromRecent(searches.firstChild);
+        }
+    });
+}
+
+function removeFromRecent(target){
+    searchMenuResults.removeChild(target.parentElement);
+    removeRecentSearchFromFirestore(target.parentElement.firstChild.textContent);
+}
+
+function clearRecent(){
+    searchMenuResults.innerHTML = "";
+}
+
 function clickSearch(){
     searchMenu.classList.toggle("d-none");
     searchMenu.classList.toggle("d-flex");
 }
+
 
 function searchFilter(color) {
   markerLayer.clearLayers()
@@ -140,6 +192,7 @@ function searchRecent(target, closeMenu = true) {
   markerLayer.clearLayers()
   shapes.filter(s => s.name === target).forEach(showShape)
   if (closeMenu) clickSearch()
+    addToRecent(target)
 }
 
 function search() {
@@ -149,10 +202,13 @@ function search() {
 
 searchBarButton.addEventListener("click", clickSearch)
 
-Object.assign(window, {searchFilter, searchRecent })
+Object.assign(window, {searchFilter, searchRecent,removeFromRecent,clearRecent})
 
 //prevent reload when button is submitted and call search()
 searchForm.addEventListener("submit", function (event) {
     event.preventDefault();
     search();
 });
+////
+//// END PLACEHOLDER
+////
