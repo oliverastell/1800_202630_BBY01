@@ -21,13 +21,26 @@
 }
 
 #login-button {
-  width: 60px;
+  min-width: 60px;
   height: 60px;
+  padding: 0 16px;
+  border-radius: 30px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#login-button.is-signed-in {
+  color: #146c43;
+  background-color: #e9f7ef;
+  border-color: #146c43;
 }
 
 #login-button:hover {
   transform: scale(1.06);
 }
 
+@media (max-width: 500px) {
+  .login-status {
+    display: none;
+  }
+}
 /* Make sure design is mobile-first and responsive */
