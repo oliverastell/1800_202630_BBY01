@@ -20,42 +20,23 @@ const bookmarkButton = document.querySelectorAll(".bookmark-toggle")
 // Track bookmarked items for each button
 const bookmarkItems = new Map()
 
-/* Go through each bookmark button. Each one has its own item that starts as null.
-When click it, if the icon is empty I fill it and add a li with a link to the bookmark list.
-When click a tag will trigger searchRecent function. If it's already filled, I empty it and remove that li. */
+// Use the same tracking map for clicks and bookmarks loaded from Firestore.
 bookmarkButton.forEach (function(current){
-  let item = null
   current.addEventListener("click", function() {
     const icon = current.querySelector("img")
     const text = current.previousElementSibling.textContent
     const searchTarget = text.toLowerCase().trim()
 
-    if (item === null){
-      icon.src = onIconPath
-      item = document.createElement("li")
-
-      const anchor = document.createElement("a")
-      anchor.href = "#"
-      anchor.style.textDecoration = "none"
-      anchor.textContent = text
-      anchor.onclick = function (e){
-        e.preventDefault()
-        searchRecent(searchTarget, false)
-      }
-
-      item.appendChild(anchor)
-      list.appendChild(item)
-
-      // Track this bookmark
-      bookmarkItems.set(current, { item, searchTarget, text })
+    const bookmark = bookmarkItems.get(current)
+    if (!bookmark){
+      addBookmarkToList(searchTarget, text)
 
       // Save to Firestore if user is logged in
       saveBookmarkToFirestore(searchTarget, text)
     }
     else{
       icon.src = offIconPath
-      item.remove()
-      item = null
+      bookmark.item.remove()
 
       // Remove from tracking and Firestore
       bookmarkItems.delete(current)
@@ -129,6 +110,7 @@ function addBookmarkToList(searchTarget, displayText) {
   })
 
   if (!targetButton) return
+  if (bookmarkItems.has(targetButton)) return
 
   const icon = targetButton.querySelector("img")
   if (!icon) return
