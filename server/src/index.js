@@ -3,15 +3,16 @@
 import express from "express";
 import ViteExpress from "vite-express";
 import * as fs from "node:fs";
-
+import { fileURLToPath } from "node:url";
 // REQUIRES
 const app = express();
 app.use(express.json());
 
 // just like a simple web server like Apache web server
 // we are mapping file system paths to the app's virtual paths
-app.use("/res", express.static("./client/res"));
-
+app.use('/data', express.static(
+    fileURLToPath(new URL('../data/', import.meta.url))
+));
 
 // css/bootstrap/bootstrap.min.css
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist/css'));

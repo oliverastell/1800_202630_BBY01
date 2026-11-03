@@ -40,7 +40,7 @@ bookmarkButton.forEach (function(current){
       anchor.textContent = text
       anchor.onclick = function (e){
         e.preventDefault()
-        searchRecent(searchTarget, true)
+        searchRecent(searchTarget, false)
       }
 
       item.appendChild(anchor)
@@ -142,7 +142,7 @@ function addBookmarkToList(searchTarget, displayText) {
   anchor.textContent = displayText
   anchor.onclick = function (e) {
     e.preventDefault()
-    searchRecent(searchTarget, true)
+    searchRecent(searchTarget, false)
   }
   item.appendChild(anchor)
   list.appendChild(item)
