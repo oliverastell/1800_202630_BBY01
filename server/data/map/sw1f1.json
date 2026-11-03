@@ -1,0 +1,19 @@
+{
+  "name": "sw1f1",
+  "type": "floor",
+  "children": [
+    {
+      "name": "washrooms",
+      "type": "pointmap",
+      "pointIcon": "icon",
+      "points": [
+        [49.25122825,-123.00337002]
+      ]
+    },
+    {
+      "name": "1090",
+      "type": "room",
+      "points": []
+    }
+  ]
+}

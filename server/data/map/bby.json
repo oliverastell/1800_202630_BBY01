@@ -1,0 +1,9 @@
+{
+  "name": "bby",
+  "aliases": ["burnaby"],
+  "type": "campus",
+  "children": [
+    "sw1"
+  ]
+}
+
