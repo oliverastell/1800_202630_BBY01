@@ -129,20 +129,21 @@ function showShape(shape) {
 function addToRecent(name){
     checkRecentDupe(name);
     let newRow = document.createElement("div");
-    newRow.setAttribute("class", "list-group-item p-0 position-relative");
+    newRow.setAttribute("class", "list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden");
     let newSearch = document.createElement("button");
     newSearch.setAttribute("type", "button");
-    newSearch.setAttribute("class", " btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 ");
+    newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
     newSearch.setAttribute("onclick", "searchRecent('" + name + "')");
     newSearch.textContent = name;
     newRow.appendChild(newSearch)
     let bookmarkButton = document.createElement("button");
     bookmarkButton.setAttribute("type", "button");
-    bookmarkButton.setAttribute("class", "btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
-    bookmarkButton.setAttribute("style", "padding-right:30px");
+    bookmarkButton.setAttribute("class", "btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle pe-4");
     let bookmarkIcon = document.createElement("img");
     bookmarkIcon.setAttribute("src", "/res/img/bookmark-icon.svg");
     bookmarkIcon.setAttribute("alt", "Bookmark Icon");
+    bookmarkIcon.setAttribute("width", "20");
+    bookmarkIcon.setAttribute("height", "24");
     bookmarkIcon.addEventListener("click", function() {
         bookmarkT(bookmarkButton);
     });
@@ -150,7 +151,7 @@ function addToRecent(name){
     newRow.append(bookmarkButton);
     let xButton = document.createElement("button");
     xButton.setAttribute("type", "button");
-    xButton.setAttribute("class", "btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
+    xButton.setAttribute("class", "btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
     xButton.textContent = "X";
     xButton.setAttribute("onclick", "removeFromRecent(this)");
     newRow.append(xButton);
