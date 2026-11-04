@@ -3,9 +3,9 @@
   "type": "floor",
   "children": [
     {
-      "name": "washrooms",
+      "name": "seats",
       "type": "pointmap",
-      "pointIcon": "icon",
+      "pointIcon": "seat",
       "points": [
         [49.25122825,-123.00337002]
       ]

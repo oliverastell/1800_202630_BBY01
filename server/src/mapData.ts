@@ -1,10 +1,4 @@
 
-interface Point {
-    pointId: number,
-    latitude: number,
-    longitude: number
-}
-
 interface Node {
     name: string,
     aliases: string[],
@@ -12,17 +6,20 @@ interface Node {
     path: string,
     properties: { [index: string]: unknown },
     children: Node[],
-    _directChildren: Node[],
-    _includes: string[]
+    _unprocessedChildren: Node[] | string
 }
 
 let callbacks: (() => undefined)[] = []
-let nodes: { [index: string]: Node } = {}
+let nodes: Map<string, Node> = new Map();
 let loaded = false
 
 export function getMapNodes() {
     if (!loaded) return undefined
     return nodes
+}
+
+export function getNode(path: string) {
+    return nodes.get(path)
 }
 
 export function onDataReady(callback: () => undefined) {
@@ -35,9 +32,8 @@ export function onDataReady(callback: () => undefined) {
 
 function parseNode(nodeDocument: any, parentPath: string, defaultName: string | undefined = undefined) {
     const type = nodeDocument.type
-    const children = []
     const properties: { [index: string]: unknown } = {}
-    const includes = nodeDocument.includes || []
+    const unprocessedChildren = []
     const aliases = nodeDocument.aliases || []
 
     let name = defaultName
@@ -56,7 +52,7 @@ function parseNode(nodeDocument: any, parentPath: string, defaultName: string | 
         name : parentPath + "/" + name
 
     for (let child of nodeDocument.children || []) {
-        children.push(parseNode(child, path))
+        unprocessedChildren.push(child)
     }
 
     for (let [key, value] of Object.entries(nodeDocument)) {
@@ -79,11 +75,11 @@ function parseNode(nodeDocument: any, parentPath: string, defaultName: string | 
         type: type,
         path: path,
         properties: properties,
-        _directChildren: children,
-        _includes: includes
+        children: [],
+        _unprocessedChildren: unprocessedChildren,
     } as Node
 
-    nodes[node.path] = node
+    nodes.set(node.path, node)
     return node
 }
 
@@ -99,6 +95,19 @@ async function initData() {
 
         let path = ""
         parseNode(nodeDocument, path, fileName)
+    }
+
+    for (let [_, node] of nodes) {
+        for (let unprocessedChild of node._unprocessedChildren) {
+            if (typeof unprocessedChild === "string") {
+                let subNode = getNode(unprocessedChild)
+                if (subNode !== undefined) {
+                    node.children.push(subNode)
+                }
+            } else {
+                node.children.push(unprocessedChild)
+            }
+        }
     }
 }
 
