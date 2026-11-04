@@ -58,14 +58,14 @@
 
       <!-- Search menu -->
       <div id="searchMenu"
-        class="d-none position-absolute top-0 start-0 end-0 bottom-0 z-3 flex-column col-md-5 col-lg-4 shadow" style="background-color: rgb(204, 204, 204);">
+        class="d-none position-absolute top-0 start-0 end-0 bottom-0 z-3 flex-column col-md-5 col-lg-4 shadow bg-dark-subtle border border-secondary rounded-4 overflow-hidden pb-3">
         <form id="searchForm" role="search" class="d-flex p-3 gap-2 flex-shrink-0">
-          <input id="searchField" class="form-control" type="search"
+          <input id="searchField" size="1" class="form-control flex-grow-1 rounded-pill border-dark bg-body-secondary text-dark px-3 py-2" type="search"
             placeholder="Search Location..." aria-label="Search">
-          <button type="submit" class="btn btn-outline-success">Search</button>
+          <button type="submit" class="btn btn-outline-dark rounded-pill bg-body-secondary flex-shrink-0 px-3">Search</button>
         </form>
 
-        <div id="searchMenuIcons" class="d-flex gap-1 px-3 pb-2 border-bottom border-dark flex-shrink-0">
+        <div id="searchMenuIcons" class="d-flex flex-wrap gap-1 px-3 pb-2 flex-shrink-0">
           <button type="button" class="btn p-1 border-0" aria-label="Red filter" onclick="searchFilter('red')">
             <svg height="40" width="40"><circle cx="20" cy="20" r="12" fill="red" /></svg>
           </button>
@@ -79,69 +79,69 @@
             <svg height="40" width="40"><circle cx="20" cy="20" r="12" fill="yellow" /></svg>
           </button>
         </div>
-      <div id="searchMenuResults11" class="overflow-y-auto flex-grow-1" >
-        <div class="list-group-item p-0 position-relative">
-          <p class="m-0 px-3 py-2 fw-semibold border-bottom">Recent</p>
-          <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1" onclick="clearRecent()">Clear All</button>
+      <div id="searchMenuResults11" class="overflow-y-auto flex-shrink-1 mx-3 mt-2 px-3 pt-3 pb-4 rounded-5 bg-body-secondary" >
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <p class="m-0 px-3 py-2 fs-5 text-center text-dark flex-grow-1">Recents</p>
+          <button type=button class="btn border-0 rounded-pill flex-shrink-0" onclick="clearRecent()">Clear All</button>
         </div>
 
-      <div id="searchMenuResults" class="list-group list-group-flush">
-          <div class="list-group list-group-flush">
+      <div id="searchMenuResults" class="list-group gap-2">
+          <div class="list-group gap-2">
 
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('red square 1')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('red square 1')">
                 Red square 1
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
 
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('green circle 1')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('green circle 1')">
                 Green circle 1
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
 
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('blue triangle 3')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('blue triangle 3')">
                 Blue triangle 3
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
 
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('yellow rectangle 2')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('yellow rectangle 2')">
                 Yellow rectangle 2
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
 
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('red circle 1')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('red circle 1')">
                 Red circle 1
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
 
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('green square 1')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('green square 1')">
                 Green square 1
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
 
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('blue square 3')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('blue square 3')">
                 Blue square 3
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
             
-            <div class="list-group-item p-0 position-relative">
-              <button type="button" class=" btn list-group-item-action text-start w-100 border-0 rounded-0 py-3 ps-3 pe-5 " onclick="searchRecent('yellow circle 1')">
+            <div class="list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden">
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('yellow circle 1')">
                 Yellow circle 1
               </button>
-              <button type=button class="btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" alt="Bookmark Icon"></button>
+              <button type=button class="btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
             </div>
           </div>
           </div>
