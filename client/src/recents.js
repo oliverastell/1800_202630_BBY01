@@ -1,4 +1,4 @@
-import { onAuthReady } from "../../src/authentication.js";
+import { onAuthReady } from "./authentication.js";
 import { auth, db } from "./firebaseConfig.js";
 import { doc, setDoc, collection, getDocs, deleteDoc} from "firebase/firestore";
 
