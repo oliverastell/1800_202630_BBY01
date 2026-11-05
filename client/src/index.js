@@ -15,7 +15,7 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
     const campusBounds = L.latLngBounds(bounds).pad(0.1)
     const map = L.map('map',
         {keyboard: true, 
-        // maxBounds: bounds, 
+        maxBounds: bounds, 
         fadeAnimation: false,
         zoomAnimation: false,
         markerZoomAnimation: false}).setView([49.248087, -123.001192], 18)
@@ -27,78 +27,78 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
     map.getContainer().focus()
 
-    // let campusBorder = null
+    let campusBorder = null
 
-    // map.createPane("block")
-    // map.getPane("block").style.zIndex = 300
+    map.createPane("block")
+    map.getPane("block").style.zIndex = 300
 
-    // fetch("/data/campus-block.geojson")
-    // .then(r => r.json())
-    // .then(data => {
-    //     campusBorder = data.features[0].geometry.coordinates
-    //     .map(([lng, lat]) => [lat, lng])
+    fetch("/data/campus-block.geojson")
+    .then(r => r.json())
+    .then(data => {
+        campusBorder = data.features[0].geometry.coordinates
+        .map(([lng, lat]) => [lat, lng])
 
-    //     const outside = [[-85, -180], [-85, 180], [85, 180], [85, -180]]
+        const outside = [[-85, -180], [-85, 180], [85, 180], [85, -180]]
 
-    //     L.polygon([outside, campusBorder], {
-    //     pane: "block",
-    //     interactive: false,
-    //     stroke: false,
-    //     fillColor: "#254e6c",
-    //     fillOpacity: 0.5
-    //     }).addTo(map)
+        L.polygon([outside, campusBorder], {
+        pane: "block",
+        interactive: false,
+        stroke: false,
+        fillColor: "#254e6c",
+        fillOpacity: 0.5
+        }).addTo(map)
 
-    //     L.polygon(campusBorder, {
-    //     pane: "block",
-    //     interactive: false,
-    //     fill: false,
-    //     color: "#003a70",
-    //     weight: 10,
-    //     opacity: 0.12,
-    //     lineJoin: "round"
-    //     }).addTo(map)
+        L.polygon(campusBorder, {
+        pane: "block",
+        interactive: false,
+        fill: false,
+        color: "#003a70",
+        weight: 10,
+        opacity: 0.12,
+        lineJoin: "round"
+        }).addTo(map)
 
-    //     L.polygon(campusBorder, {
-    //     pane: "block",
-    //     interactive: false,
-    //     fill: false,
-    //     color: "#003a70",
-    //     weight: 2,
-    //     opacity: 0.9,
-    //     lineJoin: "round"
-    //     }).addTo(map)
+        L.polygon(campusBorder, {
+        pane: "block",
+        interactive: false,
+        fill: false,
+        color: "#003a70",
+        weight: 2,
+        opacity: 0.9,
+        lineJoin: "round"
+        }).addTo(map)
 
         
-    // })
+    })
     
-    // function insideCampus([lat, lng], border) {
-    //     if (!border || border.length < 3) return false
+    function insideCampus([lat, lng], border) {
+        if (!border || border.length < 3) return false
 
-    //     let isInside = false
-    //     for (let i = 0, j = border.length - 1; i < border.length; j = i++) {
-    //         const [latI, lngI] = border[i]
-    //         const [latJ, lngJ] = border[j]
-    //         if ((latI > lat) !== (latJ > lat) &&
-    //             lng < (lngJ - lngI) * (lat - latI) / (latJ - latI) + lngI) {
-    //             isInside = !isInside
-    //         }
-    //     }
-    //     return isInside
-    // }
+        let isInside = false
+        for (let i = 0, j = border.length - 1; i < border.length; j = i++) {
+            const [latI, lngI] = border[i]
+            const [latJ, lngJ] = border[j]
+            if ((latI > lat) !== (latJ > lat) &&
+                lng < (lngJ - lngI) * (lat - latI) / (latJ - latI) + lngI) {
+                isInside = !isInside
+            }
+        }
+        return isInside
+    }
 
-    // const pinLayer = L.layerGroup().addTo(map)
-    // map.on("click", (e) => {
-    //     if (!campusBorder || !insideCampus([e.latlng.lat, e.latlng.lng], campusBorder)) return
+    const pinLayer = L.layerGroup().addTo(map)
+    map.on("click", (e) => {
+        if (!campusBorder || !insideCampus([e.latlng.lat, e.latlng.lng], campusBorder)) return
 
-    //     pinLayer.clearLayers()
-    //     const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
-    //         .addTo(pinLayer)
-    //         .bindPopup("You clicked the map at " + e.latlng.toString())
-    //     marker.once("popupclose", () => pinLayer.removeLayer(marker))
-    //     marker.openPopup()
-    // })
+        pinLayer.clearLayers()
+        const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
+            .addTo(pinLayer)
+            .bindPopup("You clicked the map at " + e.latlng.toString())
+        marker.once("popupclose", () => pinLayer.removeLayer(marker))
+        marker.openPopup()
+    })
 
-    // map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
+    map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
 
 ////
 //// Leaflet Map
