@@ -15,7 +15,7 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
     const campusBounds = L.latLngBounds(bounds).pad(0.1)
     const map = L.map('map',
         {keyboard: true, 
-        maxBounds: bounds, 
+        // maxBounds: bounds, 
         fadeAnimation: false,
         zoomAnimation: false,
         markerZoomAnimation: false}).setView([49.248087, -123.001192], 18)
@@ -27,78 +27,78 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
     map.getContainer().focus()
 
-    let campusBorder = null
+    // let campusBorder = null
 
-    map.createPane("block")
-    map.getPane("block").style.zIndex = 300
+    // map.createPane("block")
+    // map.getPane("block").style.zIndex = 300
 
-    fetch("/data/campus-block.geojson")
-    .then(r => r.json())
-    .then(data => {
-        campusBorder = data.features[0].geometry.coordinates
-        .map(([lng, lat]) => [lat, lng])
+    // fetch("/data/campus-block.geojson")
+    // .then(r => r.json())
+    // .then(data => {
+    //     campusBorder = data.features[0].geometry.coordinates
+    //     .map(([lng, lat]) => [lat, lng])
 
-        const outside = [[-85, -180], [-85, 180], [85, 180], [85, -180]]
+    //     const outside = [[-85, -180], [-85, 180], [85, 180], [85, -180]]
 
-        L.polygon([outside, campusBorder], {
-        pane: "block",
-        interactive: false,
-        stroke: false,
-        fillColor: "#254e6c",
-        fillOpacity: 0.5
-        }).addTo(map)
+    //     L.polygon([outside, campusBorder], {
+    //     pane: "block",
+    //     interactive: false,
+    //     stroke: false,
+    //     fillColor: "#254e6c",
+    //     fillOpacity: 0.5
+    //     }).addTo(map)
 
-        L.polygon(campusBorder, {
-        pane: "block",
-        interactive: false,
-        fill: false,
-        color: "#003a70",
-        weight: 10,
-        opacity: 0.12,
-        lineJoin: "round"
-        }).addTo(map)
+    //     L.polygon(campusBorder, {
+    //     pane: "block",
+    //     interactive: false,
+    //     fill: false,
+    //     color: "#003a70",
+    //     weight: 10,
+    //     opacity: 0.12,
+    //     lineJoin: "round"
+    //     }).addTo(map)
 
-        L.polygon(campusBorder, {
-        pane: "block",
-        interactive: false,
-        fill: false,
-        color: "#003a70",
-        weight: 2,
-        opacity: 0.9,
-        lineJoin: "round"
-        }).addTo(map)
+    //     L.polygon(campusBorder, {
+    //     pane: "block",
+    //     interactive: false,
+    //     fill: false,
+    //     color: "#003a70",
+    //     weight: 2,
+    //     opacity: 0.9,
+    //     lineJoin: "round"
+    //     }).addTo(map)
 
         
-    })
+    // })
     
-    function insideCampus([lat, lng], border) {
-        if (!border || border.length < 3) return false
+    // function insideCampus([lat, lng], border) {
+    //     if (!border || border.length < 3) return false
 
-        let isInside = false
-        for (let i = 0, j = border.length - 1; i < border.length; j = i++) {
-            const [latI, lngI] = border[i]
-            const [latJ, lngJ] = border[j]
-            if ((latI > lat) !== (latJ > lat) &&
-                lng < (lngJ - lngI) * (lat - latI) / (latJ - latI) + lngI) {
-                isInside = !isInside
-            }
-        }
-        return isInside
-    }
+    //     let isInside = false
+    //     for (let i = 0, j = border.length - 1; i < border.length; j = i++) {
+    //         const [latI, lngI] = border[i]
+    //         const [latJ, lngJ] = border[j]
+    //         if ((latI > lat) !== (latJ > lat) &&
+    //             lng < (lngJ - lngI) * (lat - latI) / (latJ - latI) + lngI) {
+    //             isInside = !isInside
+    //         }
+    //     }
+    //     return isInside
+    // }
 
-    const pinLayer = L.layerGroup().addTo(map)
-    map.on("click", (e) => {
-        if (!campusBorder || !insideCampus([e.latlng.lat, e.latlng.lng], campusBorder)) return
+    // const pinLayer = L.layerGroup().addTo(map)
+    // map.on("click", (e) => {
+    //     if (!campusBorder || !insideCampus([e.latlng.lat, e.latlng.lng], campusBorder)) return
 
-        pinLayer.clearLayers()
-        const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
-            .addTo(pinLayer)
-            .bindPopup("You clicked the map at " + e.latlng.toString())
-        marker.once("popupclose", () => pinLayer.removeLayer(marker))
-        marker.openPopup()
-    })
+    //     pinLayer.clearLayers()
+    //     const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
+    //         .addTo(pinLayer)
+    //         .bindPopup("You clicked the map at " + e.latlng.toString())
+    //     marker.once("popupclose", () => pinLayer.removeLayer(marker))
+    //     marker.openPopup()
+    // })
 
-    map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
+    // map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
 
 ////
 //// Leaflet Map
@@ -115,6 +115,128 @@ const shapes = [
   { name: "blue square 3",      color: "blue",   lat: 49.2478, lng: -123.0015 },
   { name: "yellow circle 1",    color: "yellow", lat: 49.2483, lng: -122.9990 },
 ]
+
+//getting user's location
+
+let locationDot = null;
+let compassHeading = null;
+
+const locationIcon = L.divIcon({
+  className: "",
+  iconSize: [40, 40],
+  iconAnchor: [20, 20],
+  html: `
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="40" height="40" viewBox="0 0 40 40">
+      <g data-direction visibility="hidden">
+        <path d="M20 1 L14 10 L26 10 Z" fill="#1677ff" />
+      </g>
+
+      <circle cx="20" cy="20" r="8"
+              fill="#1677ff" stroke="white" stroke-width="2" />
+    </svg>
+  `
+});
+
+function updateArrow() {
+  const arrow = locationDot
+    ?.getElement()
+    ?.querySelector("[data-direction]");
+
+  if (!arrow) return;
+
+  if (!Number.isFinite(compassHeading)) {
+    arrow.setAttribute("visibility", "hidden");
+    return;
+  }
+
+  arrow.setAttribute("visibility", "visible");
+  arrow.setAttribute(
+    "transform",
+    `rotate(${compassHeading} 20 20)`
+  );
+}
+
+function handleOrientation(event) {
+  let heading;
+
+  if (Number.isFinite(event.webkitCompassHeading)) {
+    if (event.webkitCompassAccuracy < 0) return;
+
+    heading = event.webkitCompassHeading;
+  } else if (
+    event.absolute === true &&
+    Number.isFinite(event.alpha)
+  ) {
+    heading = 360 - event.alpha;
+  } else {
+    return;
+  }
+
+  compassHeading = (heading + 360) % 360;
+  updateArrow();
+}
+
+function setupCompass() {
+  if (!window.isSecureContext || typeof DeviceOrientationEvent === "undefined") {
+    console.warn("Compass needs HTTPS and a device with orientation support.");
+    return;
+  }
+  window.addEventListener("deviceorientationabsolute", handleOrientation);
+  window.addEventListener("deviceorientation", handleOrientation);
+
+  if (typeof DeviceOrientationEvent.requestPermission === "function") {
+    map.getContainer().addEventListener("click", async () => {
+      try {
+        const permission = await DeviceOrientationEvent.requestPermission(true);
+        if (permission !== "granted") {
+          console.warn("Compass permission was denied.");
+        }
+      } catch (error) {
+        console.error("Compass permission error:", error);
+      }
+    }, { once: true });
+  }
+}
+
+setupCompass();
+
+let watchId = null;
+
+if ("geolocation" in navigator) {
+  watchId = navigator.geolocation.watchPosition(
+    position => {
+      const { latitude, longitude, accuracy } = position.coords;
+      const point = [latitude, longitude];
+
+      console.log({
+        latitude,
+        longitude,
+        accuracyMetres: accuracy,
+        measuredAt: new Date(position.timestamp).toLocaleTimeString()
+      });
+
+      if (!locationDot) {
+        locationDot = L.marker(point, {
+          icon: locationIcon,
+          interactive: false,
+          keyboard: false
+        }).addTo(map);
+      } else {
+        locationDot.setLatLng(point);
+      }
+
+      updateArrow();
+    },
+    error => console.error("Location error:", error.message),
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 15000
+    }
+  );
+}
+
 
 const markerLayer = L.layerGroup().addTo(map)
 
