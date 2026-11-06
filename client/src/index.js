@@ -1,3 +1,4 @@
+import { buildings, loadBuildings } from "./buildings.js";
 // ###############MOVED THE SEARCH PLACEHOLDERS UP HERE ###############
 const searchBar = document.getElementById("searchBar");
 const searchBarButton = document.getElementById("searchBarButton");
@@ -5,6 +6,13 @@ const searchMenu = document.getElementById("searchMenu");
 const searchMenuResults = document.getElementById("searchMenuResults");
 const searchMenuIcons = document.getElementById("searchMenuIcons");
 const searchForm = document.getElementById("searchForm");
+const searchStatus = document.getElementById("searchStatus");
+let buildingsLoadError = false;
+const buildingsReady = loadBuildings().catch(error => {
+  buildingsLoadError = true;
+  searchStatus.textContent = "Buildings could not be loaded. Please reload to try again.";
+  console.error("Error loading buildings:", error);
+});
 
 const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
@@ -86,35 +94,29 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
         return isInside
     }
 
-/// SW1 Detector
-    let SW1Border = null
-
-    fetch("/data/SW1-block.geojson")
-    .then(r => r.json())
-    .then(data => {
-        SW1Border = data.features[0].geometry.coordinates
-        .map(([lng, lat]) => [lat, lng])})
-/// SW1 Detector
-
     const pinLayer = L.layerGroup().addTo(map)
-    map.on("click", (e) => {
-        if (!campusBorder || !isInside([e.latlng.lat, e.latlng.lng], campusBorder)) return
+    map.on("click", async (e) => {
+        /* Load buildings based on firestore data, if exist it will return the building, 
+        if not it will check if the click is inside the campus border and add a pin.*/
+        await buildingsReady;
+        const b = findBuildingAt(e.latlng)
+        if (b) { showBuilding(b); return }
 
-        pinLayer.clearLayers()
-        const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
-            .addTo(pinLayer)
-            if (isInside([e.latlng.lat, e.latlng.lng], SW1Border)) {
-                marker.bindPopup("SW1")
-            }
-            else {
-                marker.bindPopup("You clicked the map at " + e.latlng.toString())
-            }
-        marker.once("popupclose", () => pinLayer.removeLayer(marker))
-        marker.openPopup()
+        // if not load check if the click is inside the campus border, if not return
+        if(!campusBorder || !isInside([e.latlng.lat, e.latlng.lng], campusBorder)) {
+            return
+        }
+        // if inside the campus border and building is not found, add a pin and show the coordinates
+        const { lat, lng } = e.latlng;
+        const marker = L.marker(e.latlng)
+          .addTo(pinLayer)
+          .bindPopup("You clicked at (" + lat.toFixed(6) + ", " + lng.toFixed(6) + ")")
+          .openPopup();
+        marker.once("popupclose", () => {
+          pinLayer.removeLayer(marker);
+        });
     })
-
     map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
-
 ////
 ////
 //// Leaflet Map
@@ -277,7 +279,7 @@ function addToRecent(name){
     let newSearch = document.createElement("button");
     newSearch.setAttribute("type", "button");
     newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-    newSearch.setAttribute("onclick", "searchRecent('" + name + "')");
+    newSearch.addEventListener("click", () => searchRecent(name));
     newSearch.textContent = name;
     newRow.appendChild(newSearch)
     let bookmarkButton = document.createElement("button");
@@ -288,9 +290,6 @@ function addToRecent(name){
     bookmarkIcon.setAttribute("alt", "Bookmark Icon");
     bookmarkIcon.setAttribute("width", "20");
     bookmarkIcon.setAttribute("height", "24");
-    bookmarkIcon.addEventListener("click", function() {
-        bookmarkT(bookmarkButton);
-    });
     bookmarkButton.appendChild(bookmarkIcon);
     newRow.append(bookmarkButton);
     let xButton = document.createElement("button");
@@ -338,6 +337,7 @@ function clickSearch() {
   }
   else {
     searchBar.classList.remove("d-none")
+    map.off("click", clickSearch)
   }
 }
 
@@ -348,11 +348,58 @@ function searchFilter(color) {
   clickSearch()
 }
 
-function searchRecent(target, closeMenu = true) {
+function findBuildingAt(latlng) {
+  return buildings.find(b => isInside([latlng.lat, latlng.lng], b.border));
+}
+
+function findBuildingByText(text) {
+  const t = text.toLowerCase().trim();
+  if (!t) return;
+  const names = b => [b.id, b.name, b.searchNames].map(n => n.toLowerCase().trim());
+  return buildings.find(b => names(b).includes(t))
+      || buildings.find(b => names(b).some(n => n.includes(t)));
+}
+
+function showBuilding(b) {
+  markerLayer.clearLayers();
+  pinLayer.clearLayers();
+  const label = document.createElement("span");
+  label.textContent = b.name;
+  const marker = L.marker(b.center).addTo(pinLayer).bindPopup(label);
+  marker.once("popupclose", () => pinLayer.removeLayer(marker));
+  map.setView(b.center, 19);   // setView since zoom animation is off
+  marker.openPopup();
+  searchStatus.textContent = "";
+  if (searchMenu.classList.contains("d-flex")) clickSearch();
+}
+
+async function searchRecent(target, closeMenu = true) {
+  target = target.trim();
+  if (!target) {
+    searchStatus.textContent = "Enter a building name, such as SW1.";
+    return;
+  }
+  searchStatus.textContent = "Searching…";
+  await buildingsReady;
+  const b = findBuildingByText(target);
+  if (b) {
+    showBuilding(b);
+    addToRecent(b.name);
+    return;
+  }
   markerLayer.clearLayers()
-  shapes.filter(s => s.name.toLowerCase().trim() === target.toLowerCase().trim()).forEach(showShape)
-  if (closeMenu) clickSearch()
-    addToRecent(target)
+  const matches = shapes.filter(s => s.name.toLowerCase().trim() === target.toLowerCase().trim());
+  if (!matches.length) {
+    searchStatus.textContent = buildingsLoadError
+      ? "Buildings could not be loaded. Please reload to try again."
+      : `No building found for “${target}”.`;
+    return;
+  }
+  pinLayer.clearLayers();
+  matches.forEach(showShape);
+  searchStatus.textContent = "";
+  if (closeMenu && searchMenu.classList.contains("d-flex")) clickSearch();
+  addToRecent(target);
 }
 
 function search() {

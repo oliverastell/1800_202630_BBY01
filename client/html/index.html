@@ -65,6 +65,7 @@
           <button type="submit" class="btn btn-outline-dark rounded-pill bg-body-secondary flex-shrink-0 px-3">Search</button>
         </form>
 
+        <p id="searchStatus" class="px-3 mb-2 text-dark" role="status" aria-live="polite"></p>
         <div id="searchMenuIcons" class="d-flex flex-wrap gap-1 px-3 pb-2 flex-shrink-0">
           <button type="button" class="btn p-1 border-0" aria-label="Red filter" onclick="searchFilter('red')">
             <svg height="40" width="40"><circle cx="20" cy="20" r="12" fill="red" /></svg>
@@ -89,8 +90,8 @@
           <div class="list-group gap-2">
 
             <div class="list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row">
-              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('red square 1')">
-                Red square 1
+              <button type="button" class=" btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5 " onclick="searchRecent('SW1')">
+                SW1
               </button>
               <button type=button class="btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action bookmark-toggle"><img src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
               <button type="button" class="btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action" aria-label="Remove recent search" onclick="removeFromRecent(this)">X</button>
