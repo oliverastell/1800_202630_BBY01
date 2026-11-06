@@ -43,4 +43,21 @@
     display: none;
   }
 }
+/* Keep search text and both action buttons in separate, non-overlapping boxes. */
+.recent-search-row {
+  padding-right: 8px !important;
+}
+
+.recent-search-row > .list-group-item-action {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+  padding-right: 8px !important;
+}
+
+.recent-search-action {
+  width: 40px;
+  height: 40px;
+}
+
 /* Make sure design is mobile-first and responsive */

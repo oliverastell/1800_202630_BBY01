@@ -14,12 +14,12 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
     const bounds = [[49.2400, -123.0065], [49.2565, -122.9962]]
     const campusBounds = L.latLngBounds(bounds).pad(0.1)
     const map = L.map('map',
-        {keyboard: true, 
-        maxBounds: bounds, 
+        {keyboard: true,
+        maxBounds: bounds,
         fadeAnimation: false,
         zoomAnimation: false,
         markerZoomAnimation: false}).setView([49.248087, -123.001192], 18)
-    
+
     L.maplibreGL({
         style: `https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=${mapTilerKey}`,
         attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
@@ -68,10 +68,10 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
         lineJoin: "round"
         }).addTo(map)
 
-        
+
     })
-    
-    function insideCampus([lat, lng], border) {
+
+    function isInside([lat, lng], border) {
         if (!border || border.length < 3) return false
 
         let isInside = false
@@ -86,20 +86,36 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
         return isInside
     }
 
+/// SW1 Detector
+    let SW1Border = null
+
+    fetch("/data/SW1-block.geojson")
+    .then(r => r.json())
+    .then(data => {
+        SW1Border = data.features[0].geometry.coordinates
+        .map(([lng, lat]) => [lat, lng])})
+/// SW1 Detector
+
     const pinLayer = L.layerGroup().addTo(map)
     map.on("click", (e) => {
-        if (!campusBorder || !insideCampus([e.latlng.lat, e.latlng.lng], campusBorder)) return
+        if (!campusBorder || !isInside([e.latlng.lat, e.latlng.lng], campusBorder)) return
 
         pinLayer.clearLayers()
         const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
             .addTo(pinLayer)
-            .bindPopup("You clicked the map at " + e.latlng.toString())
+            if (isInside([e.latlng.lat, e.latlng.lng], SW1Border)) {
+                marker.bindPopup("SW1")
+            }
+            else {
+                marker.bindPopup("You clicked the map at " + e.latlng.toString())
+            }
         marker.once("popupclose", () => pinLayer.removeLayer(marker))
         marker.openPopup()
     })
 
     map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
 
+////
 ////
 //// Leaflet Map
 ////
@@ -120,6 +136,7 @@ const shapes = [
 
 let locationDot = null;
 let compassHeading = null;
+let hasCenteredOnUser = false;
 
 const locationIcon = L.divIcon({
   className: "",
@@ -227,6 +244,12 @@ if ("geolocation" in navigator) {
       }
 
       updateArrow();
+
+      // Adjust the screen once, then let the user freely explore the map.
+      if (!hasCenteredOnUser && campusBounds.contains(point)) {
+        map.setView(point, Math.max(map.getZoom(), 18));
+        hasCenteredOnUser = true;
+      }
     },
     error => console.error("Location error:", error.message),
     {
@@ -236,7 +259,6 @@ if ("geolocation" in navigator) {
     }
   );
 }
-
 
 const markerLayer = L.layerGroup().addTo(map)
 
@@ -251,7 +273,7 @@ function showShape(shape) {
 function addToRecent(name){
     checkRecentDupe(name);
     let newRow = document.createElement("div");
-    newRow.setAttribute("class", "list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden");
+    newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
     let newSearch = document.createElement("button");
     newSearch.setAttribute("type", "button");
     newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
@@ -260,7 +282,7 @@ function addToRecent(name){
     newRow.appendChild(newSearch)
     let bookmarkButton = document.createElement("button");
     bookmarkButton.setAttribute("type", "button");
-    bookmarkButton.setAttribute("class", "btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle pe-4");
+    bookmarkButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 bookmark-toggle recent-search-action");
     let bookmarkIcon = document.createElement("img");
     bookmarkIcon.setAttribute("src", "/res/img/bookmark-icon.svg");
     bookmarkIcon.setAttribute("alt", "Bookmark Icon");
@@ -273,8 +295,9 @@ function addToRecent(name){
     newRow.append(bookmarkButton);
     let xButton = document.createElement("button");
     xButton.setAttribute("type", "button");
-    xButton.setAttribute("class", "btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
+    xButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action");
     xButton.textContent = "X";
+    xButton.setAttribute("aria-label", "Remove recent search");
     xButton.setAttribute("onclick", "removeFromRecent(this)");
     newRow.append(xButton);
     searchMenuResults.insertBefore(newRow, searchMenuResults.firstChild);
@@ -284,24 +307,38 @@ function addToRecent(name){
 function checkRecentDupe(target){
     const recentSearches = searchMenuResults.querySelectorAll(".list-group-item");
     recentSearches.forEach((searches) => {
-        if (searches.firstChild.textContent === target) {
-            removeFromRecent(searches.firstChild);
+        if (searches.firstElementChild.textContent.toLowerCase().trim() === target.toLowerCase().trim()) {
+            // Replace the displayed row without deleting the saved recent search.
+            searches.remove();
         }
     });
 }
 
 function removeFromRecent(target){
-    searchMenuResults.removeChild(target.parentElement);
-    removeRecentSearchFromFirestore(target.parentElement.firstChild.textContent);
+    const row = target.parentElement;
+    const searchTarget = row.firstElementChild.textContent;
+    row.remove();
+    removeRecentSearchFromFirestore(searchTarget);
 }
 
 function clearRecent(){
     searchMenuResults.innerHTML = "";
 }
 
-function clickSearch(){
-    searchMenu.classList.toggle("d-none");
-    searchMenu.classList.toggle("d-flex");
+//Clicksearch hide the search bar and show the search bar again when close the menu, the menu can be close by clicking the map.
+function clickSearch() {
+  searchMenu.classList.toggle("d-none");
+  searchMenu.classList.toggle("d-flex");
+
+  const isMenuOpen = searchMenu.classList.contains("d-flex")
+
+  if (isMenuOpen) {
+    searchBar.classList.add("d-none")
+    map.once("click", clickSearch)
+  }
+  else {
+    searchBar.classList.remove("d-none")
+  }
 }
 
 
@@ -313,7 +350,7 @@ function searchFilter(color) {
 
 function searchRecent(target, closeMenu = true) {
   markerLayer.clearLayers()
-  shapes.filter(s => s.name === target).forEach(showShape)
+  shapes.filter(s => s.name.toLowerCase().trim() === target.toLowerCase().trim()).forEach(showShape)
   if (closeMenu) clickSearch()
     addToRecent(target)
 }
