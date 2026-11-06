@@ -1,3 +1,10 @@
+import { buildings, loadBuildings, highlightBuilding } from "./buildings.js";
+import {Map, Marker, Popup, LngLat, LngLatBounds, NavigationControl, setWorkerUrl} from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+
+// Let Vite bundle and serve MapLibre's worker before creating the map.
+setWorkerUrl(workerUrl);
 // ###############MOVED THE SEARCH PLACEHOLDERS UP HERE ###############
 const searchBar = document.getElementById("searchBar");
 const searchBarButton = document.getElementById("searchBarButton");
@@ -5,71 +12,97 @@ const searchMenu = document.getElementById("searchMenu");
 const searchMenuResults = document.getElementById("searchMenuResults");
 const searchMenuIcons = document.getElementById("searchMenuIcons");
 const searchForm = document.getElementById("searchForm");
+const searchStatus = document.getElementById("searchStatus");
+let buildingsLoadError = false;
+const buildingsReady = loadBuildings().catch(error => {
+  buildingsLoadError = true;
+  searchStatus.textContent = "Buildings could not be loaded. Please reload to try again.";
+  console.error("Error loading buildings:", error);
+});
 
 const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
-////
-//// Leaflet Map
-////
-    const bounds = [[49.2400, -123.0065], [49.2565, -122.9962]]
-    const campusBounds = L.latLngBounds(bounds).pad(0.1)
-    const map = L.map('map',
-        {keyboard: true,
-        maxBounds: bounds,
-        fadeAnimation: false,
-        zoomAnimation: false,
-        markerZoomAnimation: false}).setView([49.248087, -123.001192], 18)
+// MapLibre coordinates are [longitude, latitude].
+const toLngLat = ([lat, lng]) => [lng, lat];
+const bounds = [[-123.0065, 49.2400], [-122.9962, 49.2565]];
+// Two extra zoom-out levels need four times the visible area in each direction.
+const boundsCenter = bounds[0].map((value, axis) => (value + bounds[1][axis]) / 2);
+const zoomOutBounds = bounds.map(point => point.map(
+  (value, axis) => boundsCenter[axis] + (value - boundsCenter[axis]) * 4
+));
+const campusBounds = new LngLatBounds([-123.00753, 49.23835], [-122.99517, 49.25815]);
+const map = new Map({
+  container: 'map',
+  style: `https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=${mapTilerKey}`,
+  center: [-123.001192, 49.248087],
+  zoom: 17, maxBounds: zoomOutBounds, renderWorldCopies: false,
+  transformCameraUpdate: ({ center }) => ({
+    center: new LngLat(center.lng, Math.max(bounds[0][1], Math.min(bounds[1][1], center.lat)))
+  }),
+  dragRotate: true, pitchWithRotate: true, touchPitch: true
+});
 
-    L.maplibreGL({
-        style: `https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=${mapTilerKey}`,
-        attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-    }).addTo(map)
+map.addControl(new NavigationControl({ showCompass: true}), 'top-left');
+map.getCanvas().focus();
 
-    map.getContainer().focus()
-
-    let campusBorder = null
-
-    map.createPane("block")
-    map.getPane("block").style.zIndex = 300
-
-    fetch("/data/campus-block.geojson")
-    .then(r => r.json())
-    .then(data => {
-        campusBorder = data.features[0].geometry.coordinates
-        .map(([lng, lat]) => [lat, lng])
-
-        const outside = [[-85, -180], [-85, 180], [85, 180], [85, -180]]
-
-        L.polygon([outside, campusBorder], {
-        pane: "block",
-        interactive: false,
-        stroke: false,
-        fillColor: "#254e6c",
-        fillOpacity: 0.5
-        }).addTo(map)
-
-        L.polygon(campusBorder, {
-        pane: "block",
-        interactive: false,
-        fill: false,
-        color: "#003a70",
-        weight: 10,
-        opacity: 0.12,
-        lineJoin: "round"
-        }).addTo(map)
-
-        L.polygon(campusBorder, {
-        pane: "block",
-        interactive: false,
-        fill: false,
-        color: "#003a70",
-        weight: 2,
-        opacity: 0.9,
-        lineJoin: "round"
-        }).addTo(map)
-
-
-    })
+// Custom SW1 footprint traced from the supplied coordinates.
+let campusBorder = null;
+const mapReady = new Promise(resolve => map.once('load', resolve));
+mapReady.then(() => {
+  
+  map.addSource('sw1', { type: 'geojson', data: '/data/sw1Fill.geojson' });
+  map.addLayer({
+    id: 'sw1-fill', type: 'fill', source: 'sw1',
+    paint: { 'fill-color': '#e6e9e6', 'fill-opacity': 1 }
+  });
+  
+}).catch(error => console.error('Error adding SW1 overlay:', error));
+Promise.all([mapReady, fetch('/data/campus-block.geojson').then(r => {
+  if (!r.ok) throw new Error('Campus border could not be loaded');
+  return r.json();
+})]).then(([, data]) => {
+  const ring = data.features[0].geometry.coordinates.map(p => [...p]);
+  if (ring[0][0] !== ring.at(-1)[0] || ring[0][1] !== ring.at(-1)[1]) ring.push([...ring[0]]);
+  campusBorder = ring.map(([lng, lat]) => [lat, lng]);
+  map.addSource('campus-mask', { type: 'geojson', data: {
+    type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [
+      [[-180,-85],[180,-85],[180,85],[-180,85],[-180,-85]], ring
+    ]}
+  }});
+  map.addSource('campus-border', { type: 'geojson', data: {
+    type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: ring }
+  }});
+  map.addLayer({ id: 'campus-mask', type: 'fill', source: 'campus-mask',
+    paint: { 'fill-color': '#254e6c', 'fill-opacity': 0.5, 'fill-antialias': false } });
+  for (const [id, width, opacity] of [['glow',10,0.12], ['line',2,0.9]]) {
+    map.addLayer({ id: 'campus-border-' + id, type: 'line', source: 'campus-border',
+      layout: { 'line-join': 'round' },
+      paint: { 'line-color': '#003a70', 'line-width': width, 'line-opacity': opacity } });
+  }
+}).catch(error => console.error('Error loading campus border:', error));
+const pinLayer = new Set();
+const markerLayer = new Set();
+let activePopup = null;
+function clearMarkers(markers) {
+  for (const marker of [...markers]) marker.remove();
+  markers.clear();
+}
+function addMarker(point, content, markers, options = {}, removeOnClose = false) {
+  const popup = new Popup({ offset: 25, closeOnClick: true, maxWidth: '300px' });
+  if (typeof content === 'string') popup.setText(content);
+  else popup.setDOMContent(content);
+  const marker = new Marker(options).setLngLat(point).setPopup(popup).addTo(map);
+  markers.add(marker);
+  popup.on('open', () => {
+    if (activePopup && activePopup !== popup) activePopup.remove();
+    activePopup = popup;
+  });
+  popup.on('close', () => {
+    if (activePopup === popup) activePopup = null;
+    if (removeOnClose) { markers.delete(marker); marker.remove(); }
+  });
+  return marker;
+}
 
     function isInside([lat, lng], border) {
         if (!border || border.length < 3) return false
@@ -86,41 +119,19 @@ const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
         return isInside
     }
 
-/// SW1 Detector
-    let SW1Border = null
+map.on('click', async event => {
+  await Promise.all([buildingsReady, mapReady]);
+  const { lat, lng } = event.lngLat;
+  const building = findBuildingAt(event.lngLat);
+  if (building) { showBuilding(building); return; }
+  clearMarkers(pinLayer);
+  if (activePopup) activePopup.remove();
+  highlightBuilding(map, null);
+  if (!campusBorder || !isInside([lat, lng], campusBorder)) return;
+  addMarker([lng, lat], 'You clicked at (' + lat.toFixed(6) + ', ' + lng.toFixed(6) + ')',
+    pinLayer, {}, true).togglePopup();
+});
 
-    fetch("/data/SW1-block.geojson")
-    .then(r => r.json())
-    .then(data => {
-        SW1Border = data.features[0].geometry.coordinates
-        .map(([lng, lat]) => [lat, lng])})
-/// SW1 Detector
-
-    const pinLayer = L.layerGroup().addTo(map)
-    map.on("click", (e) => {
-        if (!campusBorder || !isInside([e.latlng.lat, e.latlng.lng], campusBorder)) return
-
-        pinLayer.clearLayers()
-        const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
-            .addTo(pinLayer)
-            if (isInside([e.latlng.lat, e.latlng.lng], SW1Border)) {
-                marker.bindPopup("SW1")
-            }
-            else {
-                marker.bindPopup("You clicked the map at " + e.latlng.toString())
-            }
-        marker.once("popupclose", () => pinLayer.removeLayer(marker))
-        marker.openPopup()
-    })
-
-    map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
-
-////
-////
-//// Leaflet Map
-////
-
-// Draw on leaflet map instead for now
 const shapes = [
   { name: "red square 1",       color: "red",    lat: 49.2490, lng: -123.0020 },
   { name: "green circle 1",     color: "green",  lat: 49.2485, lng: -123.0010 },
@@ -138,11 +149,9 @@ let locationDot = null;
 let compassHeading = null;
 let hasCenteredOnUser = false;
 
-const locationIcon = L.divIcon({
-  className: "",
-  iconSize: [40, 40],
-  iconAnchor: [20, 20],
-  html: `
+const locationIcon = document.createElement('div');
+locationIcon.className = 'user-location-marker';
+locationIcon.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg"
          width="40" height="40" viewBox="0 0 40 40">
       <g data-direction visibility="hidden">
@@ -152,8 +161,7 @@ const locationIcon = L.divIcon({
       <circle cx="20" cy="20" r="8"
               fill="#1677ff" stroke="white" stroke-width="2" />
     </svg>
-  `
-});
+`;
 
 function updateArrow() {
   const arrow = locationDot
@@ -224,7 +232,7 @@ if ("geolocation" in navigator) {
   watchId = navigator.geolocation.watchPosition(
     position => {
       const { latitude, longitude, accuracy } = position.coords;
-      const point = [latitude, longitude];
+      const point = [longitude, latitude];
 
       console.log({
         latitude,
@@ -234,20 +242,16 @@ if ("geolocation" in navigator) {
       });
 
       if (!locationDot) {
-        locationDot = L.marker(point, {
-          icon: locationIcon,
-          interactive: false,
-          keyboard: false
-        }).addTo(map);
+        locationDot = new Marker({ element: locationIcon }).setLngLat(point).addTo(map);
       } else {
-        locationDot.setLatLng(point);
+        locationDot.setLngLat(point);
       }
 
       updateArrow();
 
       // Adjust the screen once, then let the user freely explore the map.
       if (!hasCenteredOnUser && campusBounds.contains(point)) {
-        map.setView(point, Math.max(map.getZoom(), 18));
+        map.jumpTo({ center: point, zoom: Math.max(map.getZoom(), 17) });
         hasCenteredOnUser = true;
       }
     },
@@ -260,15 +264,13 @@ if ("geolocation" in navigator) {
   );
 }
 
-const markerLayer = L.layerGroup().addTo(map)
-
 function showShape(shape) {
-    console.log("showing", shape)
-    L.circleMarker([shape.lat, shape.lng], {
-    color: shape.color, fillColor: shape.color, fillOpacity: 0.8, radius: 10,
-    }).addTo(markerLayer).bindPopup(shape.name)
+  const element = document.createElement('div');
+  element.className = 'shape-marker';
+  element.style.backgroundColor = shape.color;
+  element.style.borderColor = shape.color;
+  addMarker([shape.lng, shape.lat], shape.name, markerLayer, { element });
 }
-
 
 function addToRecent(name){
     checkRecentDupe(name);
@@ -277,7 +279,7 @@ function addToRecent(name){
     let newSearch = document.createElement("button");
     newSearch.setAttribute("type", "button");
     newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-    newSearch.setAttribute("onclick", "searchRecent('" + name + "')");
+    newSearch.addEventListener("click", () => searchRecent(name));
     newSearch.textContent = name;
     newRow.appendChild(newSearch)
     let bookmarkButton = document.createElement("button");
@@ -288,9 +290,6 @@ function addToRecent(name){
     bookmarkIcon.setAttribute("alt", "Bookmark Icon");
     bookmarkIcon.setAttribute("width", "20");
     bookmarkIcon.setAttribute("height", "24");
-    bookmarkIcon.addEventListener("click", function() {
-        bookmarkT(bookmarkButton);
-    });
     bookmarkButton.appendChild(bookmarkIcon);
     newRow.append(bookmarkButton);
     let xButton = document.createElement("button");
@@ -338,21 +337,70 @@ function clickSearch() {
   }
   else {
     searchBar.classList.remove("d-none")
+    map.off("click", clickSearch)
   }
 }
 
 
 function searchFilter(color) {
-  markerLayer.clearLayers()
+  if (map.isStyleLoaded()) highlightBuilding(map, null);
+  clearMarkers(markerLayer)
   shapes.filter(s => s.color === color).forEach(showShape)
   clickSearch()
 }
 
-function searchRecent(target, closeMenu = true) {
-  markerLayer.clearLayers()
-  shapes.filter(s => s.name.toLowerCase().trim() === target.toLowerCase().trim()).forEach(showShape)
-  if (closeMenu) clickSearch()
-    addToRecent(target)
+function findBuildingAt(latlng) {
+  return buildings.find(b => isInside([latlng.lat, latlng.lng], b.border));
+}
+
+function findBuildingByText(text) {
+  const t = text.toLowerCase().trim();
+  if (!t) return;
+  const names = b => [b.id, b.name, b.searchNames].map(n => n.toLowerCase().trim());
+  return buildings.find(b => names(b).includes(t))
+      || buildings.find(b => names(b).some(n => n.includes(t)));
+}
+
+function showBuilding(b) {
+  highlightBuilding(map, b);
+  clearMarkers(markerLayer);
+  clearMarkers(pinLayer);
+  if (activePopup) activePopup.remove();
+  const marker = new Marker().setLngLat(toLngLat(b.center)).addTo(map);
+  pinLayer.add(marker)
+  map.jumpTo({ center: toLngLat(b.center), zoom: 18 });
+  searchStatus.textContent = "";
+  if (searchMenu.classList.contains("d-flex")) clickSearch();
+}
+
+async function searchRecent(target, closeMenu = true) {
+  target = target.trim();
+  if (!target) {
+    searchStatus.textContent = "Enter a building name, such as SW1.";
+    return;
+  }
+  searchStatus.textContent = "Searching…";
+  await Promise.all([buildingsReady, mapReady]);
+  const b = findBuildingByText(target);
+  if (b) {
+    showBuilding(b);
+    addToRecent(b.name);
+    return;
+  }
+  clearMarkers(markerLayer)
+  const matches = shapes.filter(s => s.name.toLowerCase().trim() === target.toLowerCase().trim());
+  if (!matches.length) {
+    searchStatus.textContent = buildingsLoadError
+      ? "Buildings could not be loaded. Please reload to try again."
+      : `No building found for “${target}”.`;
+    return;
+  }
+  clearMarkers(pinLayer);
+  highlightBuilding(map, null);
+  matches.forEach(showShape);
+  searchStatus.textContent = "";
+  if (closeMenu && searchMenu.classList.contains("d-flex")) clickSearch();
+  addToRecent(target);
 }
 
 function search() {

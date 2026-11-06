@@ -49,14 +49,6 @@ onAuthReady(async (user) => {
     })
 });   
 
-const searchForm = document.getElementById("searchForm");
-
-
-function search(){
-    const searchText = document.getElementById("searchField").value.trim().toLowerCase();
-    addtoRecentFS(searchText,searchText);
-}
-
 async function addtoRecentFS(searchTarget, displayText) {
     searchTarget = searchTarget.toLowerCase().trim()
     const user = auth.currentUser
@@ -89,8 +81,3 @@ async function removeRecentSearchFromFirestore(searchTarget) {
 
 
 Object.assign(window, {removeRecentSearchFromFirestore,addtoRecentFS})
-
-searchForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    search();
-});
