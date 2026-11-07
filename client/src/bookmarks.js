@@ -1,6 +1,6 @@
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 
 const button = document.getElementById("bookmark-button")
 const popup = document.getElementById("bookmark-popup")
@@ -21,44 +21,46 @@ const bookmarkButtonArray = []
 // Track bookmarks by search text so they survive removal of a recent row.
 const bookmarkItems = new Map()
 
-function bookmarkT(currentButton){
-  if (!currentButton.querySelector("img")) return
-  const searchTarget = currentButton.previousElementSibling.textContent.toLowerCase().trim()
-  currentButton.querySelector("img").src = bookmarkItems.has(searchTarget) ? onIconPath : offIconPath
-  if (bookmarkButtonArray.includes(currentButton)) return
-  bookmarkButtonArray.push(currentButton)
- 
-  currentButton.addEventListener("click", function() {
-    const icon = currentButton.querySelector("img")
-    const text = currentButton.previousElementSibling.textContent
-    const searchTarget = text.toLowerCase().trim()
-    
-    const bookmark = bookmarkItems.get(searchTarget)
-    if (!bookmark){
-      addBookmarkToList(searchTarget, text)
+function bookmarkT(currentButton) {
+  const icon = currentButton.querySelector("img");
+  if (!icon) return;
+  const searchTarget = currentButton.previousElementSibling.textContent.toLowerCase().trim();
+  icon.src = bookmarkItems.has(searchTarget) ? onIconPath : offIconPath;
+  if (bookmarkButtonArray.includes(currentButton)) return;
+  bookmarkButtonArray.push(currentButton);
 
-      // Save to Firestore if user is logged in
-      saveBookmarkToFirestore(searchTarget, text)
-    }
-    else{
-      icon.src = offIconPath
-      bookmark.item.remove()
-
-      // Remove from tracking and Firestore
-      bookmarkItems.delete(searchTarget)
+  currentButton.addEventListener("click", async () => {
+    const text = currentButton.previousElementSibling.textContent.trim();
+    const searchTarget = text.toLowerCase();
+    const bookmark = bookmarkItems.get(searchTarget);
+    if (!bookmark) {
+      const coordinates = {
+        latitude: Number(currentButton.dataset.latitude),
+        longitude: Number(currentButton.dataset.longitude)
+      };
+      currentButton.disabled = true;
+      const saved = await saveBookmarkToFirestore(searchTarget, text, coordinates);
+      currentButton.disabled = false;
+      if (saved) {
+        addBookmarkToList(searchTarget, text, coordinates);
+        window.dispatchEvent(new CustomEvent("location-bookmark-saved", {
+          detail: { searchTarget, name: text, ...coordinates }
+        }));
+      }
+    } else {
+      bookmark.item.remove();
+      bookmarkItems.delete(searchTarget);
       bookmarkButtonArray.forEach(btn => {
         if (btn.previousElementSibling.textContent.toLowerCase().trim() === searchTarget) {
-          btn.querySelector("img").src = offIconPath
+          btn.querySelector("img").src = offIconPath;
         }
-      })
-      removeBookmarkFromFirestore(searchTarget)
+      });
+      removeBookmarkFromFirestore(searchTarget);
     }
   });
 }
 
-
-// Use the same tracking map for clicks and bookmarks loaded from Firestore.
-bookmarkButton.forEach(bookmarkT)
+bookmarkButton.forEach(bookmarkT);
 
 // Register bookmark buttons when new recent searches appear.
 const recentObserver = new MutationObserver(() => {
@@ -76,25 +78,84 @@ Object.assign(window, { bookmarkT })
 export { bookmarkT }
 
 //When click bookmark button this unhide the list
-button.addEventListener("click", function() {
+button.addEventListener("click", function () {
   popup.hidden = !popup.hidden
 })
 
-async function saveBookmarkToFirestore(searchTarget, displayText) {
-  searchTarget = searchTarget.toLowerCase().trim()
-  const user = auth.currentUser
-  if (!user) return
+// async function saveBookmarkToFirestore(searchTarget, displayText) {
+//   const user = auth.currentUser
+//   if (!user) return
+
+//   try {
+//     const bookmarksRef = doc(db, "users", user.uid, "bookmarks", searchTarget)
+//     await setDoc(bookmarksRef, {
+//       searchTarget: searchTarget,
+//       displayText: displayText,
+//       createdAt: new Date().toISOString()
+//     })
+//   } catch (error) {
+//     console.error("Error saving bookmark:", error)
+//   }
+// }
+
+async function saveBookmarkToFirestore(
+  searchTarget,
+  displayText,
+  coordinates = null
+) {
+  searchTarget = searchTarget.toLowerCase().trim();
+  const user = auth.currentUser;
+  if (!user) {
+    window.alert("Please log in to save a bookmark.");
+    return false;
+  }
+
+  const data = {
+    searchTarget,
+    displayText,
+    createdAt: new Date().toISOString()
+  };
+
+  // Include coordinates when they are valid numbers.
+  if (
+    Number.isFinite(coordinates?.latitude) &&
+    Number.isFinite(coordinates?.longitude)
+  ) {
+    data.latitude = coordinates.latitude;
+    data.longitude = coordinates.longitude;
+    const match = searchTarget.match(/^marked location (\d+)$/i);
+    if (match) data.markedLocationNumber = Number(match[1]);
+  }
 
   try {
-    const bookmarksRef = doc(db, "users", user.uid, "bookmarks", searchTarget)
-    await setDoc(bookmarksRef, {
-      searchTarget: searchTarget,
-      displayText: displayText,
-      createdAt: new Date().toISOString()
-    })
+    const bookmarkRef = doc(
+      db,
+      "users",
+      user.uid,
+      "bookmarks",
+      searchTarget
+    );
+
+    await setDoc(bookmarkRef, data);
+    return true;
   } catch (error) {
-    console.error("Error saving bookmark:", error)
+    console.error("Error saving bookmark:", error);
+    return false;
   }
+}
+
+export async function renameLocationBookmark(searchTarget, name) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Please log in to rename this bookmark.");
+  const displayText = name.trim();
+  if (!displayText) throw new Error("Enter a name for this location.");
+  // Keep the document ID and original number when the display name changes.
+  const data = { displayText };
+  const match = searchTarget.match(/^marked location (\d+)$/i);
+  if (match) data.markedLocationNumber = Number(match[1]);
+  await updateDoc(doc(db, "users", user.uid, "bookmarks", searchTarget), data);
+  await loadUserBookmarks(user);
+  return displayText;
 }
 
 async function removeBookmarkFromFirestore(searchTarget) {
@@ -126,7 +187,10 @@ async function loadUserBookmarks(user) {
     snapshot.forEach((doc) => {
       const data = doc.data()
       if (data.searchTarget && data.displayText) {
-        addBookmarkToList(data.searchTarget, data.displayText)
+        addBookmarkToList(data.searchTarget, data.displayText, {
+          latitude: data.latitude,
+          longitude: data.longitude
+        });
       }
     })
   } catch (error) {
@@ -134,31 +198,80 @@ async function loadUserBookmarks(user) {
   }
 }
 
-function addBookmarkToList(searchTarget, displayText) {
-  searchTarget = searchTarget.toLowerCase().trim()
-  // Update every matching recent row, including differently capitalized names.
+// function addBookmarkToList(searchTarget, displayText) {
+//   // Find the corresponding bookmark button
+//   const targetButton = Array.from(bookmarkButton).find(btn => {
+//     const text = btn.previousElementSibling.textContent.toLowerCase().trim()
+//     return text === searchTarget
+//   })
+
+//   if (!targetButton) return
+//   if (bookmarkItems.has(targetButton)) return
+
+//   const icon = targetButton.querySelector("img")
+//   if (!icon) return
+
+//   icon.src = onIconPath
+
+//   const item = document.createElement("li")
+//   const anchor = document.createElement("a")
+//   anchor.href = "#"
+//   anchor.style.textDecoration = "none"
+//   anchor.textContent = displayText
+//   anchor.onclick = function (e) {
+//     e.preventDefault()
+//     searchRecent(searchTarget, false)
+//   }
+//   item.appendChild(anchor)
+//   list.appendChild(item)
+
+//   // Track this bookmark
+//   bookmarkItems.set(targetButton, { item, searchTarget, text: displayText })
+// }
+
+function addBookmarkToList(searchTarget, displayText, coordinates = null) {
+  searchTarget = searchTarget.toLowerCase().trim();
   bookmarkButtonArray.forEach(btn => {
-    const text = btn.previousElementSibling.textContent.toLowerCase().trim()
-    if (text === searchTarget) btn.querySelector("img").src = onIconPath
-  })
+    if (btn.previousElementSibling.textContent.toLowerCase().trim() === searchTarget) {
+      btn.querySelector("img").src = onIconPath;
+    }
+  });
+  if (bookmarkItems.has(searchTarget)) return;
 
-  if (bookmarkItems.has(searchTarget)) return
+  // Always create the list entry, even without a matching button.
+  const item = document.createElement("li");
+  const anchor = document.createElement("a");
 
-  const item = document.createElement("li")
-  const anchor = document.createElement("a")
-  anchor.href = "#"
-  anchor.style.textDecoration = "none"
-  anchor.textContent = displayText
-  anchor.onclick = function (e) {
-    e.preventDefault()
-    searchRecent(searchTarget, false)
-  }
-  item.appendChild(anchor)
-  list.appendChild(item)
+  anchor.href = "#";
+  anchor.style.textDecoration = "none";
+  anchor.textContent = displayText;
 
-  // Track this bookmark
-  bookmarkItems.set(searchTarget, { item, searchTarget, text: displayText })
+  anchor.onclick = function (event) {
+    event.preventDefault();
+    if (
+      Number.isFinite(coordinates?.latitude) &&
+      Number.isFinite(coordinates?.longitude)
+    ) {
+      window.dispatchEvent(new CustomEvent("show-bookmarked-location", {
+        detail: {
+          searchTarget,
+          name: displayText,
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude
+        }
+      }));
+      popup.hidden = true;
+    } else {
+      searchRecent(searchTarget, false);
+    }
+  };
+
+  item.appendChild(anchor);
+  list.appendChild(item);
+
+  bookmarkItems.set(searchTarget, { item, searchTarget, text: displayText });
 }
+
 
 // Clear the bookmark list and reset icons
 function clearBookmarkList() {
@@ -176,3 +289,42 @@ function clearBookmarkList() {
 onAuthStateChanged(auth, (user) => {
   loadUserBookmarks(user)
 })
+
+export async function getNextMarkedLocationNumber() {
+  await auth.authStateReady();
+
+  const user = auth.currentUser;
+  if (!user) return 1;
+
+  const bookmarksRef = collection(
+    db,
+    "users",
+    user.uid,
+    "bookmarks"
+  );
+
+  const snapshot = await getDocs(bookmarksRef);
+
+  let highestNumber = 0;
+
+  snapshot.forEach((bookmarkDoc) => {
+    const data = bookmarkDoc.data();
+    const originalMatch = bookmarkDoc.id.match(/^marked location (\d+)$/i);
+    if (Number.isInteger(data.markedLocationNumber)) {
+      highestNumber = Math.max(highestNumber, data.markedLocationNumber);
+      return;
+    } else if (originalMatch) {
+      highestNumber = Math.max(highestNumber, Number(originalMatch[1]));
+      return;
+    }
+    const name = data.displayText || "";
+    const match = name.trim().match(/^Marked location (\d+)$/i);
+
+    if (match) {
+      const number = Number(match[1]);
+      highestNumber = Math.max(highestNumber, number);
+    }
+  });
+
+  return highestNumber + 1;
+}

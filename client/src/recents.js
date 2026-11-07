@@ -1,4 +1,4 @@
-import { onAuthReady } from "./homeAuth.js";
+import { onAuthStateChanged } from "firebase/auth";
 import { bookmarkT } from "./bookmarks.js";
 import { auth, db } from "./firebaseConfig.js";
 import { doc, setDoc, collection, getDocs, deleteDoc} from "firebase/firestore";
@@ -6,7 +6,8 @@ import { doc, setDoc, collection, getDocs, deleteDoc} from "firebase/firestore";
 
 const searchMenuResults = document.getElementById("searchMenuResults");
 
-onAuthReady(async (user) => {
+onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
     const rsDoc = collection(db, "users", user.uid, "recentSearches");
     const userDoc = await getDocs(rsDoc);
     const userInfo = userDoc;
