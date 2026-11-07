@@ -1,4 +1,4 @@
-import { getNextMarkedLocationNumber, renameLocationBookmark } from "./bookmarks.js";
+import { getNextMarkedLocationNumber, renameLocationBookmark, bookmarkT } from "./bookmarks.js";
 // ###############MOVED THE SEARCH PLACEHOLDERS UP HERE ###############
 const searchBar = document.getElementById("searchBar");
 const searchBarButton = document.getElementById("searchBarButton");
@@ -90,6 +90,15 @@ function insideCampus([lat, lng], border) {
   }
   return isInside
 }
+
+// Preserve develop's SW1 detection alongside the location details panel.
+let SW1Border = null;
+fetch("/data/SW1-block.geojson")
+  .then(response => response.json())
+  .then(data => {
+    SW1Border = data.features[0].geometry.coordinates
+      .map(([lng, lat]) => [lat, lng]);
+  });
 
 const pinLayer = L.layerGroup().addTo(map)
 const savedPinLayer = L.layerGroup().addTo(map);
@@ -209,7 +218,9 @@ map.on("click", async (e) => {
   pinLayer.clearLayers()
   const marker = L.marker(e.latlng, { bubblingMouseEvents: false })
     .addTo(pinLayer)
-    .bindPopup("You clicked the map at " + e.latlng.toString())
+    .bindPopup(insideCampus([e.latlng.lat, e.latlng.lng], SW1Border)
+      ? "SW1"
+      : "You clicked the map at " + e.latlng.toString())
   selectedMarker = marker;
   selectedBookmark = null;
   locationBookmarkButton.dataset.latitude = e.latlng.lat;
@@ -263,6 +274,7 @@ window.addEventListener("location-bookmark-saved", (event) => {
 map.setMinZoom(map.getBoundsZoom(campusBounds) + 0.5)
 
 ////
+////
 //// Leaflet Map
 ////
 
@@ -297,6 +309,7 @@ const shapes = [
 
 let locationDot = null;
 let compassHeading = null;
+let hasCenteredOnUser = false;
 
 const locationIcon = L.divIcon({
   className: "",
@@ -404,6 +417,12 @@ if ("geolocation" in navigator) {
       }
 
       updateArrow();
+
+      // Adjust the screen once, then let the user freely explore the map.
+      if (!hasCenteredOnUser && campusBounds.contains(point)) {
+        map.setView(point, Math.max(map.getZoom(), 18));
+        hasCenteredOnUser = true;
+      }
     },
     error => console.error("Location error:", error.message),
     {
@@ -413,7 +432,6 @@ if ("geolocation" in navigator) {
     }
   );
 }
-
 
 const markerLayer = L.layerGroup().addTo(map)
 
@@ -425,60 +443,73 @@ function showShape(shape) {
 }
 
 
-function addToRecent(name) {
-  checkRecentDupe(name);
-  let newRow = document.createElement("div");
-  newRow.setAttribute("class", "list-group-item p-0 position-relative border-0 rounded-pill bg-light overflow-hidden");
-  let newSearch = document.createElement("button");
-  newSearch.setAttribute("type", "button");
-  newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-  newSearch.setAttribute("onclick", "searchRecent('" + name + "')");
-  newSearch.textContent = name;
-  newRow.appendChild(newSearch)
-  let bookmarkButton = document.createElement("button");
-  bookmarkButton.setAttribute("type", "button");
-  bookmarkButton.setAttribute("class", "btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle pe-4");
-  let bookmarkIcon = document.createElement("img");
-  bookmarkIcon.setAttribute("src", "/res/img/bookmark-icon.svg");
-  bookmarkIcon.setAttribute("alt", "Bookmark Icon");
-  bookmarkIcon.setAttribute("width", "20");
-  bookmarkIcon.setAttribute("height", "24");
-  bookmarkIcon.addEventListener("click", function () {
+function addToRecent(name){
+    checkRecentDupe(name);
+    let newRow = document.createElement("div");
+    newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
+    let newSearch = document.createElement("button");
+    newSearch.setAttribute("type", "button");
+    newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
+    newSearch.setAttribute("onclick", "searchRecent('" + name + "')");
+    newSearch.textContent = name;
+    newRow.appendChild(newSearch)
+    let bookmarkButton = document.createElement("button");
+    bookmarkButton.setAttribute("type", "button");
+    bookmarkButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 bookmark-toggle recent-search-action");
+    let bookmarkIcon = document.createElement("img");
+    bookmarkIcon.setAttribute("src", "/res/img/bookmark-icon.svg");
+    bookmarkIcon.setAttribute("alt", "Bookmark Icon");
+    bookmarkIcon.setAttribute("width", "20");
+    bookmarkIcon.setAttribute("height", "24");
+    bookmarkButton.appendChild(bookmarkIcon);
+    newRow.append(bookmarkButton);
+    let xButton = document.createElement("button");
+    xButton.setAttribute("type", "button");
+    xButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action");
+    xButton.textContent = "X";
+    xButton.setAttribute("aria-label", "Remove recent search");
+    xButton.setAttribute("onclick", "removeFromRecent(this)");
+    newRow.append(xButton);
+    searchMenuResults.insertBefore(newRow, searchMenuResults.firstChild);
     bookmarkT(bookmarkButton);
-  });
-  bookmarkButton.appendChild(bookmarkIcon);
-  newRow.append(bookmarkButton);
-  let xButton = document.createElement("button");
-  xButton.setAttribute("type", "button");
-  xButton.setAttribute("class", "btn border-0 rounded-circle position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
-  xButton.textContent = "X";
-  xButton.setAttribute("onclick", "removeFromRecent(this)");
-  newRow.append(xButton);
-  searchMenuResults.insertBefore(newRow, searchMenuResults.firstChild);
-  addtoRecentFS(name, name);
+    addtoRecentFS(name,name);
 }
 
-function checkRecentDupe(target) {
-  const recentSearches = searchMenuResults.querySelectorAll(".list-group-item");
-  recentSearches.forEach((searches) => {
-    if (searches.firstChild.textContent === target) {
-      removeFromRecent(searches.firstChild);
-    }
-  });
+function checkRecentDupe(target){
+    const recentSearches = searchMenuResults.querySelectorAll(".list-group-item");
+    recentSearches.forEach((searches) => {
+        if (searches.firstElementChild.textContent.toLowerCase().trim() === target.toLowerCase().trim()) {
+            // Replace the displayed row without deleting the saved recent search.
+            searches.remove();
+        }
+    });
 }
 
-function removeFromRecent(target) {
-  searchMenuResults.removeChild(target.parentElement);
-  removeRecentSearchFromFirestore(target.parentElement.firstChild.textContent);
+function removeFromRecent(target){
+    const row = target.parentElement;
+    const searchTarget = row.firstElementChild.textContent;
+    row.remove();
+    removeRecentSearchFromFirestore(searchTarget);
 }
 
 function clearRecent() {
   searchMenuResults.innerHTML = "";
 }
 
+//Clicksearch hide the search bar and show the search bar again when close the menu, the menu can be close by clicking the map.
 function clickSearch() {
   searchMenu.classList.toggle("d-none");
   searchMenu.classList.toggle("d-flex");
+
+  const isMenuOpen = searchMenu.classList.contains("d-flex")
+
+  if (isMenuOpen) {
+    searchBar.classList.add("d-none")
+    map.once("click", clickSearch)
+  }
+  else {
+    searchBar.classList.remove("d-none")
+  }
 }
 
 
@@ -490,7 +521,7 @@ function searchFilter(color) {
 
 function searchRecent(target, closeMenu = true) {
   markerLayer.clearLayers()
-  shapes.filter(s => s.name === target).forEach(showShape)
+  shapes.filter(s => s.name.toLowerCase().trim() === target.toLowerCase().trim()).forEach(showShape)
   if (closeMenu) clickSearch()
   addToRecent(target)
 }

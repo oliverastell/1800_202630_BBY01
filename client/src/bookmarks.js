@@ -16,93 +16,66 @@ popup.appendChild(list)
 
 //select every bookmark icon that is clickable
 const bookmarkButton = document.querySelectorAll(".bookmark-toggle")
-const bookmarkButtonArray = Array.from(bookmarkButton)
+const bookmarkButtonArray = []
 
-// Track bookmarked items for each button
+// Track bookmarks by search text so they survive removal of a recent row.
 const bookmarkItems = new Map()
 
 function bookmarkT(currentButton) {
-  bookmarkButtonArray.push(currentButton)
+  const icon = currentButton.querySelector("img");
+  if (!icon) return;
+  const searchTarget = currentButton.previousElementSibling.textContent.toLowerCase().trim();
+  icon.src = bookmarkItems.has(searchTarget) ? onIconPath : offIconPath;
+  if (bookmarkButtonArray.includes(currentButton)) return;
+  bookmarkButtonArray.push(currentButton);
 
-  currentButton.addEventListener("click", function () {
-    const icon = currentButton.querySelector("img")
-    const text = currentButton.previousElementSibling.textContent
-    const searchTarget = text.toLowerCase().trim()
-
-    if (icon.getAttribute("src") === offIconPath) {
-      icon.src = onIconPath
-      let item = document.createElement("li")
-      console.log(text)
-      console.log(item)
-      const anchor = document.createElement("a")
-      anchor.href = "#"
-      anchor.style.textDecoration = "none"
-      anchor.textContent = text
-      anchor.onclick = function (e) {
-        e.preventDefault()
-        searchRecent(searchTarget, true)
-      }
-
-      item.appendChild(anchor)
-      list.appendChild(item)
-
-      // Track this bookmark
-      bookmarkItems.set(currentButton, { item, searchTarget, text })
-
-      // Save to Firestore if user is logged in
-      saveBookmarkToFirestore(searchTarget, text)
-    }
-    else {
-      icon.src = offIconPath
-      item.remove()
-      item = null
-
-      // Remove from tracking and Firestore
-      bookmarkItems.delete(current)
-      removeBookmarkFromFirestore(searchTarget)
-    }
-  }, { once: true });
-}
-
-
-// Use the same tracking map for clicks and bookmarks loaded from Firestore.
-bookmarkButton.forEach(function (current) {
-  current.addEventListener("click", async function () {
-    const icon = current.querySelector("img")
-    const text = current.previousElementSibling.textContent
-    const searchTarget = text.toLowerCase().trim()
-
-    let bookmark = bookmarkItems.get(current);
-    if (bookmark && bookmark.searchTarget !== searchTarget) {
-      bookmarkItems.delete(current);
-      bookmark = null;
-    }
+  currentButton.addEventListener("click", async () => {
+    const text = currentButton.previousElementSibling.textContent.trim();
+    const searchTarget = text.toLowerCase();
+    const bookmark = bookmarkItems.get(searchTarget);
     if (!bookmark) {
       const coordinates = {
-        latitude: Number(current.dataset.latitude),
-        longitude: Number(current.dataset.longitude)
+        latitude: Number(currentButton.dataset.latitude),
+        longitude: Number(currentButton.dataset.longitude)
       };
-      if (current.id === "bookmarkSelectedLocation") current.disabled = true;
+      currentButton.disabled = true;
       const saved = await saveBookmarkToFirestore(searchTarget, text, coordinates);
+      currentButton.disabled = false;
       if (saved) {
         addBookmarkToList(searchTarget, text, coordinates);
         window.dispatchEvent(new CustomEvent("location-bookmark-saved", {
           detail: { searchTarget, name: text, ...coordinates }
         }));
-      } else if (current.id === "bookmarkSelectedLocation") {
-        current.disabled = false;
       }
+    } else {
+      bookmark.item.remove();
+      bookmarkItems.delete(searchTarget);
+      bookmarkButtonArray.forEach(btn => {
+        if (btn.previousElementSibling.textContent.toLowerCase().trim() === searchTarget) {
+          btn.querySelector("img").src = offIconPath;
+        }
+      });
+      removeBookmarkFromFirestore(searchTarget);
     }
-    else {
-      icon.src = offIconPath
-      bookmark.item.remove()
+  });
+}
 
-      // Remove from tracking and Firestore
-      bookmarkItems.delete(current)
-      removeBookmarkFromFirestore(searchTarget)
-    }
-  })
+bookmarkButton.forEach(bookmarkT);
+
+// Register bookmark buttons when new recent searches appear.
+const recentObserver = new MutationObserver(() => {
+  for (let i = bookmarkButtonArray.length - 1; i >= 0; i--) {
+    if (!bookmarkButtonArray[i].isConnected) bookmarkButtonArray.splice(i, 1)
+  }
+  document.querySelectorAll(".bookmark-toggle").forEach(bookmarkT)
 })
+recentObserver.observe(document.getElementById("searchMenuResults"), {
+  childList: true,
+  subtree: true
+})
+
+Object.assign(window, { bookmarkT })
+export { bookmarkT }
 
 //When click bookmark button this unhide the list
 button.addEventListener("click", function () {
@@ -130,6 +103,7 @@ async function saveBookmarkToFirestore(
   displayText,
   coordinates = null
 ) {
+  searchTarget = searchTarget.toLowerCase().trim();
   const user = auth.currentUser;
   if (!user) {
     window.alert("Please log in to save a bookmark.");
@@ -185,6 +159,7 @@ export async function renameLocationBookmark(searchTarget, name) {
 }
 
 async function removeBookmarkFromFirestore(searchTarget) {
+  searchTarget = searchTarget.toLowerCase().trim()
   const user = auth.currentUser
   if (!user) return
 
@@ -255,22 +230,13 @@ async function loadUserBookmarks(user) {
 // }
 
 function addBookmarkToList(searchTarget, displayText, coordinates = null) {
-  const targetButton = Array.from(bookmarkButton).find(btn => {
-    const text = btn.previousElementSibling.textContent
-      .toLowerCase()
-      .trim();
-
-    return text === searchTarget;
+  searchTarget = searchTarget.toLowerCase().trim();
+  bookmarkButtonArray.forEach(btn => {
+    if (btn.previousElementSibling.textContent.toLowerCase().trim() === searchTarget) {
+      btn.querySelector("img").src = onIconPath;
+    }
   });
-
-  if (targetButton && bookmarkItems.has(targetButton)) return;
-
-  // Update an existing button when one is available.
-  const icon = targetButton?.querySelector("img");
-
-  if (icon) {
-    icon.src = onIconPath;
-  }
+  if (bookmarkItems.has(searchTarget)) return;
 
   // Always create the list entry, even without a matching button.
   const item = document.createElement("li");
@@ -303,20 +269,14 @@ function addBookmarkToList(searchTarget, displayText, coordinates = null) {
   item.appendChild(anchor);
   list.appendChild(item);
 
-  if (targetButton) {
-    bookmarkItems.set(targetButton, {
-      item,
-      searchTarget,
-      text: displayText
-    });
-  }
+  bookmarkItems.set(searchTarget, { item, searchTarget, text: displayText });
 }
 
 
 // Clear the bookmark list and reset icons
 function clearBookmarkList() {
   list.innerHTML = ""
-  bookmarkItems.forEach((data, button) => {
+  bookmarkButtonArray.forEach(button => {
     const icon = button.querySelector("img")
     if (icon) {
       icon.src = offIconPath
