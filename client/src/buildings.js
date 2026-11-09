@@ -77,3 +77,33 @@ export function highlightBuilding(map, building) {
     map.moveLayer(id);
   }
 }
+
+export const toLngLat = ([lat, lng]) => [lng, lat];
+
+export function isInside([lat, lng], border) {
+    if (!border || border.length < 3) return false
+
+    let isInside = false
+    for (let i = 0, j = border.length - 1; i < border.length; j = i++) {
+        const [latI, lngI] = border[i]
+        const [latJ, lngJ] = border[j]
+        if ((latI > lat) !== (latJ > lat) &&
+            lng < (lngJ - lngI) * (lat - latI) / (latJ - latI) + lngI) {
+            isInside = !isInside
+        }
+    }
+    return isInside
+}
+
+export function findBuildingAt(latlng) {
+  return buildings.find(b => isInside([latlng.lat, latlng.lng], b.border));
+}
+
+
+export function findBuildingByText(text) {
+  const t = text.toLowerCase().trim();
+  if (!t) return;
+  const names = b => [b.id, b.name, b.searchNames].map(n => n.toLowerCase().trim());
+  return buildings.find(b => names(b).includes(t))
+      || buildings.find(b => names(b).some(n => n.includes(t)));
+}
