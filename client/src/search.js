@@ -165,10 +165,12 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   searchBarButton.addEventListener("click", clickSearch)
 
-  window.addEventListener("show-bookmarked-location", () => {
+  window.addEventListener("show-bookmarked-location", async ({ detail }) => {
     if (searchMenu.classList.contains("d-flex")) clickSearch();
     clearMarkers(markerLayer);
-    if (map.isStyleLoaded()) highlightBuilding(map, null);
+    await Promise.all([buildingsReady, mapReady]);
+    const building = findBuildingAt({ lat: detail.latitude, lng: detail.longitude });
+    highlightBuilding(map, building ?? null);
   });
 
   Object.assign(window, {searchFilter, searchRecent,removeFromRecent,clearRecent})

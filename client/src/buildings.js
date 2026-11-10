@@ -1,5 +1,6 @@
 import { db } from "./firebaseConfig.js";
 import { collection, getDocs } from "firebase/firestore";
+import { showBuildingFloor } from "./floorPlan.js";
 
 export const buildings = [];
 
@@ -9,16 +10,19 @@ export async function loadBuildings() {
   snap.forEach(d => {
     const b = d.data();
     try {
-      const border = typeof b.polygon === "string" ? JSON.parse(b.polygon) : b.polygon;
+      const toCoordinate = point => Array.isArray(point) ? point : [point?.latitude, point?.longitude];
+      const outline = b.outline ?? (typeof b.polygon === "string" ? JSON.parse(b.polygon) : b.polygon);
+      const border = Array.isArray(outline) ? outline.map(toCoordinate) : outline;
+      const center = toCoordinate(b.center);
       const isCoordinate = point => Array.isArray(point) && point.length === 2
         && point.every(Number.isFinite) && Math.abs(point[0]) <= 90
         && Math.abs(point[1]) <= 180;
       if (typeof b.name !== "string" || !b.name.trim()
-          || !isCoordinate(b.center)
+          || !isCoordinate(center)
           || !Array.isArray(border) || border.length < 3 || !border.every(isCoordinate)) {
         throw new Error("Invalid building fields or coordinates");
       }
-      loaded.push({ ...b, searchNames: typeof b.searchNames === "string" ? b.searchNames : "", id: d.id, border });
+      loaded.push({ ...b, searchNames: Array.isArray(b.searchNames) ? b.searchNames.filter(name => typeof name === "string") : [b.searchNames].filter(name => typeof name === "string"), id: d.id, center, border });
     } catch (error) {
       console.warn(`Skipping invalid building ${d.id}:`, error);
     }
@@ -30,6 +34,7 @@ export async function loadBuildings() {
 // Call after the map loads. Firestore stores coordinates as [latitude, longitude].
 // Both map clicks and searches use this function to replace the selected building.
 export function highlightBuilding(map, building) {
+  showBuildingFloor(map, building);
   const sourceId = "selected-building";
   if (!map.getSource(sourceId)) {
     map.addSource(sourceId, {
@@ -103,7 +108,7 @@ export function findBuildingAt(latlng) {
 export function findBuildingByText(text) {
   const t = text.toLowerCase().trim();
   if (!t) return;
-  const names = b => [b.id, b.name, b.searchNames].map(n => n.toLowerCase().trim());
+  const names = b => [b.id, b.name, ...b.searchNames].map(n => n.toLowerCase().trim());
   return buildings.find(b => names(b).includes(t))
       || buildings.find(b => names(b).some(n => n.includes(t)));
 }
