@@ -94,7 +94,21 @@
   width: 40px;
   height: 5px;
 }
+#floorPlanToggle[aria-expanded="true"]::after { transform: rotate(180deg); }
 .floor-plan-canvas { max-height: 320px; }
+.floor-plan-fullscreen {
+  position: fixed !important;
+  inset: 0;
+  z-index: 1055;
+  width: 100vw;
+  height: 100dvh;
+  padding: 12px;
+  background: var(--bs-body-bg);
+}
+.floor-plan-fullscreen .floor-plan-canvas {
+  height: 100%;
+  max-height: none;
+}
 .floor-plan-svg { width: max(100%, 850px); }
 .floor-plan-area { fill: var(--bs-light); stroke: var(--bs-secondary-color); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
 .floor-plan-label { fill: var(--bs-body-color); font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
