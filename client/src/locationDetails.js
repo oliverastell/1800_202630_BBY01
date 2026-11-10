@@ -1,34 +1,63 @@
 import { getNextMarkedLocationNumber, getCachedMarkedLocationNumber, renameLocationBookmark, syncLocationBookmark } from "./bookmarks.js";
 import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { findBuildingAt } from "./buildings.js";
-import { loadFloorFeatures, renderFloorPlan } from "./floorPlan.js";
-import Collapse from "bootstrap/js/dist/collapse.js";
+import { findBuildingAt, highlightBuilding } from "./buildings.js";
+import { showBuildingFloor } from "./floorPlan.js";
 
 export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, closePopup }) {
   const aboutLocation = document.getElementById("aboutLocation");
   const dragHandle = document.getElementById("aboutLocationDragHandle");
   const locationTitle = document.getElementById("aboutLocationTitle");
   const locationBookmarkButton = document.getElementById("bookmarkSelectedLocation");
+  const savedPins = new Map();
   const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
-  const floorPlanToggle = document.getElementById("floorPlanToggle");
   const floorChooser = document.getElementById("floorChooser");
-  const selectFirstFloor = document.getElementById("selectFirstFloor");
-  const floorPlanSection = document.getElementById("floorPlanSection");
-  const floorPlanStatus = document.getElementById("floorPlanStatus");
-  const floorPlanViewport = document.getElementById("floorPlanViewport");
-  const floorPlanCanvas = document.getElementById("floorPlanCanvas");
-  const floorPlanFullscreenButton = document.getElementById("floorPlanFullscreenButton");
-  const floorPlanExpandIcon = document.getElementById("floorPlanExpandIcon");
-  const floorPlanExitIcon = document.getElementById("floorPlanExitIcon");
-  const floorPlanCollapse = new Collapse(floorPlanSection, { toggle: false });
-  const savedPins = new Map();
+
+  function closeFloorChooser() {
+    floorChooser.classList.remove("show");
+    floorPlanButton.setAttribute("aria-expanded", "false");
+  }
+
+  function setFloorBuilding(building) {
+    closeFloorChooser();
+    floorChooser.replaceChildren();
+    const levels = building ? [...new Set(building.floorLevels ?? [1])].filter(Number.isInteger).sort((a, b) => a - b) : [];
+    floorDropdown.classList.toggle("d-none", !levels.length);
+    for (const level of levels) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "dropdown-item";
+      button.textContent = level === 1 ? "1st floor" : `Floor ${level}`;
+      button.classList.toggle("active", level === 1);
+      button.setAttribute("aria-pressed", String(level === 1));
+      button.addEventListener("click", () => {
+        for (const item of floorChooser.children) {
+          item.classList.toggle("active", item === button);
+          item.setAttribute("aria-pressed", String(item === button));
+        }
+        closeFloorChooser();
+        showBuildingFloor(map, building, level);
+      });
+      floorChooser.append(button);
+    }
+  }
+
+  floorPlanButton.addEventListener("click", () => {
+    const open = floorChooser.classList.toggle("show");
+    floorPlanButton.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", event => {
+    if (!floorDropdown.contains(event.target)) closeFloorChooser();
+  });
+  floorDropdown.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    closeFloorChooser();
+    floorPlanButton.focus();
+  });
   let selectedMarker = null;
   let selectedBookmark = null;
   let selectionVersion = 0;
-  let selectedBuildingId = null;
-  let floorSelectionVersion = 0;
   let dragStart = null;
   let suppressHandleClick = false;
 
@@ -78,122 +107,6 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     setSheetExpanded(!aboutLocation.classList.contains("h-100"));
   });
 
-  let floorPlanShouldBeVisible = false;
-
-  function setFloorPlanFullscreen(fullscreen) {
-    if (fullscreen === floorPlanViewport.classList.contains("floor-plan-fullscreen")) return;
-    if (fullscreen) document.body.append(floorPlanViewport);
-    else floorPlanSection.append(floorPlanViewport);
-    floorPlanViewport.classList.toggle("floor-plan-fullscreen", fullscreen);
-    floorPlanExpandIcon.classList.toggle("d-none", fullscreen);
-    floorPlanExitIcon.classList.toggle("d-none", !fullscreen);
-    floorPlanFullscreenButton.setAttribute("aria-pressed", String(fullscreen));
-    floorPlanFullscreenButton.setAttribute("aria-label", fullscreen ? "Exit floor plan fullscreen" : "Show floor plan fullscreen");
-    floorPlanFullscreenButton.title = fullscreen ? "Exit floor plan fullscreen" : "Show floor plan fullscreen";
-  }
-
-  floorPlanFullscreenButton.addEventListener("click", () => {
-    setFloorPlanFullscreen(!floorPlanViewport.classList.contains("floor-plan-fullscreen"));
-    floorPlanFullscreenButton.focus();
-  });
-
-  document.addEventListener("keydown", event => {
-    if (event.key !== "Escape" || !floorPlanViewport.classList.contains("floor-plan-fullscreen")) return;
-    setFloorPlanFullscreen(false);
-    floorPlanFullscreenButton.focus();
-  });
-
-  function setFloorPlanVisible(visible) {
-    floorPlanShouldBeVisible = visible;
-    if (!visible) setFloorPlanFullscreen(false);
-    if (visible) floorPlanCollapse.show();
-    else floorPlanCollapse.hide();
-  }
-
-  function updateFloorPlanToggle(visible) {
-    floorPlanToggle.setAttribute("aria-expanded", String(visible));
-    floorPlanToggle.setAttribute("aria-label", visible ? "Hide floor plan" : "Show floor plan");
-    floorPlanToggle.title = visible ? "Hide floor plan" : "Show floor plan";
-  }
-
-  floorPlanSection.addEventListener("show.bs.collapse", () => updateFloorPlanToggle(true));
-  floorPlanSection.addEventListener("hide.bs.collapse", () => updateFloorPlanToggle(false));
-  floorPlanSection.addEventListener("shown.bs.collapse", () => {
-    if (!floorPlanShouldBeVisible) floorPlanCollapse.hide();
-  });
-  floorPlanSection.addEventListener("hidden.bs.collapse", () => {
-    if (floorPlanShouldBeVisible) floorPlanCollapse.show();
-  });
-
-  function floorBuildingId(building) {
-    return [building?.id, building?.name].some(value =>
-      typeof value === "string" && value.trim().toLowerCase() === "sw1"
-    ) ? "sw1" : null;
-  }
-
-  function setFloorBuilding(buildingId) {
-    if (selectedBuildingId === buildingId) return;
-    selectedBuildingId = buildingId;
-    floorSelectionVersion++;
-    floorDropdown.classList.toggle("d-none", buildingId !== "sw1");
-    floorPlanToggle.classList.toggle("d-none", buildingId !== "sw1");
-    floorPlanButton.setAttribute("aria-expanded", "false");
-    floorChooser.classList.remove("show");
-    selectFirstFloor.setAttribute("aria-pressed", "false");
-    selectFirstFloor.classList.remove("active");
-    setFloorPlanVisible(false);
-    floorPlanStatus.textContent = "";
-    floorPlanCanvas.replaceChildren();
-  }
-
-  floorPlanButton.addEventListener("click", () => {
-    const open = floorChooser.classList.toggle("show");
-    floorPlanButton.setAttribute("aria-expanded", String(open));
-  });
-
-  floorPlanToggle.addEventListener("click", () => {
-    if (selectedBuildingId !== "sw1") return;
-    if (!selectFirstFloor.classList.contains("active")) {
-      selectFirstFloor.click();
-      return;
-    }
-    setFloorPlanVisible(!floorPlanShouldBeVisible);
-  });
-
-  document.addEventListener("click", event => {
-    if (floorDropdown.contains(event.target)) return;
-    floorChooser.classList.remove("show");
-    floorPlanButton.setAttribute("aria-expanded", "false");
-  });
-
-  floorDropdown.addEventListener("keydown", event => {
-    if (event.key !== "Escape") return;
-    floorChooser.classList.remove("show");
-    floorPlanButton.setAttribute("aria-expanded", "false");
-    floorPlanButton.focus();
-  });
-
-  selectFirstFloor.addEventListener("click", async () => {
-    if (selectedBuildingId !== "sw1") return;
-    const version = ++floorSelectionVersion;
-    floorChooser.classList.remove("show");
-    floorPlanButton.setAttribute("aria-expanded", "false");
-    selectFirstFloor.setAttribute("aria-pressed", "true");
-    selectFirstFloor.classList.add("active");
-    floorPlanStatus.textContent = "Loading floor plan…";
-    floorPlanCanvas.replaceChildren();
-    setFloorPlanVisible(true);
-    try {
-      const features = await loadFloorFeatures("sw1", 1);
-      if (version !== floorSelectionVersion || selectedBuildingId !== "sw1") return;
-      renderFloorPlan(floorPlanCanvas, features);
-      floorPlanStatus.textContent = "";
-    } catch (error) {
-      if (version !== floorSelectionVersion) return;
-      floorPlanStatus.textContent = "Could not load the floor plan. Choose 1st floor to retry.";
-      console.error("Could not load SW1 floor plan:", error);
-    }
-  });
   function savedLocationPopup(details, marker) {
     const container = document.createElement("div");
     const button = document.createElement("button");
@@ -215,7 +128,8 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     selectedMarker = marker;
     selectedBookmark = details;
     const building = findBuildingAt({ lat: details.latitude, lng: details.longitude });
-    setFloorBuilding(floorBuildingId(building));
+    setFloorBuilding(building);
+    if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
     aboutLocation.classList.remove("d-none");
     locationTitle.replaceChildren();
     const nameButton = document.createElement("button");
@@ -287,8 +201,9 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
 
 
   function close() {
-    selectionVersion++;
     setFloorBuilding(null);
+    selectionVersion++;
+
     aboutLocation.classList.add("d-none");
     setSheetExpanded(false);
     clearMarkers(pinLayer);
@@ -306,6 +221,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     showSavedLocation(details, marker);
   }
   async function selectLocation(point, label = "Selected location", building = null) {
+    setFloorBuilding(building);
     setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
@@ -323,13 +239,13 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
         selectionVersion++;
         selectedMarker = null;
         selectedBookmark = null;
-        setFloorBuilding(null);
+    
         aboutLocation.classList.add("d-none");
       }
     });
     selectedMarker = marker;
     selectedBookmark = null;
-    setFloorBuilding(floorBuildingId(building));
+    if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
     marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
     aboutLocation.classList.remove("d-none");
