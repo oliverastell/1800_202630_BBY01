@@ -1,4 +1,4 @@
-import { loadBuildings, highlightBuilding, findBuildingAt, findBuildingByText, isInside, toLngLat } from "./buildings.js";
+import { loadBuildings, highlightBuilding, findBuildingAt, findBuildingByText, isInside, toLngLat, buildings } from "./buildings.js";
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
@@ -9,8 +9,11 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchBarButton = document.getElementById("searchBarButton");
   const searchMenu = document.getElementById("searchMenu");
   const searchMenuResults = document.getElementById("searchMenuResults");
+  const searchMenuForHide = document.getElementById("searchMenuResults11");
   const searchForm = document.getElementById("searchForm");
   const searchStatus = document.getElementById("searchStatus");
+  const searchingText = document.getElementById("searchMenuSearching");
+  const searchingText2 = document.getElementById("searchMenuSearching2");
   let buildingsLoadError = false;
   const buildingsReady = loadBuildings().catch(error => {
     buildingsLoadError = true;
@@ -139,6 +142,8 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     if (b) {
       showBuilding(b);
       addToRecent(b.name);
+      document.getElementById("searchForm").reset();
+      //toggleSearchingText();
       return;
     }
     clearMarkers(markerLayer)
@@ -156,7 +161,10 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     searchStatus.textContent = "";
     if (closeMenu && searchMenu.classList.contains("d-flex")) clickSearch();
     addToRecent(target);
+    document.getElementById("searchForm").reset();
   }
+
+
 
   function search() {
     const text = document.getElementById("searchField").value.trim().toLowerCase()
@@ -224,6 +232,64 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   }
 
 
+function toggleSearchingText() {
+  searchingText.classList.toggle("d-none");
+  searchingText.classList.toggle("d-flex");
+  searchMenuForHide.classList.toggle("d-none");
+  searchMenuForHide.classList.toggle("d-flex");
+}
+
+
+function searchKeyboard(event) {
+    if(event instanceof KeyboardEvent) {
+      searchingText2.innerHTML = "";
+      const searchtext = document.getElementById("searchField").value.trim().toLowerCase();
+      console.log(searchtext);
+      if (searchtext.length >= 1 && searchingText.classList.contains("d-none")){
+        toggleSearchingText();
+      }
+      if (event.key == "Backspace" && searchtext.length == 0 && searchingText.classList.contains("d-flex")){
+        toggleSearchingText();
+      }
+      if (searchtext.length > 0){
+        //ERASE THIS ONCE WE ADD MORE BUILDINGS I GUESS
+        shapes.filter(s => s.name.includes(searchtext)).forEach(showtext => {
+          if (showtext.name.startsWith(searchtext)){
+            console.log(showtext.name);
+            let newRow = document.createElement("div");
+            newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
+            let newSearch = document.createElement("button");
+            newSearch.setAttribute("type", "button");
+            newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
+            newSearch.addEventListener("click", () => searchRecent(showtext.name));
+            newSearch.addEventListener("click", () => toggleSearchingText());
+            newSearch.textContent = showtext.name;
+            newRow.appendChild(newSearch)
+            searchingText2.insertBefore(newRow, searchingText2.firstChild);
+          }
+          });
+          buildings.filter(s => s.searchNames.includes(searchtext)).forEach(showtext => {
+          if (showtext.searchNames.startsWith(searchtext)){
+            console.log(showtext.searchNames);
+            let newRow = document.createElement("div");
+            newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
+            let newSearch = document.createElement("button");
+            newSearch.setAttribute("type", "button");
+            newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
+            newSearch.addEventListener("click", () => searchRecent(showtext.searchNames));
+            newSearch.addEventListener("click", () => toggleSearchingText());
+            newSearch.textContent = showtext.searchNames;
+            newRow.appendChild(newSearch)
+            searchingText2.insertBefore(newRow, searchingText2.firstChild);
+          }
+        });
+      }
+          }
+      }
+document.getElementById("searchField").addEventListener("keyup", searchKeyboard, false);
+
+searchingText.classList.toggle("d-none");
+  
 
   onAuthStateChanged(auth, async user => {
     if (!user) return;
