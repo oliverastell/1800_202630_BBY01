@@ -21,6 +21,12 @@ const bookmarkButtonArray = []
 // Track bookmarks by search text so they survive removal of a recent row.
 const bookmarkItems = new Map()
 
+function bookmarkButtonText(currentButton) {
+  return currentButton.id === "bookmarkSelectedLocation"
+    ? document.getElementById("aboutLocationTitle").textContent.trim()
+    : currentButton.previousElementSibling.textContent.trim();
+}
+
 export function getCachedMarkedLocationNumber() {
   let highest = 0;
   for (const key of bookmarkItems.keys()) {
@@ -45,13 +51,13 @@ export function syncLocationBookmark(currentButton, name) {
 function bookmarkT(currentButton) {
   const icon = currentButton.querySelector("img");
   if (!icon) return;
-  const searchTarget = currentButton.previousElementSibling.textContent.toLowerCase().trim();
+  const searchTarget = bookmarkButtonText(currentButton).toLowerCase();
   if (currentButton.id !== "bookmarkSelectedLocation") icon.src = bookmarkItems.has(searchTarget) ? onIconPath : offIconPath;
   if (bookmarkButtonArray.includes(currentButton)) return;
   bookmarkButtonArray.push(currentButton);
 
   currentButton.addEventListener("click", async () => {
-    const text = currentButton.previousElementSibling.textContent.trim();
+    const text = bookmarkButtonText(currentButton);
     if (currentButton.id === "bookmarkSelectedLocation") syncLocationBookmark(currentButton, text);
     const searchTarget = currentButton.dataset.bookmarkKey || text.toLowerCase();
     const bookmark = bookmarkItems.get(searchTarget);
@@ -78,7 +84,7 @@ function bookmarkT(currentButton) {
       bookmark.item.remove();
       bookmarkItems.delete(searchTarget);
       bookmarkButtonArray.forEach(btn => {
-        if (btn.previousElementSibling.textContent.toLowerCase().trim() === searchTarget) {
+        if (bookmarkButtonText(btn).toLowerCase() === searchTarget) {
           btn.querySelector("img").src = offIconPath;
         }
       });

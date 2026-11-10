@@ -121,7 +121,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     clearMarkers(markerLayer);
     clearMarkers(pinLayer);
     closePopup();
-    locationDetails.selectLocation({ lng: b.center[1], lat: b.center[0] }, b.name);
+    locationDetails.selectLocation({ lng: b.center[1], lat: b.center[0] }, b.name, b);
     map.jumpTo({ center: toLngLat(b.center), zoom: 18 });
     searchStatus.textContent = "";
     if (searchMenu.classList.contains("d-flex")) clickSearch();
