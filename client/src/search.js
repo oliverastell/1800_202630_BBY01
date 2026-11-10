@@ -3,6 +3,7 @@ import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { bookmarkT } from "./bookmarks.js";
+import { setWashroomFilter } from "./washrooms.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker, getCampusBorder, closePopup }, locationDetails) {
   const searchBar = document.getElementById("searchBar");
@@ -11,6 +12,8 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchMenuResults = document.getElementById("searchMenuResults");
   const searchForm = document.getElementById("searchForm");
   const searchStatus = document.getElementById("searchStatus");
+  const washroomFilter = document.getElementById("washroomFilter");
+  let washroomsVisible = false;
   let buildingsLoadError = false;
   const buildingsReady = loadBuildings().catch(error => {
     buildingsLoadError = true;
@@ -116,6 +119,21 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     clickSearch()
   }
 
+  function showWashrooms() {
+    washroomsVisible = !washroomsVisible;
+    setWashroomFilter(map, washroomsVisible);
+    washroomFilter.setAttribute("aria-pressed", String(washroomsVisible));
+    washroomFilter.setAttribute("aria-label", washroomsVisible ? "Hide washrooms" : "Show washrooms");
+    washroomFilter.classList.toggle("btn-primary", washroomsVisible);
+    washroomFilter.classList.toggle("btn-light", !washroomsVisible);
+    locationDetails.close();
+    if (map.isStyleLoaded()) highlightBuilding(map, null);
+    clearMarkers(markerLayer);
+    clearMarkers(pinLayer);
+    closePopup();
+    clickSearch();
+  }
+
   function showBuilding(b) {
     highlightBuilding(map, b);
     clearMarkers(markerLayer);
@@ -164,6 +182,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   }
 
   searchBarButton.addEventListener("click", clickSearch)
+  washroomFilter.addEventListener("click", showWashrooms);
 
   window.addEventListener("show-bookmarked-location", async ({ detail }) => {
     if (searchMenu.classList.contains("d-flex")) clickSearch();

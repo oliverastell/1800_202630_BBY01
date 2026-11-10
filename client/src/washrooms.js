@@ -9,8 +9,14 @@ const washroomIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height=
 </svg>`;
 
 function stateFor(map) {
-  if (!mapStates.has(map)) mapStates.set(map, { records: [], buildingId: null, floorId: "f1" });
+  if (!mapStates.has(map)) mapStates.set(map, { records: [], buildingId: null, floorId: "f1", enabled: false });
   return mapStates.get(map);
+}
+
+export function setWashroomFilter(map, enabled) {
+  const state = stateFor(map);
+  state.enabled = enabled;
+  updateWashroomVisibility(map, state.buildingId, Number(state.floorId.slice(1)));
 }
 
 export function updateWashroomVisibility(map, buildingId = null, level = 1) {
@@ -19,7 +25,7 @@ export function updateWashroomVisibility(map, buildingId = null, level = 1) {
   state.floorId = `f${level}`;
   for (const record of state.records) {
     const floorId = record.buildingId === buildingId ? state.floorId : "f1";
-    record.marker.getElement().hidden = record.floorId !== floorId;
+    record.marker.getElement().hidden = !state.enabled || record.floorId !== floorId;
   }
 }
 
@@ -41,6 +47,7 @@ export async function setupWashrooms({ map, mapReady }) {
       }
       const element = document.createElement("div");
       element.className = "washroom-marker";
+      element.hidden = true;
       const label = [washroom.name || `Washroom ${washroom.roomId || ""}`,
         washroom.category, washroom.buildingId.toUpperCase(), washroom.floorId].filter(Boolean).join(" · ");
       element.title = label;

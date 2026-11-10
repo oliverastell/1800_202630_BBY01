@@ -108,6 +108,11 @@
           <button type="submit" class="btn btn-outline-dark rounded-pill bg-body-secondary flex-shrink-0 px-3">Search</button>
         </form>
 
+        <div class="d-flex gap-2 px-3 pb-2 flex-shrink-0 overflow-x-auto" aria-label="Search categories">
+          <button id="washroomFilter" type="button"
+            class="btn btn-light border rounded-pill shadow-sm d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold flex-shrink-0"
+            aria-label="Show washrooms" aria-pressed="false"><span aria-hidden="true">🚻</span><span>Washroom</span></button>
+        </div>
         <p id="searchStatus" class="px-3 mb-2 text-dark" role="status" aria-live="polite"></p>
         <div id="searchMenuIcons" class="d-flex flex-wrap gap-1 px-3 pb-2 flex-shrink-0">
           <button type="button" class="btn p-1 border-0" aria-label="Red filter" onclick="searchFilter('red')">
