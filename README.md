@@ -57,17 +57,28 @@ Once the application is running:
 
 ## Project Structure
 
-[//]: <> (```
-elmo-hikes/
-├── src/
-│   ├── main.js
-├── styles/
-│   └── style.css
-├── public/
-├── images/
-├── index.html
+```
+1800_202630_BBY01/
+├── node_modules/  <-- all libraries are exposed to client
+│
+├── client/     <-- all files in client are automatically exposed
+│   ├── html/
+│   ├── res/    <-- localhost:8000/res/
+│   │   ├── css/ 
+│   │   ├── font/
+│   │   └── img/
+│   └── src/    <-- /client/src/
+│
+├── server/     <-- not exposed to client
+│   ├── data/   
+│   └── src/    
+│       └── index.js   <-- ran on server start
+│
+├── .env  <-- anything prefixed with VITE_ is exposed to the client (do not push to github)
 ├── package.json
-├── README.md```)
+├── README.md
+└── vite.config.js
+```
 
 \---
 

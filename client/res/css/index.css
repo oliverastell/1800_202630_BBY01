@@ -1,0 +1,116 @@
+/* Fix: use Bootstrap for most of the design */
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+#bookmark-button {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 30px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#bookmark-button:hover {
+  transform: scale(1.06);
+}
+
+.bookmark-list:empty::before {
+  content: "There is nothing in the bookmark";
+  color: #8d969e
+}
+
+#login-button {
+  min-width: 60px;
+  height: 60px;
+  padding: 0 16px;
+  border-radius: 30px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#login-button.is-signed-in {
+  color: #146c43;
+  background-color: #e9f7ef;
+  border-color: #146c43;
+}
+
+#login-button:hover {
+  transform: scale(1.06);
+}
+
+@media (max-width: 500px) {
+  .login-status {
+    display: none;
+  }
+}
+/* Keep search text and both action buttons in separate, non-overlapping boxes. */
+.recent-search-row {
+  padding-right: 8px !important;
+}
+
+.recent-search-row > .list-group-item-action {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+  padding-right: 8px !important;
+}
+
+.recent-search-action {
+  width: 40px;
+  height: 40px;
+}
+
+/* MapLibre elements for the existing location dot and search circles. */
+.user-location-marker { width: 40px; height: 40px; pointer-events: none; }
+.shape-marker {
+  width: 23px;
+  height: 23px;
+  border: 3px solid;
+  border-radius: 50%;
+  background-clip: padding-box;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+#aboutLocationTitle { min-width: 0; }
+#aboutLocation {
+  transition: height 220ms ease;
+}
+#aboutLocation.location-dragging { transition: none; }
+.location-drag-handle {
+  height: 28px;
+  cursor: grab;
+  touch-action: none;
+}
+.location-drag-handle:active { cursor: grabbing; }
+.location-drag-handle span {
+  width: 40px;
+  height: 5px;
+}
+#floorPlanToggle[aria-expanded="true"]::after { transform: rotate(180deg); }
+.floor-plan-canvas { max-height: 320px; }
+.floor-plan-fullscreen {
+  position: fixed !important;
+  inset: 0;
+  z-index: 1055;
+  width: 100vw;
+  height: 100dvh;
+  padding: 12px;
+  background: var(--bs-body-bg);
+}
+.floor-plan-fullscreen .floor-plan-canvas {
+  height: 100%;
+  max-height: none;
+}
+.floor-plan-svg { width: max(100%, 850px); }
+.floor-plan-area { fill: var(--bs-light); stroke: var(--bs-secondary-color); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.floor-plan-label { fill: var(--bs-body-color); font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+
+/* Make sure design is mobile-first and responsive */
