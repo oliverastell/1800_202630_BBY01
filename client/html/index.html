@@ -47,6 +47,9 @@
               <button type="button" id="selectFirstFloor" class="dropdown-item" aria-pressed="false">1st floor</button>
             </div>
           </div>
+          <button type="button" id="floorPlanToggle" class="btn btn-sm btn-outline-secondary dropdown-toggle d-none"
+            aria-label="Show floor plan" title="Show floor plan" aria-controls="floorPlanSection"
+            aria-expanded="false"></button>
         </div>
         <h2 id="aboutLocationTitle" class="fs-5 text-dark text-center text-break flex-grow-1 mb-0">
           About location
@@ -55,7 +58,7 @@
           aria-label="Close location details"></button>
       </div>
 
-      <section id="floorPlanSection" class="d-none mb-3" aria-label="Floor plan">
+      <section id="floorPlanSection" class="collapse mb-3" aria-label="Floor plan">
         <h3 class="fs-6 mb-2">SW1 · 1st floor</h3>
         <div id="floorPlanStatus" class="small" role="status" aria-live="polite"></div>
         <div id="floorPlanCanvas" class="floor-plan-canvas overflow-auto rounded border bg-white"></div>

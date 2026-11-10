@@ -3,6 +3,7 @@ import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { findBuildingAt } from "./buildings.js";
 import { loadFloorFeatures, renderFloorPlan } from "./floorPlan.js";
+import Collapse from "bootstrap/js/dist/collapse.js";
 
 export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, closePopup }) {
   const aboutLocation = document.getElementById("aboutLocation");
@@ -10,17 +11,41 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const locationBookmarkButton = document.getElementById("bookmarkSelectedLocation");
   const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
+  const floorPlanToggle = document.getElementById("floorPlanToggle");
   const floorChooser = document.getElementById("floorChooser");
   const selectFirstFloor = document.getElementById("selectFirstFloor");
   const floorPlanSection = document.getElementById("floorPlanSection");
   const floorPlanStatus = document.getElementById("floorPlanStatus");
   const floorPlanCanvas = document.getElementById("floorPlanCanvas");
+  const floorPlanCollapse = new Collapse(floorPlanSection, { toggle: false });
   const savedPins = new Map();
   let selectedMarker = null;
   let selectedBookmark = null;
   let selectionVersion = 0;
   let selectedBuildingId = null;
   let floorSelectionVersion = 0;
+  let floorPlanShouldBeVisible = false;
+
+  function setFloorPlanVisible(visible) {
+    floorPlanShouldBeVisible = visible;
+    if (visible) floorPlanCollapse.show();
+    else floorPlanCollapse.hide();
+  }
+
+  function updateFloorPlanToggle(visible) {
+    floorPlanToggle.setAttribute("aria-expanded", String(visible));
+    floorPlanToggle.setAttribute("aria-label", visible ? "Hide floor plan" : "Show floor plan");
+    floorPlanToggle.title = visible ? "Hide floor plan" : "Show floor plan";
+  }
+
+  floorPlanSection.addEventListener("show.bs.collapse", () => updateFloorPlanToggle(true));
+  floorPlanSection.addEventListener("hide.bs.collapse", () => updateFloorPlanToggle(false));
+  floorPlanSection.addEventListener("shown.bs.collapse", () => {
+    if (!floorPlanShouldBeVisible) floorPlanCollapse.hide();
+  });
+  floorPlanSection.addEventListener("hidden.bs.collapse", () => {
+    if (floorPlanShouldBeVisible) floorPlanCollapse.show();
+  });
 
   function floorBuildingId(building) {
     return [building?.id, building?.name].some(value =>
@@ -33,11 +58,12 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     selectedBuildingId = buildingId;
     floorSelectionVersion++;
     floorDropdown.classList.toggle("d-none", buildingId !== "sw1");
+    floorPlanToggle.classList.toggle("d-none", buildingId !== "sw1");
     floorPlanButton.setAttribute("aria-expanded", "false");
     floorChooser.classList.remove("show");
     selectFirstFloor.setAttribute("aria-pressed", "false");
     selectFirstFloor.classList.remove("active");
-    floorPlanSection.classList.add("d-none");
+    setFloorPlanVisible(false);
     floorPlanStatus.textContent = "";
     floorPlanCanvas.replaceChildren();
   }
@@ -45,6 +71,15 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   floorPlanButton.addEventListener("click", () => {
     const open = floorChooser.classList.toggle("show");
     floorPlanButton.setAttribute("aria-expanded", String(open));
+  });
+
+  floorPlanToggle.addEventListener("click", () => {
+    if (selectedBuildingId !== "sw1") return;
+    if (!selectFirstFloor.classList.contains("active")) {
+      selectFirstFloor.click();
+      return;
+    }
+    setFloorPlanVisible(!floorPlanShouldBeVisible);
   });
 
   document.addEventListener("click", event => {
@@ -67,9 +102,9 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     floorPlanButton.setAttribute("aria-expanded", "false");
     selectFirstFloor.setAttribute("aria-pressed", "true");
     selectFirstFloor.classList.add("active");
-    floorPlanSection.classList.remove("d-none");
     floorPlanStatus.textContent = "Loading floor plan…";
     floorPlanCanvas.replaceChildren();
+    setFloorPlanVisible(true);
     try {
       const features = await loadFloorFeatures("sw1", 1);
       if (version !== floorSelectionVersion || selectedBuildingId !== "sw1") return;

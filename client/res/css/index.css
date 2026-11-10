@@ -80,6 +80,7 @@
 }
 
 #aboutLocationTitle { min-width: 0; }
+#floorPlanToggle[aria-expanded="true"]::after { transform: rotate(180deg); }
 .floor-plan-canvas { max-height: 320px; }
 .floor-plan-svg { width: max(100%, 850px); }
 .floor-plan-area { fill: var(--bs-light); stroke: var(--bs-secondary-color); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
