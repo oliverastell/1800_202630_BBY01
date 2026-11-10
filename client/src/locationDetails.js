@@ -16,7 +16,11 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const selectFirstFloor = document.getElementById("selectFirstFloor");
   const floorPlanSection = document.getElementById("floorPlanSection");
   const floorPlanStatus = document.getElementById("floorPlanStatus");
+  const floorPlanViewport = document.getElementById("floorPlanViewport");
   const floorPlanCanvas = document.getElementById("floorPlanCanvas");
+  const floorPlanFullscreenButton = document.getElementById("floorPlanFullscreenButton");
+  const floorPlanExpandIcon = document.getElementById("floorPlanExpandIcon");
+  const floorPlanExitIcon = document.getElementById("floorPlanExitIcon");
   const floorPlanCollapse = new Collapse(floorPlanSection, { toggle: false });
   const savedPins = new Map();
   let selectedMarker = null;
@@ -26,8 +30,32 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   let floorSelectionVersion = 0;
   let floorPlanShouldBeVisible = false;
 
+  function setFloorPlanFullscreen(fullscreen) {
+    if (fullscreen === floorPlanViewport.classList.contains("floor-plan-fullscreen")) return;
+    if (fullscreen) document.body.append(floorPlanViewport);
+    else floorPlanSection.append(floorPlanViewport);
+    floorPlanViewport.classList.toggle("floor-plan-fullscreen", fullscreen);
+    floorPlanExpandIcon.classList.toggle("d-none", fullscreen);
+    floorPlanExitIcon.classList.toggle("d-none", !fullscreen);
+    floorPlanFullscreenButton.setAttribute("aria-pressed", String(fullscreen));
+    floorPlanFullscreenButton.setAttribute("aria-label", fullscreen ? "Exit floor plan fullscreen" : "Show floor plan fullscreen");
+    floorPlanFullscreenButton.title = fullscreen ? "Exit floor plan fullscreen" : "Show floor plan fullscreen";
+  }
+
+  floorPlanFullscreenButton.addEventListener("click", () => {
+    setFloorPlanFullscreen(!floorPlanViewport.classList.contains("floor-plan-fullscreen"));
+    floorPlanFullscreenButton.focus();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key !== "Escape" || !floorPlanViewport.classList.contains("floor-plan-fullscreen")) return;
+    setFloorPlanFullscreen(false);
+    floorPlanFullscreenButton.focus();
+  });
+
   function setFloorPlanVisible(visible) {
     floorPlanShouldBeVisible = visible;
+    if (!visible) setFloorPlanFullscreen(false);
     if (visible) floorPlanCollapse.show();
     else floorPlanCollapse.hide();
   }
