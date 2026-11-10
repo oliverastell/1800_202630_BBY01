@@ -29,21 +29,30 @@
     <section id="aboutLocation" class="d-none position-absolute bottom-0 start-0 end-0 z-3
          h-50 bg-dark-subtle border border-secondary
          rounded-top-4 shadow p-3 overflow-y-auto" aria-labelledby="aboutLocationTitle">
-      <div class="position-relative mb-3">
-        <h2 id="aboutLocationTitle" class="fs-5 text-dark text-center px-5 mb-0">
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="d-flex align-items-center gap-1 flex-shrink-0">
+          <button type="button" id="bookmarkSelectedLocation" aria-label="Bookmark this location" aria-pressed="false" disabled
+            class="btn border-0 rounded-circle bookmark-toggle"><img
+              src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
+          <button type="button" id="floorPlanButton" class="btn btn-outline-dark btn-sm d-none"
+            aria-controls="floorChooser" aria-expanded="false">Floors</button>
+        </div>
+        <h2 id="aboutLocationTitle" class="fs-5 text-dark text-center text-break flex-grow-1 mb-0">
           About location
         </h2>
-        <button type="button" id="bookmarkSelectedLocation" aria-label="Bookmark this location" aria-pressed="false" disabled
-          class="btn border-0 rounded-circle position-absolute top-0 start-0 z-1 bookmark-toggle"><img
-            src="../res/img/bookmark-icon.svg" width="20" height="24" alt="Bookmark Icon"></button>
-
-
-
-
-        <button id="closeAboutLocation" type="button"
-          class="btn-close position-absolute top-50 end-0 translate-middle-y"
+        <button id="closeAboutLocation" type="button" class="btn-close flex-shrink-0 mt-1"
           aria-label="Close location details"></button>
       </div>
+
+      <div id="floorChooser" class="d-none mb-3" aria-label="Choose a floor">
+        <button type="button" id="selectFirstFloor" class="btn btn-outline-primary btn-sm" aria-pressed="false">1st floor</button>
+      </div>
+
+      <section id="floorPlanSection" class="d-none mb-3" aria-label="Floor plan">
+        <h3 class="fs-6 mb-2">SW1 · 1st floor</h3>
+        <div id="floorPlanStatus" class="small" role="status" aria-live="polite"></div>
+        <div id="floorPlanCanvas" class="floor-plan-canvas overflow-auto rounded border bg-white"></div>
+      </section>
 
       <div class="bg-body-secondary rounded-5 p-3">
 

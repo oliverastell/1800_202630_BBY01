@@ -1,15 +1,70 @@
 import { getNextMarkedLocationNumber, getCachedMarkedLocationNumber, renameLocationBookmark, syncLocationBookmark } from "./bookmarks.js";
 import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
+import { findBuildingAt } from "./buildings.js";
+import { loadFloorFeatures, renderFloorPlan } from "./floorPlan.js";
 
 export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, closePopup }) {
   const aboutLocation = document.getElementById("aboutLocation");
   const locationTitle = document.getElementById("aboutLocationTitle");
   const locationBookmarkButton = document.getElementById("bookmarkSelectedLocation");
+  const floorPlanButton = document.getElementById("floorPlanButton");
+  const floorChooser = document.getElementById("floorChooser");
+  const selectFirstFloor = document.getElementById("selectFirstFloor");
+  const floorPlanSection = document.getElementById("floorPlanSection");
+  const floorPlanStatus = document.getElementById("floorPlanStatus");
+  const floorPlanCanvas = document.getElementById("floorPlanCanvas");
   const savedPins = new Map();
   let selectedMarker = null;
   let selectedBookmark = null;
   let selectionVersion = 0;
+  let selectedBuildingId = null;
+  let floorSelectionVersion = 0;
+
+  function floorBuildingId(building) {
+    return [building?.id, building?.name].some(value =>
+      typeof value === "string" && value.trim().toLowerCase() === "sw1"
+    ) ? "sw1" : null;
+  }
+
+  function setFloorBuilding(buildingId) {
+    if (selectedBuildingId === buildingId) return;
+    selectedBuildingId = buildingId;
+    floorSelectionVersion++;
+    floorPlanButton.classList.toggle("d-none", buildingId !== "sw1");
+    floorPlanButton.setAttribute("aria-expanded", "false");
+    floorChooser.classList.add("d-none");
+    selectFirstFloor.setAttribute("aria-pressed", "false");
+    floorPlanSection.classList.add("d-none");
+    floorPlanStatus.textContent = "";
+    floorPlanCanvas.replaceChildren();
+  }
+
+  floorPlanButton.addEventListener("click", () => {
+    const open = floorChooser.classList.toggle("d-none") === false;
+    floorPlanButton.setAttribute("aria-expanded", String(open));
+  });
+
+  selectFirstFloor.addEventListener("click", async () => {
+    if (selectedBuildingId !== "sw1") return;
+    const version = ++floorSelectionVersion;
+    floorChooser.classList.add("d-none");
+    floorPlanButton.setAttribute("aria-expanded", "false");
+    selectFirstFloor.setAttribute("aria-pressed", "true");
+    floorPlanSection.classList.remove("d-none");
+    floorPlanStatus.textContent = "Loading floor plan…";
+    floorPlanCanvas.replaceChildren();
+    try {
+      const features = await loadFloorFeatures("sw1", 1);
+      if (version !== floorSelectionVersion || selectedBuildingId !== "sw1") return;
+      renderFloorPlan(floorPlanCanvas, features);
+      floorPlanStatus.textContent = "";
+    } catch (error) {
+      if (version !== floorSelectionVersion) return;
+      floorPlanStatus.textContent = "Could not load the floor plan. Choose 1st floor to retry.";
+      console.error("Could not load SW1 floor plan:", error);
+    }
+  });
   function savedLocationPopup(details, marker) {
     const container = document.createElement("div");
     const button = document.createElement("button");
@@ -30,6 +85,8 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     locationBookmarkButton.dataset.selectionVersion = selectionVersion;
     selectedMarker = marker;
     selectedBookmark = details;
+    const building = findBuildingAt({ lat: details.latitude, lng: details.longitude });
+    setFloorBuilding(floorBuildingId(building));
     aboutLocation.classList.remove("d-none");
     locationTitle.replaceChildren();
     const nameButton = document.createElement("button");
@@ -102,6 +159,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
 
   function close() {
     selectionVersion++;
+    setFloorBuilding(null);
     aboutLocation.classList.add("d-none");
     clearMarkers(pinLayer);
     closePopup();
@@ -117,7 +175,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     };
     showSavedLocation(details, marker);
   }
-  async function selectLocation(point, label = "Selected location") {
+  async function selectLocation(point, label = "Selected location", building = null) {
     clearMarkers(pinLayer);
     closePopup();
     const version = ++selectionVersion;
@@ -134,11 +192,13 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
         selectionVersion++;
         selectedMarker = null;
         selectedBookmark = null;
+        setFloorBuilding(null);
         aboutLocation.classList.add("d-none");
       }
     });
     selectedMarker = marker;
     selectedBookmark = null;
+    setFloorBuilding(floorBuildingId(building));
     marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
     aboutLocation.classList.remove("d-none");
