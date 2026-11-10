@@ -60,12 +60,24 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   let selectionVersion = 0;
   let dragStart = null;
   let suppressHandleClick = false;
+  let sheetSize = "half";
 
   function setSheetExpanded(expanded) {
+    setSheetSize(expanded ? "full" : "half");
+  }
+
+  function setSheetSize(size) {
+    sheetSize = size;
     aboutLocation.classList.remove("location-dragging");
     aboutLocation.style.height = "";
-    aboutLocation.classList.toggle("h-100", expanded);
-    aboutLocation.classList.toggle("h-50", !expanded);
+    aboutLocation.classList.toggle("h-100", size === "full");
+    aboutLocation.classList.toggle("h-50", size === "half");
+    aboutLocation.classList.toggle("location-collapsed", size === "collapsed");
+    if (size === "collapsed") {
+      aboutLocation.style.height = "32px";
+      aboutLocation.scrollTop = 0;
+    }
+    const expanded = size === "full";
     dragHandle.setAttribute("aria-expanded", String(expanded));
     dragHandle.setAttribute("aria-label", expanded ? "Collapse location details" : "Expand location details");
   }
@@ -73,7 +85,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   dragHandle.addEventListener("pointerdown", event => {
     if (event.button !== 0 || !event.isPrimary) return;
     dragStart = { pointerId: event.pointerId, y: event.clientY, height: aboutLocation.getBoundingClientRect().height,
-      expanded: aboutLocation.classList.contains("h-100") };
+      size: sheetSize };
     suppressHandleClick = false;
     aboutLocation.classList.add("location-dragging");
     dragHandle.setPointerCapture(event.pointerId);
@@ -84,17 +96,18 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     const distance = dragStart.y - event.clientY;
     if (Math.abs(distance) > 5) suppressHandleClick = true;
     const fullHeight = aboutLocation.parentElement.getBoundingClientRect().height;
-    aboutLocation.style.setProperty("height", `${Math.min(fullHeight, Math.max(fullHeight / 2, dragStart.height + distance))}px`, "important");
+    aboutLocation.style.setProperty("height", `${Math.min(fullHeight, Math.max(Math.min(32, fullHeight / 2), dragStart.height + distance))}px`, "important");
   });
 
   function finishDrag(event, cancelled = false) {
     if (!dragStart || event.pointerId !== dragStart.pointerId) return;
     const distance = dragStart.y - event.clientY;
-    const expanded = cancelled || Math.abs(distance) < 60
-      ? dragStart.expanded
-      : distance > 0;
+    const sizes = ["collapsed", "half", "full"];
+    const size = cancelled || Math.abs(distance) < 60
+      ? dragStart.size
+      : sizes[Math.max(0, Math.min(2, sizes.indexOf(dragStart.size) + (distance > 0 ? 1 : -1)))];
     dragStart = null;
-    setSheetExpanded(expanded);
+    setSheetSize(size);
   }
 
   dragHandle.addEventListener("pointerup", event => finishDrag(event));

@@ -1,5 +1,6 @@
 import { db } from "./firebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
+import { updateWashroomVisibility } from "./washrooms.js";
 
 const pendingFloors = new Map();
 const svgNS = "http://www.w3.org/2000/svg";
@@ -7,6 +8,7 @@ const mapSelections = new WeakMap();
 
 // Display the selected building's first floor in its geographic position.
 export async function showBuildingFloor(map, building, level = 1) {
+  updateWashroomVisibility(map, building?.id ?? null, level);
   const selection = {};
   mapSelections.set(map, selection);
   const sourceId = "building-floor-rooms";
