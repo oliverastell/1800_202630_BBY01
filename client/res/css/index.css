@@ -83,9 +83,6 @@
 .floor-plan-canvas { max-height: 320px; }
 .floor-plan-svg { width: max(100%, 850px); }
 .floor-plan-area { fill: var(--bs-light); stroke: var(--bs-secondary-color); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
-.floor-plan-corridor, .floor-plan-lobby { fill: var(--bs-secondary-bg); }
-.floor-plan-washroom { fill: var(--bs-info-bg-subtle); }
-.floor-plan-stair, .floor-plan-entrance { fill: var(--bs-success-bg-subtle); }
 .floor-plan-label { fill: var(--bs-body-color); font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
 
 /* Make sure design is mobile-first and responsive */

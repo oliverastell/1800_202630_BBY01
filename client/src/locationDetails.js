@@ -8,6 +8,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const aboutLocation = document.getElementById("aboutLocation");
   const locationTitle = document.getElementById("aboutLocationTitle");
   const locationBookmarkButton = document.getElementById("bookmarkSelectedLocation");
+  const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
   const floorChooser = document.getElementById("floorChooser");
   const selectFirstFloor = document.getElementById("selectFirstFloor");
@@ -31,26 +32,41 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     if (selectedBuildingId === buildingId) return;
     selectedBuildingId = buildingId;
     floorSelectionVersion++;
-    floorPlanButton.classList.toggle("d-none", buildingId !== "sw1");
+    floorDropdown.classList.toggle("d-none", buildingId !== "sw1");
     floorPlanButton.setAttribute("aria-expanded", "false");
-    floorChooser.classList.add("d-none");
+    floorChooser.classList.remove("show");
     selectFirstFloor.setAttribute("aria-pressed", "false");
+    selectFirstFloor.classList.remove("active");
     floorPlanSection.classList.add("d-none");
     floorPlanStatus.textContent = "";
     floorPlanCanvas.replaceChildren();
   }
 
   floorPlanButton.addEventListener("click", () => {
-    const open = floorChooser.classList.toggle("d-none") === false;
+    const open = floorChooser.classList.toggle("show");
     floorPlanButton.setAttribute("aria-expanded", String(open));
+  });
+
+  document.addEventListener("click", event => {
+    if (floorDropdown.contains(event.target)) return;
+    floorChooser.classList.remove("show");
+    floorPlanButton.setAttribute("aria-expanded", "false");
+  });
+
+  floorDropdown.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    floorChooser.classList.remove("show");
+    floorPlanButton.setAttribute("aria-expanded", "false");
+    floorPlanButton.focus();
   });
 
   selectFirstFloor.addEventListener("click", async () => {
     if (selectedBuildingId !== "sw1") return;
     const version = ++floorSelectionVersion;
-    floorChooser.classList.add("d-none");
+    floorChooser.classList.remove("show");
     floorPlanButton.setAttribute("aria-expanded", "false");
     selectFirstFloor.setAttribute("aria-pressed", "true");
+    selectFirstFloor.classList.add("active");
     floorPlanSection.classList.remove("d-none");
     floorPlanStatus.textContent = "Loading floor plan…";
     floorPlanCanvas.replaceChildren();

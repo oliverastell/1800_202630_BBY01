@@ -59,7 +59,7 @@ export function renderFloorPlan(container, features) {
           return `${pointIndex ? "L" : "M"}${x.toFixed(2)} ${y.toFixed(2)}`;
         }).join(" ") + " Z"
       ).join(" "));
-      path.setAttribute("class", `floor-plan-area floor-plan-${properties.kind || "other"}`);
+      path.setAttribute("class", "floor-plan-area");
       path.dataset.featureIndex = index;
       const title = document.createElementNS(svgNS, "title");
       title.textContent = [properties.name, properties.use || properties.kind].filter(Boolean).join(" · ");
