@@ -26,9 +26,14 @@
       </div>
 
     <!--About location-->
-    <section id="aboutLocation" class="d-none position-absolute bottom-0 start-0 end-0 z-3
-         h-50 bg-dark-subtle border border-secondary
-         rounded-top-4 shadow p-3 overflow-y-auto" aria-labelledby="aboutLocationTitle">
+    <section id="aboutLocation" class="d-none position-absolute bottom-0 start-0 end-0 z-3 h-50
+         bg-dark-subtle border border-secondary
+         rounded-top-4 shadow px-3 pb-3 pt-0 overflow-y-auto" aria-labelledby="aboutLocationTitle">
+      <button type="button" id="aboutLocationDragHandle"
+        class="location-drag-handle btn border-0 bg-transparent w-100 d-flex align-items-center justify-content-center p-0 mb-1"
+        aria-label="Expand location details" aria-controls="aboutLocation" aria-expanded="false">
+        <span class="d-block rounded-pill bg-secondary" aria-hidden="true"></span>
+      </button>
       <div class="d-flex align-items-start gap-2 mb-3">
         <div class="d-flex align-items-center gap-1 flex-shrink-0">
           <button type="button" id="bookmarkSelectedLocation" aria-label="Bookmark this location" aria-pressed="false" disabled
