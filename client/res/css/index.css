@@ -80,6 +80,20 @@
 }
 
 #aboutLocationTitle { min-width: 0; }
+#aboutLocation {
+  transition: height 220ms ease;
+}
+#aboutLocation.location-dragging { transition: none; }
+.location-drag-handle {
+  height: 28px;
+  cursor: grab;
+  touch-action: none;
+}
+.location-drag-handle:active { cursor: grabbing; }
+.location-drag-handle span {
+  width: 40px;
+  height: 5px;
+}
 #floorPlanToggle[aria-expanded="true"]::after { transform: rotate(180deg); }
 .floor-plan-canvas { max-height: 320px; }
 .floor-plan-fullscreen {

@@ -7,6 +7,7 @@ import Collapse from "bootstrap/js/dist/collapse.js";
 
 export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, closePopup }) {
   const aboutLocation = document.getElementById("aboutLocation");
+  const dragHandle = document.getElementById("aboutLocationDragHandle");
   const locationTitle = document.getElementById("aboutLocationTitle");
   const locationBookmarkButton = document.getElementById("bookmarkSelectedLocation");
   const floorDropdown = document.getElementById("floorDropdown");
@@ -28,6 +29,55 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   let selectionVersion = 0;
   let selectedBuildingId = null;
   let floorSelectionVersion = 0;
+  let dragStart = null;
+  let suppressHandleClick = false;
+
+  function setSheetExpanded(expanded) {
+    aboutLocation.classList.remove("location-dragging");
+    aboutLocation.style.height = "";
+    aboutLocation.classList.toggle("h-100", expanded);
+    aboutLocation.classList.toggle("h-50", !expanded);
+    dragHandle.setAttribute("aria-expanded", String(expanded));
+    dragHandle.setAttribute("aria-label", expanded ? "Collapse location details" : "Expand location details");
+  }
+
+  dragHandle.addEventListener("pointerdown", event => {
+    if (event.button !== 0 || !event.isPrimary) return;
+    dragStart = { pointerId: event.pointerId, y: event.clientY, height: aboutLocation.getBoundingClientRect().height,
+      expanded: aboutLocation.classList.contains("h-100") };
+    suppressHandleClick = false;
+    aboutLocation.classList.add("location-dragging");
+    dragHandle.setPointerCapture(event.pointerId);
+  });
+
+  dragHandle.addEventListener("pointermove", event => {
+    if (!dragStart || event.pointerId !== dragStart.pointerId) return;
+    const distance = dragStart.y - event.clientY;
+    if (Math.abs(distance) > 5) suppressHandleClick = true;
+    const fullHeight = aboutLocation.parentElement.getBoundingClientRect().height;
+    aboutLocation.style.setProperty("height", `${Math.min(fullHeight, Math.max(fullHeight / 2, dragStart.height + distance))}px`, "important");
+  });
+
+  function finishDrag(event, cancelled = false) {
+    if (!dragStart || event.pointerId !== dragStart.pointerId) return;
+    const distance = dragStart.y - event.clientY;
+    const expanded = cancelled || Math.abs(distance) < 60
+      ? dragStart.expanded
+      : distance > 0;
+    dragStart = null;
+    setSheetExpanded(expanded);
+  }
+
+  dragHandle.addEventListener("pointerup", event => finishDrag(event));
+  dragHandle.addEventListener("pointercancel", event => finishDrag(event, true));
+  dragHandle.addEventListener("click", () => {
+    if (suppressHandleClick) {
+      suppressHandleClick = false;
+      return;
+    }
+    setSheetExpanded(!aboutLocation.classList.contains("h-100"));
+  });
+
   let floorPlanShouldBeVisible = false;
 
   function setFloorPlanFullscreen(fullscreen) {
@@ -240,6 +290,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     selectionVersion++;
     setFloorBuilding(null);
     aboutLocation.classList.add("d-none");
+    setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
     selectedMarker = null;
@@ -255,6 +306,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     showSavedLocation(details, marker);
   }
   async function selectLocation(point, label = "Selected location", building = null) {
+    setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
     const version = ++selectionVersion;
