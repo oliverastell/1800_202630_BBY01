@@ -30,18 +30,18 @@ export function createCampusMap() {
   map.addControl(new NavigationControl({ showCompass: true}), 'top-left');
   map.getCanvas().focus();
 
-  // Custom SW1 footprint traced from the supplied coordinates.
+  // Custom building footprints traced from the supplied coordinates.
   let campusBorder = null;
   const mapReady = new Promise(resolve => map.once('load', resolve));
   mapReady.then(() => {
-    
-    map.addSource('sw1', { type: 'geojson', data: '/data/sw1Fill.geojson' });
-    map.addLayer({
-      id: 'sw1-fill', type: 'fill', source: 'sw1',
-      paint: { 'fill-color': '#e6e9e6', 'fill-opacity': 1 }
-    });
-    
-  }).catch(error => console.error('Error adding SW1 overlay:', error));
+    for (const buildingId of ['sw1', 'nw7']) {
+      map.addSource(buildingId, { type: 'geojson', data: `/data/${buildingId}Fill.geojson` });
+      map.addLayer({
+        id: `${buildingId}-fill`, type: 'fill', source: buildingId,
+        paint: { 'fill-color': '#e6e9e6', 'fill-opacity': 1 }
+      });
+    }
+  }).catch(error => console.error('Error adding building overlays:', error));
   Promise.all([mapReady, fetch('/data/campus-block.geojson').then(r => {
     if (!r.ok) throw new Error('Campus border could not be loaded');
     return r.json();
