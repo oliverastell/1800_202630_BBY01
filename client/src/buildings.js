@@ -13,18 +13,24 @@ export async function loadBuildings() {
     if (d.id === "sw1") b.floorLevels = [...new Set([1, 2, 3, 4, ...(b.floorLevels ?? [])])];
     try {
       const toCoordinate = point => Array.isArray(point) ? point : [point?.latitude, point?.longitude];
-      const outline = b.outline ?? (typeof b.polygon === "string" ? JSON.parse(b.polygon) : b.polygon);
-      const border = Array.isArray(outline) ? outline.map(toCoordinate) : outline;
+      const storedOutline = b.outline ?? b.polygon;
+      const outline = typeof storedOutline === "string" ? JSON.parse(storedOutline) : storedOutline;
+      // Accept a single ring or separate footprint rings, all in [latitude, longitude].
+      const hasMultipleOutlines = Array.isArray(outline?.[0]) && Array.isArray(outline[0][0]);
+      const borders = (hasMultipleOutlines ? outline : [outline]).map(
+        ring => Array.isArray(ring) ? ring.map(toCoordinate) : ring
+      );
       const center = toCoordinate(b.center);
       const isCoordinate = point => Array.isArray(point) && point.length === 2
         && point.every(Number.isFinite) && Math.abs(point[0]) <= 90
         && Math.abs(point[1]) <= 180;
       if (typeof b.name !== "string" || !b.name.trim()
           || !isCoordinate(center)
-          || !Array.isArray(border) || border.length < 3 || !border.every(isCoordinate)) {
+          || !borders.length || !borders.every(border =>
+            Array.isArray(border) && border.length >= 3 && border.every(isCoordinate))) {
         throw new Error("Invalid building fields or coordinates");
       }
-      loaded.push({ ...b, searchAliases: Array.isArray(b.searchAliases) ? b.searchAliases.filter(name => typeof name === "string") : [], id: d.id, center, border });
+      loaded.push({ ...b, searchAliases: Array.isArray(b.searchAliases) ? b.searchAliases.filter(name => typeof name === "string") : [], id: d.id, center, border: borders[0], borders });
     } catch (error) {
       console.warn(`Skipping invalid building ${d.id}:`, error);
     }
@@ -66,14 +72,17 @@ export function highlightBuilding(map, building) {
 
   const features = [];
   if (building) {
-    const ring = building.border.map(([lat, lng]) => [lng, lat]);
-    if (ring[0][0] !== ring.at(-1)[0] || ring[0][1] !== ring.at(-1)[1]) {
-      ring.push([...ring[0]]);
+    for (const border of building.borders ?? [building.border]) {
+      const ring = border.map(([lat, lng]) => [lng, lat]);
+      if (ring[0][0] !== ring.at(-1)[0] || ring[0][1] !== ring.at(-1)[1]) {
+        ring.push([...ring[0]]);
+      }
+      features.push({
+        type: "Feature", properties: { name: building.name },
+        geometry: { type: "Polygon", coordinates: [ring] }
+      });
     }
     features.push({
-      type: "Feature", properties: { name: building.name },
-      geometry: { type: "Polygon", coordinates: [ring] }
-    }, {
       type: "Feature", properties: { name: building.name },
       geometry: { type: "Point", coordinates: [building.center[1], building.center[0]] }
     });
@@ -103,7 +112,9 @@ export function isInside([lat, lng], border) {
 }
 
 export function findBuildingAt(latlng) {
-  return buildings.find(b => isInside([latlng.lat, latlng.lng], b.border));
+  return buildings.find(b => (b.borders ?? [b.border]).some(
+    border => isInside([latlng.lat, latlng.lng], border)
+  ));
 }
 
 
