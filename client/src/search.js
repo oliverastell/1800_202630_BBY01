@@ -229,11 +229,10 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   }
 
 
-function toggleSearchingText() {
-  searchingText.classList.toggle("d-none");
-  searchingText.classList.toggle("d-flex");
-  searchMenuForHide.classList.toggle("d-none");
-  searchMenuForHide.classList.toggle("d-flex");
+function toggleSearchingText(isSearching) {
+  searchingText.classList.toggle("d-none", !isSearching);
+  searchingText.classList.toggle("d-flex", isSearching);
+  searchMenuForHide.classList.toggle("d-none", isSearching);
 }
 
 
@@ -242,12 +241,7 @@ function searchKeyboard(event) {
       searchingText2.innerHTML = "";
       const searchtext = document.getElementById("searchField").value.trim().toLowerCase();
       console.log(searchtext);
-      if (searchtext.length >= 1 && searchingText.classList.contains("d-none")){
-        toggleSearchingText();
-      }
-      if (searchtext.length == 0 && searchingText.classList.contains("d-flex")){
-        toggleSearchingText();
-      }
+      toggleSearchingText(searchtext.length > 0);
       if (searchtext.length > 0){
           buildings.filter(s => [s.id, s.name, ...s.searchAliases].some(name => name.toLowerCase().includes(searchtext))).forEach(showtext => {
           {
@@ -258,7 +252,6 @@ function searchKeyboard(event) {
             newSearch.setAttribute("type", "button");
             newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
             newSearch.addEventListener("click", () => searchRecent(showtext.name));
-            newSearch.addEventListener("click", () => toggleSearchingText());
             newSearch.textContent = showtext.name;
             newRow.appendChild(newSearch)
             searchingText2.insertBefore(newRow, searchingText2.firstChild);
@@ -274,7 +267,7 @@ searchForm.addEventListener("reset", () => {
 });
 buildingsReady.then(searchKeyboard);
 
-searchingText.classList.toggle("d-none");
+toggleSearchingText(false);
   
 
   onAuthStateChanged(auth, async user => {
