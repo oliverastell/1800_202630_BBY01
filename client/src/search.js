@@ -5,7 +5,7 @@ import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore"
 import { bookmarkT } from "./bookmarks.js";
 import { setWashroomFilter } from "./washrooms.js";
 
-export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker, getCampusBorder, closePopup }, locationDetails) {
+export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
   const searchBar = document.getElementById("searchBar");
   const searchBarButton = document.getElementById("searchBarButton");
   const searchMenu = document.getElementById("searchMenu");
@@ -23,25 +23,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     searchStatus.textContent = "Buildings could not be loaded. Please reload to try again.";
     console.error("Error loading buildings:", error);
   });
-
-  const shapes = [
-    { name: "red square 1",       color: "red",    lat: 49.2490, lng: -123.0020 },
-    { name: "green circle 1",     color: "green",  lat: 49.2485, lng: -123.0010 },
-    { name: "blue triangle 3",    color: "blue",   lat: 49.2480, lng: -123.0000 },
-    { name: "yellow rectangle 2", color: "yellow", lat: 49.2475, lng: -122.9995 },
-    { name: "red circle 1",       color: "red",    lat: 49.2488, lng: -123.0005 },
-    { name: "green square 1",     color: "green",  lat: 49.2492, lng: -123.0012 },
-    { name: "blue square 3",      color: "blue",   lat: 49.2478, lng: -123.0015 },
-    { name: "yellow circle 1",    color: "yellow", lat: 49.2483, lng: -122.9990 },
-  ]
-
-  function showShape(shape) {
-    const element = document.createElement('div');
-    element.className = 'shape-marker';
-    element.style.backgroundColor = shape.color;
-    element.style.borderColor = shape.color;
-    addMarker([shape.lng, shape.lat], shape.name, markerLayer, { element });
-  }
 
   function addToRecent(name, persist = true){
       checkRecentDupe(name);
@@ -92,8 +73,22 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       removeRecentSearchFromFirestore(searchTarget);
   }
 
-  function clearRecent(){
-      searchMenuResults.innerHTML = "";
+  async function clearRecent(){
+      const user = auth.currentUser
+      if (!user) {
+          searchMenuResults.innerHTML = "";
+          return
+      }
+      try {
+          const recentRef = collection(db, "users", user.uid, "recentSearches")
+          const snapshot = await getDocs(recentRef)
+          for (const recentDoc of snapshot.docs) {
+              await deleteDoc(recentDoc.ref)
+          }
+          searchMenuResults.innerHTML = "";
+      } catch (error) {
+          console.error("Error clearing recent searches:", error)
+      }
   }
 
   //Clicksearch hide the search bar and show the search bar again when close the menu, the menu can be close by clicking the map.
@@ -113,14 +108,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     }
   }
 
-
-  function searchFilter(color) {
-    locationDetails.close();
-    if (map.isStyleLoaded()) highlightBuilding(map, null);
-    clearMarkers(markerLayer)
-    shapes.filter(s => s.color === color).forEach(showShape)
-    clickSearch()
-  }
 
   function showWashrooms() {
     washroomsVisible = !washroomsVisible;
@@ -148,7 +135,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     if (searchMenu.classList.contains("d-flex")) clickSearch();
   }
 
-  async function searchRecent(target, closeMenu = true) {
+  async function searchRecent(target) {
     target = target.trim();
     if (!target) {
       searchStatus.textContent = "Enter a building name, such as SW1.";
@@ -165,28 +152,17 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       return;
     }
     clearMarkers(markerLayer)
-    const matches = shapes.filter(s => s.name.toLowerCase().trim() === target.toLowerCase().trim());
-    if (!matches.length) {
-      searchStatus.textContent = buildingsLoadError
-        ? "Buildings could not be loaded. Please reload to try again."
-        : `No building found for “${target}”.`;
-      return;
-    }
-    locationDetails.close();
-    clearMarkers(pinLayer);
-    highlightBuilding(map, null);
-    matches.forEach(showShape);
-    searchStatus.textContent = "";
-    if (closeMenu && searchMenu.classList.contains("d-flex")) clickSearch();
-    addToRecent(target);
-    document.getElementById("searchForm").reset();
+    searchStatus.textContent = buildingsLoadError
+      ? "Buildings could not be loaded. Please reload to try again."
+      : `No building found for “${target}”.`;
+
   }
 
 
 
   function search() {
     const text = document.getElementById("searchField").value.trim().toLowerCase()
-    searchRecent(text, false)
+    searchRecent(text)
   }
 
   searchBarButton.addEventListener("click", clickSearch)
@@ -200,7 +176,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     highlightBuilding(map, building ?? null);
   });
 
-  Object.assign(window, {searchFilter, searchRecent,removeFromRecent,clearRecent})
+  Object.assign(window, {searchRecent,removeFromRecent,clearRecent})
 
   //prevent reload when button is submitted and call search()
   searchForm.addEventListener("submit", function (event) {
@@ -273,22 +249,6 @@ function searchKeyboard(event) {
         toggleSearchingText();
       }
       if (searchtext.length > 0){
-        //ERASE THIS ONCE WE ADD MORE BUILDINGS I GUESS
-        shapes.filter(s => s.name.includes(searchtext)).forEach(showtext => {
-          if (showtext.name.startsWith(searchtext)){
-            console.log(showtext.name);
-            let newRow = document.createElement("div");
-            newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
-            let newSearch = document.createElement("button");
-            newSearch.setAttribute("type", "button");
-            newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-            newSearch.addEventListener("click", () => searchRecent(showtext.name));
-            newSearch.addEventListener("click", () => toggleSearchingText());
-            newSearch.textContent = showtext.name;
-            newRow.appendChild(newSearch)
-            searchingText2.insertBefore(newRow, searchingText2.firstChild);
-          }
-          });
           buildings.filter(s => [s.id, s.name, s.searchNames].some(name => name.toLowerCase().includes(searchtext))).forEach(showtext => {
           {
             console.log(showtext.searchNames);
