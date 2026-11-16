@@ -3,6 +3,7 @@ import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { bookmarkT } from "./bookmarks.js";
+import { setWashroomFilter } from "./washrooms.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker, getCampusBorder, closePopup }, locationDetails) {
   const searchBar = document.getElementById("searchBar");
@@ -14,6 +15,8 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchStatus = document.getElementById("searchStatus");
   const searchingText = document.getElementById("searchMenuSearching");
   const searchingText2 = document.getElementById("searchMenuSearching2");
+  const washroomFilter = document.getElementById("washroomFilter");
+  let washroomsVisible = false;
   let buildingsLoadError = false;
   const buildingsReady = loadBuildings().catch(error => {
     buildingsLoadError = true;
@@ -119,6 +122,21 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     clickSearch()
   }
 
+  function showWashrooms() {
+    washroomsVisible = !washroomsVisible;
+    setWashroomFilter(map, washroomsVisible);
+    washroomFilter.setAttribute("aria-pressed", String(washroomsVisible));
+    washroomFilter.setAttribute("aria-label", washroomsVisible ? "Hide washrooms" : "Show washrooms");
+    washroomFilter.classList.toggle("btn-primary", washroomsVisible);
+    washroomFilter.classList.toggle("btn-light", !washroomsVisible);
+    locationDetails.close();
+    if (map.isStyleLoaded()) highlightBuilding(map, null);
+    clearMarkers(markerLayer);
+    clearMarkers(pinLayer);
+    closePopup();
+    clickSearch();
+  }
+
   function showBuilding(b) {
     highlightBuilding(map, b);
     clearMarkers(markerLayer);
@@ -172,11 +190,14 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   }
 
   searchBarButton.addEventListener("click", clickSearch)
+  washroomFilter.addEventListener("click", showWashrooms);
 
-  window.addEventListener("show-bookmarked-location", () => {
+  window.addEventListener("show-bookmarked-location", async ({ detail }) => {
     if (searchMenu.classList.contains("d-flex")) clickSearch();
     clearMarkers(markerLayer);
-    if (map.isStyleLoaded()) highlightBuilding(map, null);
+    await Promise.all([buildingsReady, mapReady]);
+    const building = findBuildingAt({ lat: detail.latitude, lng: detail.longitude });
+    highlightBuilding(map, building ?? null);
   });
 
   Object.assign(window, {searchFilter, searchRecent,removeFromRecent,clearRecent})
@@ -241,14 +262,14 @@ function toggleSearchingText() {
 
 
 function searchKeyboard(event) {
-    if(event instanceof KeyboardEvent) {
+    {
       searchingText2.innerHTML = "";
       const searchtext = document.getElementById("searchField").value.trim().toLowerCase();
       console.log(searchtext);
       if (searchtext.length >= 1 && searchingText.classList.contains("d-none")){
         toggleSearchingText();
       }
-      if (event.key == "Backspace" && searchtext.length == 0 && searchingText.classList.contains("d-flex")){
+      if (searchtext.length == 0 && searchingText.classList.contains("d-flex")){
         toggleSearchingText();
       }
       if (searchtext.length > 0){
@@ -268,17 +289,17 @@ function searchKeyboard(event) {
             searchingText2.insertBefore(newRow, searchingText2.firstChild);
           }
           });
-          buildings.filter(s => s.searchNames.includes(searchtext)).forEach(showtext => {
-          if (showtext.searchNames.startsWith(searchtext)){
+          buildings.filter(s => [s.id, s.name, s.searchNames].some(name => name.toLowerCase().includes(searchtext))).forEach(showtext => {
+          {
             console.log(showtext.searchNames);
             let newRow = document.createElement("div");
             newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
             let newSearch = document.createElement("button");
             newSearch.setAttribute("type", "button");
             newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-            newSearch.addEventListener("click", () => searchRecent(showtext.searchNames));
+            newSearch.addEventListener("click", () => searchRecent(showtext.name));
             newSearch.addEventListener("click", () => toggleSearchingText());
-            newSearch.textContent = showtext.searchNames;
+            newSearch.textContent = showtext.name;
             newRow.appendChild(newSearch)
             searchingText2.insertBefore(newRow, searchingText2.firstChild);
           }
@@ -286,7 +307,12 @@ function searchKeyboard(event) {
       }
           }
       }
-document.getElementById("searchField").addEventListener("keyup", searchKeyboard, false);
+document.getElementById("searchField").addEventListener("input", searchKeyboard, false);
+searchForm.addEventListener("reset", () => {
+  document.getElementById("searchField").value = "";
+  searchKeyboard();
+});
+buildingsReady.then(searchKeyboard);
 
 searchingText.classList.toggle("d-none");
   

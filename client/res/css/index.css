@@ -80,10 +80,30 @@
 }
 
 #aboutLocationTitle { min-width: 0; }
+.washroom-marker {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #164d78;
+  background: #fff;
+  border: 2px solid #164d78;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px #0004;
+}
+.washroom-marker[hidden] { display: none; }
 #aboutLocation {
   transition: height 220ms ease;
 }
 #aboutLocation.location-dragging { transition: none; }
+#aboutLocation.location-collapsed {
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
+}
+#aboutLocation.location-collapsed > :not(.location-drag-handle) {
+  visibility: hidden;
+}
 .location-drag-handle {
   height: 28px;
   cursor: grab;
