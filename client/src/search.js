@@ -249,9 +249,9 @@ function searchKeyboard(event) {
         toggleSearchingText();
       }
       if (searchtext.length > 0){
-          buildings.filter(s => [s.id, s.name, s.searchNames].some(name => name.toLowerCase().includes(searchtext))).forEach(showtext => {
+          buildings.filter(s => [s.id, s.name, ...s.searchAliases].some(name => name.toLowerCase().includes(searchtext))).forEach(showtext => {
           {
-            console.log(showtext.searchNames);
+            console.log(showtext.searchAliases);
             let newRow = document.createElement("div");
             newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
             let newSearch = document.createElement("button");

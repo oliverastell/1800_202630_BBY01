@@ -24,7 +24,7 @@ export async function loadBuildings() {
           || !Array.isArray(border) || border.length < 3 || !border.every(isCoordinate)) {
         throw new Error("Invalid building fields or coordinates");
       }
-      loaded.push({ ...b, searchNames: Array.isArray(b.searchNames) ? b.searchNames.filter(name => typeof name === "string") : [b.searchNames].filter(name => typeof name === "string"), id: d.id, center, border });
+      loaded.push({ ...b, searchAliases: Array.isArray(b.searchAliases) ? b.searchAliases.filter(name => typeof name === "string") : [], id: d.id, center, border });
     } catch (error) {
       console.warn(`Skipping invalid building ${d.id}:`, error);
     }
@@ -110,7 +110,7 @@ export function findBuildingAt(latlng) {
 export function findBuildingByText(text) {
   const t = text.toLowerCase().trim();
   if (!t) return;
-  const names = b => [b.id, b.name, ...b.searchNames].map(n => n.toLowerCase().trim());
+  const names = b => [b.id, b.name, ...b.searchAliases].map(n => n.toLowerCase().trim());
   return buildings.find(b => names(b).includes(t))
       || buildings.find(b => names(b).some(n => n.includes(t)));
 }
