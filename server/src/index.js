@@ -3,6 +3,7 @@
 import express from "express";
 import ViteExpress from "vite-express";
 import * as fs from "node:fs";
+import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 // REQUIRES
 const app = express();
@@ -45,4 +46,13 @@ function onServerRun() {
     console.log("Server is listening on port " + port + "...");
 }
 
-ViteExpress.listen(app, port, onServerRun);
+const server = createServer(app);
+server.on("error", (error) => {
+    if (error.code === "EADDRINUSE") {
+        console.error(`Port ${port} is already in use. Stop the existing server before running npm run dev again.`);
+    } else {
+        console.error("Server failed to start:", error);
+    }
+    process.exitCode = 1;
+});
+server.listen(port, () => ViteExpress.bind(app, server, onServerRun));

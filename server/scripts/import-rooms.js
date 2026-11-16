@@ -83,7 +83,10 @@ async function main() {
   try {
     const db = getFirestore(app);
     const batch = db.batch();
-    batch.set(db.doc(`buildings/${building}`), { buildingId: building }, { merge: true });
+    batch.set(db.doc(`buildings/${building}`), {
+      buildingId: building,
+      floorLevels: FieldValue.arrayUnion(level),
+    }, { merge: true });
     batch.set(db.doc(path), { ...data, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
     await batch.commit();
     console.log(`Imported ${features.length} features into ${path}.`);

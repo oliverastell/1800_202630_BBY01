@@ -145,7 +145,8 @@ After reviewing the preview, remove `--dry-run` to write. Each source feature
 must have matching `properties.building` (for example, `"se2"`) and numeric
 `properties.level` (for example, `1`). Coordinates use GeoJSON order:
 `[longitude, latitude]`. Supported geometry types are `Polygon` and `Point`.
-Update the parent building's `floorLevels` when adding another floor.
+The importer automatically adds the imported level to the parent building's
+`floorLevels`, preserving existing levels.
 
 The importer validates that each feature belongs to the requested building and
 level, and rejects oversized input before writing.
