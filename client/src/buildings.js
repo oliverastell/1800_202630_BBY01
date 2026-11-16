@@ -9,6 +9,8 @@ export async function loadBuildings() {
   const loaded = [];
   snap.forEach(d => {
     const b = d.data();
+    // Include all four SW1 floors, including older building records.
+    if (d.id === "sw1") b.floorLevels = [...new Set([1, 2, 3, 4, ...(b.floorLevels ?? [])])];
     try {
       const toCoordinate = point => Array.isArray(point) ? point : [point?.latitude, point?.longitude];
       const outline = b.outline ?? (typeof b.polygon === "string" ? JSON.parse(b.polygon) : b.polygon);

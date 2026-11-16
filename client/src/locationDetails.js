@@ -28,7 +28,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       const button = document.createElement("button");
       button.type = "button";
       button.className = "dropdown-item";
-      button.textContent = level === 1 ? "1st floor" : `Floor ${level}`;
+      button.textContent = ({ 1: "1st floor", 2: "2nd floor", 3: "3rd floor", 4: "4th floor" })[level] ?? `Floor ${level}`;
       button.classList.toggle("active", level === 1);
       button.setAttribute("aria-pressed", String(level === 1));
       button.addEventListener("click", () => {
