@@ -63,6 +63,11 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   let suppressHandleClick = false;
   let sheetSize = "half";
 
+  function setLocationPopupOpen(open) {
+    aboutLocation.classList.toggle("popup-hidden", !open);
+    aboutLocation.inert = !open;
+  }
+
   function setSheetExpanded(expanded) {
     setSheetSize(expanded ? "full" : "half");
   }
@@ -89,6 +94,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       size: sheetSize };
     suppressHandleClick = false;
     aboutLocation.classList.add("location-dragging");
+    aboutLocation.style.setProperty("height", `${dragStart.height}px`, "important");
     dragHandle.setPointerCapture(event.pointerId);
   });
 
@@ -113,6 +119,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
 
   dragHandle.addEventListener("pointerup", event => finishDrag(event));
   dragHandle.addEventListener("pointercancel", event => finishDrag(event, true));
+  dragHandle.addEventListener("lostpointercapture", event => finishDrag(event, true));
   dragHandle.addEventListener("click", () => {
     if (suppressHandleClick) {
       suppressHandleClick = false;
@@ -144,7 +151,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     const building = findBuildingAt({ lat: details.latitude, lng: details.longitude });
     setFloorBuilding(building);
     if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
-    aboutLocation.classList.remove("d-none");
+    setLocationPopupOpen(true);
     locationTitle.textContent = details.name;
     marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
     document.getElementById("selectedLatitude").textContent = details.latitude;
@@ -166,7 +173,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     setFloorBuilding(null);
     selectionVersion++;
 
-    aboutLocation.classList.add("d-none");
+    setLocationPopupOpen(false);
     setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
@@ -203,7 +210,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
         selectedMarker = null;
         selectedBookmark = null;
     
-        aboutLocation.classList.add("d-none");
+        setLocationPopupOpen(false);
       }
     });
     selectedMarker = marker;
@@ -211,7 +218,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
     marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
-    aboutLocation.classList.remove("d-none");
+    setLocationPopupOpen(true);
     if (building) locationBookmarkButton.dataset.buildingId = building.id;
     else delete locationBookmarkButton.dataset.buildingId;
     locationTitle.textContent = label === "Selected location" ? "Marked location " + getCachedMarkedLocationNumber() : label;
