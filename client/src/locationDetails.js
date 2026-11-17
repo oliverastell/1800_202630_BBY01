@@ -1,4 +1,4 @@
-import { getNextMarkedLocationNumber, getCachedMarkedLocationNumber, renameLocationBookmark, syncLocationBookmark } from "./bookmarks.js";
+import { getNextMarkedLocationNumber, getCachedMarkedLocationNumber, syncLocationBookmark } from "./bookmarks.js";
 import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { findBuildingAt, highlightBuilding } from "./buildings.js";
@@ -10,6 +10,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const locationTitle = document.getElementById("aboutLocationTitle");
   const locationBookmarkButton = document.getElementById("bookmarkSelectedLocation");
   const savedPins = new Map();
+  const savedDetails = new Map();
   const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
   const floorChooser = document.getElementById("floorChooser");
@@ -129,7 +130,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     button.addEventListener("click", (event) => {
       event.stopPropagation();
       showSavedLocation(details, marker);
-      editLocationName(details, marker);
+
     });
     container.append(button);
     return container;
@@ -144,14 +145,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     setFloorBuilding(building);
     if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
     aboutLocation.classList.remove("d-none");
-    locationTitle.replaceChildren();
-    const nameButton = document.createElement("button");
-    nameButton.type = "button";
-    nameButton.className = "btn btn-link text-dark fw-semibold rounded-pill";
-    nameButton.textContent = details.name;
-    nameButton.title = "Click to rename this location";
-    nameButton.addEventListener("click", () => editLocationName(details, marker));
-    locationTitle.appendChild(nameButton);
+    locationTitle.textContent = details.name;
     marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
     document.getElementById("selectedLatitude").textContent = details.latitude;
     document.getElementById("selectedLongitude").textContent = details.longitude;
@@ -160,58 +154,13 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     locationBookmarkButton.setAttribute("aria-label", "Location bookmarked");
     locationBookmarkButton.disabled = false;
     locationBookmarkButton.dataset.bookmarkKey = details.searchTarget;
+    if (details.buildingId) locationBookmarkButton.dataset.buildingId = details.buildingId;
+    else delete locationBookmarkButton.dataset.buildingId;
     locationBookmarkButton.dataset.latitude = details.latitude;
     locationBookmarkButton.dataset.longitude = details.longitude;
     locationBookmarkButton.setAttribute("aria-label", "Remove bookmark");
+    syncLocationBookmark(locationBookmarkButton, details.name);
   }
-
-  function editLocationName(details, marker) {
-    const form = document.createElement("form");
-    form.className = "d-flex flex-wrap justify-content-center gap-2";
-    const input = document.createElement("input");
-    input.className = "form-control rounded-pill";
-    input.value = details.name;
-    input.required = true;
-    input.setAttribute("aria-label", "Location name");
-    const save = document.createElement("button");
-    save.type = "submit";
-    save.className = "btn btn-primary rounded-pill";
-    save.textContent = "Save";
-    const cancel = document.createElement("button");
-    cancel.type = "button";
-    cancel.className = "btn btn-outline-secondary rounded-pill";
-    cancel.textContent = "Cancel";
-    cancel.addEventListener("click", () => showSavedLocation(details, marker));
-    const status = document.createElement("span");
-    status.className = "small text-danger w-100";
-    status.setAttribute("role", "status");
-    form.append(input, save, cancel, status);
-    locationTitle.replaceChildren(form);
-    input.focus();
-    input.select();
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      if (!input.value.trim()) {
-        status.textContent = "Enter a name for this location.";
-        return;
-      }
-      save.disabled = true;
-      input.disabled = true;
-      cancel.disabled = true;
-      try {
-        details.name = await renameLocationBookmark(details.searchTarget, input.value);
-        marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
-        if (selectedBookmark === details) showSavedLocation(details, marker);
-      } catch (error) {
-        status.textContent = "Could not save the name. Please try again.";
-        console.error("Could not rename bookmark:", error);
-        save.disabled = false;
-        input.disabled = false;
-        cancel.disabled = false;
-      }
-    });
-  }
-
 
   function close() {
     setFloorBuilding(null);
@@ -226,6 +175,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   }
   function retain(details, marker) {
     savedPins.set(details.searchTarget, marker);
+    savedDetails.set(details.searchTarget, details);
     marker.getElement().onclick = event => {
       event.stopPropagation();
       showSavedLocation(details, marker);
@@ -262,6 +212,8 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
     aboutLocation.classList.remove("d-none");
+    if (building) locationBookmarkButton.dataset.buildingId = building.id;
+    else delete locationBookmarkButton.dataset.buildingId;
     locationTitle.textContent = label === "Selected location" ? "Marked location " + getCachedMarkedLocationNumber() : label;
     document.getElementById("selectedLatitude").textContent = point.lat;
     document.getElementById("selectedLongitude").textContent = point.lng;
@@ -298,8 +250,12 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     retain(detail, selectedMarker);
   });
   window.addEventListener("location-bookmark-removed", ({ detail }) => {
+    if (locationBookmarkButton.dataset.bookmarkKey === detail.searchTarget) {
+      document.getElementById("selectedBookmarkEditor").replaceChildren();
+    }
     const marker = savedPins.get(detail.searchTarget);
     savedPins.delete(detail.searchTarget);
+    savedDetails.delete(detail.searchTarget);
     if (marker && marker !== selectedMarker) marker.remove();
     if (selectedBookmark?.searchTarget !== detail.searchTarget) return;
     selectedBookmark = null;
@@ -321,11 +277,27 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     map.jumpTo({ center: point, zoom: 18 });
     marker.togglePopup();
   });
+  window.addEventListener("location-bookmark-renamed", ({ detail }) => {
+    if (locationBookmarkButton.dataset.bookmarkKey === detail.searchTarget) {
+      locationTitle.textContent = detail.name;
+      syncLocationBookmark(locationBookmarkButton, detail.name);
+    }
+    const details = savedDetails.get(detail.searchTarget);
+    const marker = savedPins.get(detail.searchTarget);
+    if (!details || !marker) return;
+    details.name = detail.name;
+    marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
+    if (selectedBookmark === details) {
+      locationTitle.textContent = detail.name;
+      syncLocationBookmark(locationBookmarkButton, detail.name);
+    }
+  });
   document.getElementById("closeAboutLocation").addEventListener("click", close);
   onAuthStateChanged(auth, () => {
     close();
     for (const marker of savedPins.values()) marker.remove();
     savedPins.clear();
+    savedDetails.clear();
   });
   return { selectLocation, close };
 }

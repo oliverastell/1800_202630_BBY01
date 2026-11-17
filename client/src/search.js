@@ -2,7 +2,8 @@ import { loadBuildings, highlightBuilding, findBuildingAt, findBuildingByText, i
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
-import { bookmarkT } from "./bookmarks.js";
+import { bookmarkT, getPersonalBookmarks } from "./bookmarks.js";
+import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
 import { setWashroomFilter } from "./washrooms.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
@@ -24,14 +25,19 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     console.error("Error loading buildings:", error);
   });
 
-  function addToRecent(name, persist = true){
-      checkRecentDupe(name);
+  function addToRecent(name, persist = true, storedKey = null){
+      const entry = searchLocations("", buildings, getPersonalBookmarks()).find(entry => entry.key === name || entry.bookmark?.searchTarget === name || entry.aliases.some(alias => alias.toLowerCase() === name.toLowerCase()));
+      const target = entry?.key ?? name;
+      name = entry?.name ?? name;
+      checkRecentDupe(target);
       let newRow = document.createElement("div");
       newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
       let newSearch = document.createElement("button");
       newSearch.setAttribute("type", "button");
       newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-      newSearch.addEventListener("click", () => searchRecent(name));
+      newRow.dataset.searchTarget = target;
+      newRow.dataset.recentKey = storedKey ?? target;
+      newSearch.addEventListener("click", () => searchRecent(target));
       newSearch.textContent = name;
       newRow.appendChild(newSearch)
       let bookmarkButton = document.createElement("button");
@@ -44,6 +50,8 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       bookmarkIcon.setAttribute("height", "24");
       bookmarkButton.appendChild(bookmarkIcon);
       newRow.append(bookmarkButton);
+      if (entry?.bookmark) bookmarkButton.dataset.bookmarkKey = entry.bookmark.searchTarget;
+      if (entry?.building) bookmarkButton.dataset.buildingId = entry.building.id;
       bookmarkT(bookmarkButton);
       let xButton = document.createElement("button");
       xButton.setAttribute("type", "button");
@@ -53,13 +61,13 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       xButton.setAttribute("onclick", "removeFromRecent(this)");
       newRow.append(xButton);
       searchMenuResults.insertBefore(newRow, searchMenuResults.firstChild);
-      if (persist) addtoRecentFS(name,name);
+      if (persist) addtoRecentFS(target,name);
   }
 
   function checkRecentDupe(target){
       const recentSearches = searchMenuResults.querySelectorAll(".list-group-item");
       recentSearches.forEach((searches) => {
-          if (searches.firstElementChild.textContent.toLowerCase().trim() === target.toLowerCase().trim()) {
+          if ((searches.dataset.searchTarget || searches.firstElementChild.textContent).toLowerCase().trim() === target.toLowerCase().trim()) {
               // Replace the displayed row without deleting the saved recent search.
               searches.remove();
           }
@@ -68,7 +76,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   function removeFromRecent(target){
       const row = target.parentElement;
-      const searchTarget = row.firstElementChild.textContent;
+      const searchTarget = row.dataset.recentKey || row.dataset.searchTarget || row.firstElementChild.textContent;
       row.remove();
       removeRecentSearchFromFirestore(searchTarget);
   }
@@ -129,7 +137,10 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     clearMarkers(markerLayer);
     clearMarkers(pinLayer);
     closePopup();
-    locationDetails.selectLocation({ lng: b.center[1], lat: b.center[0] }, b.name, b);
+    const bookmark = bookmarkForBuilding(b, getPersonalBookmarks());
+    if (bookmark) {
+      window.dispatchEvent(new CustomEvent("show-bookmarked-location", { detail: { ...bookmark, name: bookmark.text, latitude: bookmark.latitude ?? b.center[0], longitude: bookmark.longitude ?? b.center[1] } }));
+    } else locationDetails.selectLocation({ lng: b.center[1], lat: b.center[0] }, b.name, b);
     map.jumpTo({ center: toLngLat(b.center), zoom: 18 });
     searchStatus.textContent = "";
     if (searchMenu.classList.contains("d-flex")) clickSearch();
@@ -143,10 +154,17 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     }
     searchStatus.textContent = "Searching…";
     await Promise.all([buildingsReady, mapReady]);
-    const b = findBuildingByText(target);
+    const entries = searchLocations(target, buildings, getPersonalBookmarks());
+    const entry = entries.find(entry => entry.aliases.some(alias => alias.toLowerCase() === target.toLowerCase())) || entries[0];
+    const b = entry?.building;
+    if (!b && entry?.bookmark) {
+      window.dispatchEvent(new CustomEvent("show-bookmarked-location", { detail: { ...entry.bookmark, name: entry.name } }));
+      addToRecent(entry.key);
+      searchForm.reset(); searchStatus.textContent = ""; return;
+    }
     if (b) {
       showBuilding(b);
-      addToRecent(b.name);
+      addToRecent(b.id);
       document.getElementById("searchForm").reset();
       //toggleSearchingText();
       return;
@@ -236,23 +254,26 @@ function toggleSearchingText(isSearching) {
 }
 
 
+let previousSuggestionQuery = "";
 function searchKeyboard(event) {
     {
-      searchingText2.innerHTML = "";
       const searchtext = document.getElementById("searchField").value.trim().toLowerCase();
-      console.log(searchtext);
       toggleSearchingText(searchtext.length > 0);
+      const matches = searchtext ? searchLocations(searchtext, buildings, getPersonalBookmarks()).slice(0, 10) : [];
+      const keepPreviousMatches = searchtext.length > 0 && previousSuggestionQuery.length > 0 && searchtext.startsWith(previousSuggestionQuery) && matches.length === 0;
+      previousSuggestionQuery = searchtext;
+      if (keepPreviousMatches) return;
+      searchingText2.innerHTML = "";
       if (searchtext.length > 0){
-          buildings.filter(s => [s.id, s.name, ...s.searchAliases].some(name => name.toLowerCase().includes(searchtext))).forEach(showtext => {
+          matches.forEach(showtext => {
           {
-            console.log(showtext.searchAliases);
             let newRow = document.createElement("div");
             newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
             let newSearch = document.createElement("button");
             newSearch.setAttribute("type", "button");
             newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-            newSearch.addEventListener("click", () => searchRecent(showtext.name));
-            newSearch.textContent = showtext.name;
+            newSearch.addEventListener("click", () => searchRecent(showtext.key));
+            newSearch.textContent = showtext.building && showtext.name !== showtext.building.name ? `${showtext.name} · ${showtext.building.name}` : showtext.name;
             newRow.appendChild(newSearch)
             searchingText2.insertBefore(newRow, searchingText2.firstChild);
           }
@@ -266,15 +287,30 @@ searchForm.addEventListener("reset", () => {
   searchKeyboard();
 });
 buildingsReady.then(searchKeyboard);
+function refreshPersonalNames() {
+  previousSuggestionQuery = "";
+  searchKeyboard();
+  const targets = [...searchMenuResults.children].map(row => ({ target: row.dataset.searchTarget, storedKey: row.dataset.recentKey })).filter(row => row.target);
+  searchMenuResults.replaceChildren();
+  targets.reverse().forEach(row => addToRecent(row.target, false, row.storedKey));
+}
+["bookmarks-loaded", "location-bookmark-saved", "location-bookmark-renamed", "location-bookmark-removed"].forEach(event => window.addEventListener(event, refreshPersonalNames));
 
 toggleSearchingText(false);
   
 
   onAuthStateChanged(auth, async user => {
+    searchMenuResults.replaceChildren();
     if (!user) return;
     try {
       const snapshot = await getDocs(collection(db, "users", user.uid, "recentSearches"));
-      snapshot.forEach(doc => addToRecent(doc.data().searchTarget, false));
+      await buildingsReady;
+      if (auth.currentUser?.uid !== user.uid) return;
+      snapshot.forEach(doc => {
+        const recent = doc.data();
+        const building = findBuildingByText(recent.searchTarget);
+        addToRecent(building?.id ?? recent.searchTarget, false, doc.id);
+      });
     } catch (error) {
       console.error("Error loading recent searches:", error);
     }

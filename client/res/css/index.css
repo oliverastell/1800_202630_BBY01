@@ -11,6 +11,15 @@
   width: 100%;
 }
 
+#bookmark-controls {
+  z-index: 2;
+  pointer-events: none;
+}
+
+#bookmark-controls > * {
+  pointer-events: auto;
+}
+
 #bookmark-button {
   width: 60px;
   height: 60px;
@@ -25,6 +34,71 @@
 .bookmark-list:empty::before {
   content: "There is nothing in the bookmark";
   color: #8d969e
+}
+
+#bookmark-popup {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  width: max-content;
+  min-width: min(240px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 160px);
+  overflow-y: auto;
+}
+
+#bookmark-popup[hidden] {
+  display: none !important;
+}
+
+.bookmark-edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #536477;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.bookmark-edit-button:hover,
+.bookmark-edit-button[aria-expanded="true"] {
+  color: #1a3a8a;
+  background-color: #eaf0fa;
+}
+
+.bookmark-edit-button:focus-visible {
+  outline: 2px solid #1a3a8a;
+  outline-offset: 2px;
+}
+
+.bookmark-edit-button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.bookmark-list > li > a {
+  min-width: 0;
+  flex-basis: auto;
+}
+
+#bookmark-popup .bookmark-list > li > span {
+  max-width: 100%;
+}
+
+#bookmark-popup form .form-control {
+  width: 18rem;
+  max-width: 100%;
+}
+
+#bookmark-popup .bookmark-list {
+  margin-bottom: 0;
 }
 
 #login-button {

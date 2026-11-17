@@ -53,9 +53,12 @@
 
 
         </div>
-        <h2 id="aboutLocationTitle" class="fs-5 text-dark text-center text-break flex-grow-1 mb-0">
+        <div class="flex-grow-1 text-center">
+        <h2 id="aboutLocationTitle" class="d-inline fs-5 text-dark text-break mb-0">
           About location
         </h2>
+        <span id="selectedBookmarkEditor" class="ms-1"></span>
+        </div>
         <button id="closeAboutLocation" type="button" class="btn-close flex-shrink-0 mt-1"
           aria-label="Close location details"></button>
       </div>
@@ -143,8 +146,8 @@
     </div>
 
     <!-- Bookmarks -->
-    <div class="position-absolute bottom-0 end-0 m-3 z-2 d-flex flex-column-reverse align-items-end mb-5">
-      <button id="bookmark-button" type="button"
+    <div id="bookmark-controls" class="position-absolute bottom-0 end-0 m-3 d-flex flex-column-reverse align-items-end mb-5">
+      <button id="bookmark-button" type="button" aria-controls="bookmark-popup" aria-expanded="false"
         class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center">
         <img src="../res/img/bookmark-icon.svg" class="object-fit-contain w-50 h-50" alt="Bookmarks">
       </button>
@@ -155,7 +158,6 @@
   </div>
 
   <!-- Post DOM Linking -->
-  <script type="module" src="/src/bookmarks.js"></script>
   <script type="module" src="/src/index.js"></script>
   <script type="module" src="/src/homeAuth.js"></script>
 

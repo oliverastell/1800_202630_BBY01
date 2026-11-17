@@ -21,6 +21,10 @@ const bookmarkButtonArray = []
 // Track bookmarks by search text so they survive removal of a recent row.
 const bookmarkItems = new Map()
 
+export function getPersonalBookmarks() {
+  return [...bookmarkItems.values()];
+}
+
 function bookmarkButtonText(currentButton) {
   return currentButton.id === "bookmarkSelectedLocation"
     ? document.getElementById("aboutLocationTitle").textContent.trim()
@@ -38,7 +42,7 @@ export function getCachedMarkedLocationNumber() {
 
 export function syncLocationBookmark(currentButton, name) {
   const target = name.toLowerCase().trim();
-  const bookmark = bookmarkItems.get(target) || [...bookmarkItems.values()].find(
+  const bookmark = bookmarkItems.get(currentButton.dataset.bookmarkKey) || bookmarkItems.get(target) || [...bookmarkItems.values()].find(
     item => item.text.toLowerCase().trim() === target
   );
   if (bookmark) currentButton.dataset.bookmarkKey = bookmark.searchTarget;
@@ -46,12 +50,13 @@ export function syncLocationBookmark(currentButton, name) {
   currentButton.querySelector("img").src = bookmark ? onIconPath : offIconPath;
   currentButton.setAttribute("aria-pressed", String(!!bookmark));
   currentButton.setAttribute("aria-label", bookmark ? "Remove bookmark" : "Bookmark this location");
+  if (currentButton.id === "bookmarkSelectedLocation") { const editor = document.getElementById("selectedBookmarkEditor"); editor?.replaceChildren(...(bookmark ? [createBookmarkEditor(bookmark.searchTarget, bookmark.text, true)] : [])); }
 }
 
 function bookmarkT(currentButton) {
   const icon = currentButton.querySelector("img");
   if (!icon) return;
-  const searchTarget = bookmarkButtonText(currentButton).toLowerCase();
+  const searchTarget = currentButton.dataset.bookmarkKey || bookmarkButtonText(currentButton).toLowerCase();
   if (currentButton.id !== "bookmarkSelectedLocation") icon.src = bookmarkItems.has(searchTarget) ? onIconPath : offIconPath;
   if (bookmarkButtonArray.includes(currentButton)) return;
   bookmarkButtonArray.push(currentButton);
@@ -63,6 +68,7 @@ function bookmarkT(currentButton) {
     const bookmark = bookmarkItems.get(searchTarget);
     if (!bookmark) {
       const coordinates = {
+        buildingId: currentButton.dataset.buildingId,
         latitude: Number(currentButton.dataset.latitude),
         longitude: Number(currentButton.dataset.longitude)
       };
@@ -112,10 +118,16 @@ recentObserver.observe(document.getElementById("searchMenuResults"), {
 Object.assign(window, { bookmarkT })
 export { bookmarkT }
 
-//When click bookmark button this unhide the list
-button.addEventListener("click", function () {
-  popup.hidden = !popup.hidden
-})
+function setBookmarkMenuOpen(open) {
+  popup.hidden = !open;
+  button.setAttribute("aria-expanded", String(open));
+}
+
+// Replace the handler on hot reload so one click only toggles the menu once.
+button.onclick = function (event) {
+  event.stopPropagation();
+  setBookmarkMenuOpen(popup.hidden);
+};
 
 async function saveBookmarkToFirestore(
   searchTarget,
@@ -131,9 +143,12 @@ async function saveBookmarkToFirestore(
 
   const data = {
     searchTarget,
+    name: displayText,
     displayText,
+    searchAliases: [displayText],
     createdAt: new Date().toISOString()
   };
+  if (coordinates?.buildingId) data.buildingId = coordinates.buildingId;
 
   // Include coordinates when they are valid numbers.
   if (
@@ -169,11 +184,14 @@ export async function renameLocationBookmark(searchTarget, name) {
   const displayText = name.trim();
   if (!displayText) throw new Error("Enter a name for this location.");
   // Keep the document ID and original number when the display name changes.
-  const data = { displayText };
+  const data = { name: displayText, displayText, searchAliases: [displayText] };
   const match = searchTarget.match(/^marked location (\d+)$/i);
   if (match) data.markedLocationNumber = Number(match[1]);
   await updateDoc(doc(db, "users", user.uid, "bookmarks", searchTarget), data);
   await loadUserBookmarks(user);
+  window.dispatchEvent(new CustomEvent("location-bookmark-renamed", {
+    detail: { searchTarget, name: displayText }
+  }));
   return displayText;
 }
 
@@ -196,19 +214,22 @@ async function loadUserBookmarks(user) {
   if (!user) {
     // Clear bookmarks when logged out
     clearBookmarkList()
+    window.dispatchEvent(new CustomEvent("bookmarks-loaded"));
     return
   }
 
   try {
     const bookmarksRef = collection(db, "users", user.uid, "bookmarks")
     const snapshot = await getDocs(bookmarksRef)
+    if (auth.currentUser?.uid !== user.uid) return;
 
     clearBookmarkList()
 
     snapshot.forEach((doc) => {
       const data = doc.data()
-      if (data.searchTarget && data.displayText) {
-        addBookmarkToList(data.searchTarget, data.displayText, {
+      if (data.searchTarget && (data.name || data.displayText)) {
+        addBookmarkToList(data.searchTarget, data.name || data.displayText, {
+          buildingId: data.buildingId,
           latitude: data.latitude,
           longitude: data.longitude
         });
@@ -251,16 +272,19 @@ function addBookmarkToList(searchTarget, displayText, coordinates = null) {
           longitude: coordinates.longitude
         }
       }));
-      popup.hidden = true;
+      setBookmarkMenuOpen(false);
     } else {
       searchRecent(searchTarget, false);
     }
   };
 
   item.appendChild(anchor);
+  item.className = "d-flex flex-wrap align-items-center gap-2 mb-2";
+  anchor.className = "flex-grow-1 text-break";
+  item.append(createBookmarkEditor(searchTarget, displayText));
   list.appendChild(item);
 
-  bookmarkItems.set(searchTarget, { item, searchTarget, text: displayText });
+  bookmarkItems.set(searchTarget, { item, searchTarget, text: displayText, ...coordinates });
 }
 
 
@@ -278,6 +302,8 @@ function clearBookmarkList() {
 
 // Listen for auth state changes
 onAuthStateChanged(auth, (user) => {
+  clearBookmarkList();
+  window.dispatchEvent(new CustomEvent("bookmarks-loaded"));
   loadUserBookmarks(user)
 })
 
@@ -318,4 +344,125 @@ export async function getNextMarkedLocationNumber() {
   });
 
   return highestNumber + 1;
+}
+
+function createBookmarkEditor(searchTarget, displayText, directRename = false) {
+  const edit = document.createElement("button");
+  edit.type = "button";
+  edit.className = directRename ? "btn btn-link border-0 bg-transparent text-dark p-0 ms-1 align-baseline" : "bookmark-edit-button";
+  {
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("width", "18");
+    icon.setAttribute("height", "18");
+    icon.setAttribute("viewBox", "0 0 24 24");
+    icon.setAttribute("fill", "none");
+    icon.setAttribute("stroke", "currentColor");
+    icon.setAttribute("stroke-width", "1.8");
+    icon.setAttribute("stroke-linecap", "round");
+    icon.setAttribute("stroke-linejoin", "round");
+    icon.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", "m16 3 5 5M4 15 15.5 3.5a3.54 3.54 0 0 1 5 5L9 20l-6 1 1-6Z");
+    icon.append(path);
+    edit.append(icon);
+  }
+  edit.title = directRename ? "Modify name" : "Edit bookmark";
+  edit.setAttribute("aria-label", `Edit ${displayText}`);
+  edit.setAttribute("aria-expanded", "false");
+  const actions = document.createElement("div");
+  actions.className = "w-100";
+  actions.hidden = true;
+  function closeEditor() {
+    actions.hidden = true;
+    status.textContent = "";
+    actions.replaceChildren(rename, remove, done, status);
+    edit.classList.remove("d-none");
+    edit.setAttribute("aria-expanded", "false");
+    edit.focus();
+  }
+  edit.addEventListener("click", () => {
+    edit.classList.add("d-none");
+    if (directRename) {
+      actions.hidden = false;
+      edit.setAttribute("aria-expanded", "true");
+      rename.click();
+      return;
+    }
+    actions.hidden = !actions.hidden;
+    edit.setAttribute("aria-expanded", String(!actions.hidden));
+    rename.focus();
+  });
+  const rename = document.createElement("button");
+  rename.type = "button";
+  rename.className = "btn btn-sm btn-light me-2";
+  rename.textContent = "Modify name";
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "btn btn-sm btn-outline-danger";
+  remove.textContent = "Remove";
+  const done = document.createElement("button");
+  done.type = "button";
+  done.className = "btn btn-sm btn-light ms-2";
+  done.textContent = "Cancel";
+  done.addEventListener("click", closeEditor);
+  const status = document.createElement("div");
+  status.className = "small text-danger";
+  status.setAttribute("role", "status");
+  rename.addEventListener("click", () => {
+    const form = document.createElement("form");
+    form.className = "d-flex flex-wrap gap-2";
+    const input = document.createElement("input");
+    input.className = "form-control form-control-sm";
+    input.value = displayText;
+    input.required = true;
+    input.setAttribute("aria-label", "Bookmark name");
+    const save = document.createElement("button");
+    save.type = "submit";
+    save.className = "btn btn-sm btn-primary";
+    save.textContent = "Save";
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "btn btn-sm btn-light";
+    cancel.textContent = "Cancel";
+    cancel.addEventListener("click", closeEditor);
+    form.append(input, save, cancel);
+    actions.replaceChildren(form, status);
+    input.focus();
+    input.select();
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!input.value.trim()) {
+        status.textContent = "Enter a name for this bookmark.";
+        return;
+      }
+      save.disabled = cancel.disabled = input.disabled = edit.disabled = true;
+      try {
+        await renameLocationBookmark(searchTarget, input.value);
+      } catch (error) {
+        status.textContent = "Could not save the name. Please try again.";
+        save.disabled = cancel.disabled = input.disabled = edit.disabled = false;
+      }
+    });
+  });
+  remove.addEventListener("click", async () => {
+    remove.disabled = rename.disabled = edit.disabled = true;
+    if (!await removeBookmarkFromFirestore(searchTarget)) {
+      status.textContent = "Could not remove the bookmark. Please try again.";
+      remove.disabled = rename.disabled = edit.disabled = false;
+      return;
+    }
+    bookmarkItems.get(searchTarget)?.item.remove();
+    bookmarkItems.delete(searchTarget);
+    bookmarkButtonArray.forEach(btn => {
+      if (bookmarkButtonText(btn).toLowerCase() === searchTarget) {
+        btn.querySelector("img").src = offIconPath;
+      }
+    });
+    window.dispatchEvent(new CustomEvent("location-bookmark-removed", {
+      detail: { searchTarget, name: displayText }
+    }));
+  });
+  actions.append(rename, remove, done, status);
+  const editor = document.createElement("span"); editor.className = "d-inline-block fs-6 fw-normal"; editor.append(edit, actions); return editor;
+
 }
