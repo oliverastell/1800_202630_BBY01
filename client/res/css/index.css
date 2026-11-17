@@ -11,19 +11,13 @@
   width: 100%;
 }
 
-#bookmark-controls {
-  z-index: 2;
-  pointer-events: none;
-}
-
-#bookmark-controls > * {
-  pointer-events: auto;
+#washroomFilter {
+  height: 60px;
 }
 
 #bookmark-button {
   width: 60px;
   height: 60px;
-  margin-bottom: 30px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -71,6 +65,14 @@
 .bookmark-edit-button[aria-expanded="true"] {
   color: #1a3a8a;
   background-color: #eaf0fa;
+}
+
+#searchField {
+  height: 60px;
+}
+
+#searchBarButton {
+  height: 60px;
 }
 
 .bookmark-edit-button:focus-visible {
@@ -208,3 +210,15 @@
 .floor-plan-label { fill: var(--bs-body-color); font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
 
 /* Make sure design is mobile-first and responsive */
+
+
+.wh-60px {
+  width: 60px;
+  height: 60px;
+}
+
+
+.wh-50px {
+  width: 50px;
+  height: 50px;
+}
