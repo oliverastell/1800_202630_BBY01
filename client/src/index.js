@@ -8,6 +8,6 @@ import { setupWashrooms } from "./washrooms.js";
 const campusMap = createCampusMap();
 setupWashrooms(campusMap);
 
-setupLocation(campusMap.map);
-const locationDetails = setupLocationDetails(campusMap);
+const userLocation = setupLocation(campusMap.map);
+const locationDetails = setupLocationDetails({ ...campusMap, ...userLocation });
 setupSearch(campusMap, locationDetails);
