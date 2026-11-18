@@ -11,6 +11,10 @@
   width: 100%;
 }
 
+#washroomFilter {
+  height: 60px;
+}
+
 #mapCanvasDiv {
   left: 0;
 }
@@ -35,8 +39,12 @@
 }
 
 @media (max-width: 767.98px) {
+  #content {
+    --mobile-search-height: 88px;
+  }
+
   #searchMenu {
-    height: 88px;
+    height: var(--mobile-search-height);
     transition: height 240ms cubic-bezier(.2, .7, .25, 1);
   }
 
@@ -117,8 +125,17 @@
 }
 
 #bookmark-controls {
+  --bookmark-size: 72px;
+  --bookmark-bottom: 3rem;
+  bottom: var(--bookmark-bottom);
   z-index: 2;
   pointer-events: none;
+}
+
+@media (max-width: 767.98px) {
+  #bookmark-controls {
+    --bookmark-bottom: calc(var(--mobile-search-height) + 12px);
+  }
 }
 
 #bookmark-controls > * {
@@ -126,9 +143,8 @@
 }
 
 #bookmark-button {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 30px;
+  width: var(--bookmark-size);
+  height: var(--bookmark-size);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -148,7 +164,7 @@
   width: max-content;
   min-width: min(240px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  max-height: calc(100dvh - 160px);
+  max-height: calc(100dvh - var(--bookmark-bottom) - var(--bookmark-size) - 24px);
   overflow-y: auto;
 }
 
@@ -207,6 +223,14 @@
 .bookmark-edit-button[aria-expanded="true"] {
   color: #1a3a8a;
   background-color: #eaf0fa;
+}
+
+#searchField {
+  height: 60px;
+}
+
+#searchBarButton {
+  height: 60px;
 }
 
 .bookmark-edit-button:focus-visible {
@@ -355,3 +379,15 @@
 }
 
 /* Make sure design is mobile-first and responsive */
+
+
+.wh-60px {
+  width: 60px;
+  height: 60px;
+}
+
+
+.wh-50px {
+  width: 50px;
+  height: 50px;
+}

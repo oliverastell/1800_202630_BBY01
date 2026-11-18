@@ -18,60 +18,73 @@
       <div id="map" class="w-100 h-100"></div>
     </div>
 
+
     <!--About location-->
-    <section id="aboutLocation" class="popup-hidden position-absolute bottom-0 start-0 end-0 z-3 h-50
-         bg-dark-subtle border border-secondary
-         rounded-top-4 shadow px-3 pb-3 pt-0 overflow-y-auto" aria-labelledby="aboutLocationTitle" inert>
+    <section
+        id="aboutLocation" class="d-none position-absolute bottom-0 start-0 end-0 z-3 h-50
+          bg-dark-subtle border border-secondary rounded-top-4 shadow px-3 pb-3 pt-0 overflow-y-auto"
+        aria-labelledby="aboutLocationTitle">
       <button type="button" id="aboutLocationDragHandle"
         class="location-drag-handle btn border-0 bg-transparent w-100 d-flex align-items-center justify-content-center p-0 mb-1"
         aria-label="Expand location details" aria-controls="aboutLocation" aria-expanded="false">
         <span class="d-block rounded-pill bg-secondary" aria-hidden="true"></span>
       </button>
-      <div class="d-flex align-items-start gap-2 mb-3">
-        <div class="d-flex align-items-center gap-1 flex-shrink-0">
-          <button type="button" id="bookmarkSelectedLocation" aria-label="Bookmark this location" aria-pressed="false"
-            disabled class="btn border-0 rounded-circle bookmark-toggle"><img src="../res/img/bookmark-icon.svg"
-              width="20" height="24" alt="Bookmark Icon"></button>
-          <div id="floorDropdown" class="dropdown d-none">
-            <button type="button" id="floorPlanButton" class="btn border-0 rounded-circle" aria-label="Select floor"
-              title="Select floor" aria-controls="floorChooser" aria-expanded="false">
-              <svg width="20" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a8a" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="m3 7 9-4 9 4-9 4-9-4Z" />
-                <path d="m3 12 9 4 9-4M3 17l9 4 9-4" />
-              </svg>
+
+      <!-- Context Panel -->
+      <div class="d-flex flex-column w-100 gap-3">
+        <!-- First row: bookmark, floors, title, X, etc. -->
+        <div class="d-flex flex-row w-100 align-items-center justify-content-between">
+          <!-- bookmark, floors -->
+          <div class="d-flex flex-row gap-2">
+            <button type="button" id="bookmarkSelectedLocation" aria-label="Bookmark this location" aria-pressed="false"
+                    class="wh-50px btn border-0 btn-light rounded-circle shadow bookmark-toggle">
+              <img class="w-100 h-100 ratio-1x1" src="../res/img/bookmark-icon.svg" alt="Bookmark Icon">
             </button>
-            <div id="floorChooser" class="dropdown-menu shadow" aria-labelledby="floorPlanButton"></div>
+
+            <button type="button" id="floorPlanButton" aria-label="Select floor" aria-pressed="false"
+                    class="wh-50px btn border-0 btn-light rounded-circle shadow">
+              <img class="w-100 h-100 ratio-1x1" src="../res/img/floor-select-icon.svg" alt="Floor Select Icon">
+            </button>
+
+            <div class="d-flex align-items-center gap-1 flex-shrink-0">
+              <div id="floorDropdown" class="dropdown d-none">
+                <div id="floorChooser" class="dropdown-menu shadow" aria-labelledby="floorPlanButton"></div>
+              </div>
+            </div>
           </div>
 
 
+          <!-- title -->
+          <div class="d-flex flex-row flex-wrap">
+            <h2 id="aboutLocationTitle" class="d-inline fs-5 text-dark text-break mb-0">
+              About location
+            </h2>
+            <span id="selectedBookmarkEditor" class="ms-1"></span>
+          </div>
+
+          <!-- X -->
+          <div class="d-flex flex-row">
+            <button type="button" id="closeAboutLocation" aria-label="Select floor" aria-pressed="false"
+                    class="wh-50px btn border-0 btn-light rounded-circle shadow">
+              <img class="w-100 h-100 ratio-1x1" src="../res/img/close-icon.svg" width="20" height="24" alt="Floor Select Icon">
+            </button>
+          </div>
         </div>
-        <div class="flex-grow-1 text-center">
-        <h2 id="aboutLocationTitle" class="d-inline fs-5 text-dark text-break mb-0">
-          About location
-        </h2>
-        <span id="selectedBookmarkEditor" class="ms-1"></span>
+
+        <!-- Second row: coords -->
+        <div class="bg-body-secondary rounded-5 p-3">
+          <dl class="mb-0">
+            <dt class="small fw-semibold text-dark mb-1">Latitude</dt>
+            <dd class="bg-light rounded-pill px-3 py-2 text-break mb-3">
+              <output id="selectedLatitude">—</output>
+            </dd>
+
+            <dt class="small fw-semibold text-dark mb-1">Longitude</dt>
+            <dd class="bg-light rounded-pill px-3 py-2 text-break mb-0">
+              <output id="selectedLongitude">—</output>
+            </dd>
+          </dl>
         </div>
-        <button id="closeAboutLocation" type="button" class="btn-close flex-shrink-0 mt-1"
-          aria-label="Close location details"></button>
-      </div>
-
-
-
-      <div class="bg-body-secondary rounded-5 p-3">
-
-
-        <dl class="mb-0">
-          <dt class="small fw-semibold text-dark mb-1">Latitude</dt>
-          <dd class="bg-light rounded-pill px-3 py-2 text-break mb-3">
-            <output id="selectedLatitude">—</output>
-          </dd>
-
-          <dt class="small fw-semibold text-dark mb-1">Longitude</dt>
-          <dd class="bg-light rounded-pill px-3 py-2 text-break mb-0">
-            <output id="selectedLongitude">—</output>
-          </dd>
-        </dl>
       </div>
     </section>
 
@@ -109,8 +122,11 @@
         <input id="searchField" size="1"
           class="form-control flex-grow-1 rounded-pill border-dark bg-body-secondary text-dark px-3 py-2" type="search"
           placeholder="Search Location..." aria-label="Search">
-        <button id="submitSearch" type="submit"
-          class="btn btn-outline-dark rounded-pill bg-body-secondary flex-shrink-0 px-3">Search</button>
+        <button type="submit" id="submitSearch"
+          class="btn btn-outline-dark rounded-pill bg-body-secondary flex-shrink-0 px-3">
+
+          <img src="../res/img/search-icon.svg" class="object-fit-contain w-100 h-100" alt="Bookmarks">
+        </button>
         <button id="closeSearchMenu" type="button"
           class="btn btn-outline-dark rounded-circle bg-body-secondary flex-shrink-0 d-md-none d-inline-flex align-items-center justify-content-center"
           aria-label="Close search">
@@ -159,9 +175,9 @@
       aria-hidden="true"></div>
 
     <!-- Bookmarks -->
-    <div id="bookmark-controls" class="position-absolute bottom-0 end-0 m-3 d-flex flex-column-reverse align-items-end mb-5">
+    <div id="bookmark-controls" class="position-absolute end-0 me-3 d-flex flex-column-reverse align-items-end">
       <button id="bookmark-button" type="button" aria-controls="bookmark-popup" aria-expanded="false"
-        class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center">
+        class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center btn-lg">
         <img src="../res/img/bookmark-icon.svg" class="object-fit-contain w-50 h-50" alt="Bookmarks">
       </button>
       <div id="bookmark-popup" class="popup-hidden bg-white p-3 rounded shadow mb-2" inert>

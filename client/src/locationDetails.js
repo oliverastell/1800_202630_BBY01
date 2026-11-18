@@ -48,7 +48,15 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     const open = floorChooser.classList.toggle("show");
     floorPlanButton.setAttribute("aria-expanded", String(open));
   });
+  //if (myElementToCheckIfClicksAreInsideOf.contains(event.target)) {
+  //         console.log('clicked inside');
+  //     } else {
+  //         console.log('clicked outside');
+  //     }
   document.addEventListener("click", event => {
+    if (floorPlanButton.contains(event.target) || floorChooser.contains(event.target)) {
+      return
+    }
     if (!floorDropdown.contains(event.target)) closeFloorChooser();
   });
   floorDropdown.addEventListener("keydown", event => {
