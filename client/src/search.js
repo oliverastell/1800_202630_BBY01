@@ -7,9 +7,21 @@ import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
 import { setWashroomFilter } from "./washrooms.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
-  const searchBar = document.getElementById("searchBar");
-  const searchBarButton = document.getElementById("searchBarButton");
   const searchMenu = document.getElementById("searchMenu");
+  const searchField = document.getElementById("searchField");
+  const closeSearchButton = document.getElementById("closeSearchMenu");
+  const sheetHandle = document.getElementById("searchSheetHandle");
+  const resizeHandle = document.getElementById("searchResizeHandle");
+  const resizeGuide = document.getElementById("searchResizeGuide");
+  const mapContainer = document.getElementById("mapCanvasDiv");
+  const aboutLocation = document.getElementById("aboutLocation");
+  const desktopSearch = window.matchMedia("(min-width: 768px)");
+  let desktopPanelWidth;
+  const minPanelWidth = 300;
+  let panelDrag = null;
+  let mobileSheetSize = "closed";
+  let sheetDrag = null;
+  let suppressSheetClick = false;
   const searchMenuResults = document.getElementById("searchMenuResults");
   const searchMenuForHide = document.getElementById("searchMenuResults11");
   const searchForm = document.getElementById("searchForm");
@@ -99,23 +111,163 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       }
   }
 
-  //Clicksearch hide the search bar and show the search bar again when close the menu, the menu can be close by clicking the map.
-  function clickSearch() {
-    searchMenu.classList.toggle("d-none");
-    searchMenu.classList.toggle("d-flex");
+  function setMobileSheetSize(size) {
+    mobileSheetSize = size;
+    sheetDrag = null;
+    searchMenu.classList.remove("search-dragging");
+    searchMenu.style.height = "";
+    searchMenu.classList.toggle("search-open", size !== "closed");
+    searchMenu.classList.toggle("search-half", size === "half");
+    sheetHandle.setAttribute("aria-expanded", String(size === "full"));
+    sheetHandle.setAttribute("aria-label", size === "full" ? "Shrink search menu" : "Expand search menu");
+  }
 
-    const isMenuOpen = searchMenu.classList.contains("d-flex")
+  function closeMobileSearch() {
+    if (desktopSearch.matches || mobileSheetSize === "closed") return;
+    if (searchMenu.contains(document.activeElement)) document.activeElement.blur();
+    setMobileSheetSize("closed");
+  }
 
-    if (isMenuOpen) {
-      searchBar.classList.add("d-none")
-      map.once("click", clickSearch)
+  function openMobileSearch() {
+    if (desktopSearch.matches || mobileSheetSize !== "closed") return;
+    setMobileSheetSize("full");
+    searchField.focus({ preventScroll: true });
+  }
+
+  sheetHandle.addEventListener("pointerdown", event => {
+    if (desktopSearch.matches || event.button !== 0 || !event.isPrimary) return;
+    sheetDrag = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      startHeight: searchMenu.offsetHeight
+    };
+    suppressSheetClick = false;
+    searchMenu.classList.add("search-dragging");
+    searchMenu.style.height = `${sheetDrag.startHeight}px`;
+    sheetHandle.setPointerCapture(event.pointerId);
+  });
+
+  sheetHandle.addEventListener("pointermove", event => {
+    if (sheetDrag?.pointerId !== event.pointerId) return;
+    const distance = sheetDrag.startY - event.clientY;
+    if (Math.abs(distance) > 5) suppressSheetClick = true;
+    if (mobileSheetSize === "closed") {
+      searchMenu.classList.toggle("search-open", distance > 5);
     }
-    else {
-      searchBar.classList.remove("d-none")
-      map.off("click", clickSearch)
+    const minHeight = searchForm.offsetHeight + sheetHandle.offsetHeight;
+    const maxHeight = searchMenu.parentElement.clientHeight;
+    searchMenu.style.height = `${Math.min(maxHeight, Math.max(minHeight, sheetDrag.startHeight + distance))}px`;
+  });
+
+  sheetHandle.addEventListener("pointerup", event => {
+    if (sheetDrag?.pointerId !== event.pointerId) return;
+    const distance = sheetDrag.startY - event.clientY;
+    if (Math.abs(distance) >= 60) suppressSheetClick = true;
+    if (distance >= 60 && mobileSheetSize === "closed") {
+      setMobileSheetSize("half");
+      searchField.focus({ preventScroll: true });
+    } else if (distance <= -60 && mobileSheetSize === "half") {
+      closeMobileSearch();
+    } else if (Math.abs(distance) < 60 || mobileSheetSize === "closed") {
+      setMobileSheetSize(mobileSheetSize);
+    } else {
+      setMobileSheetSize(distance > 0 ? "full" : "half");
+    }
+  });
+
+  sheetHandle.addEventListener("lostpointercapture", () => {
+    if (sheetDrag) setMobileSheetSize(mobileSheetSize);
+  });
+
+  sheetHandle.addEventListener("click", event => {
+    if (suppressSheetClick && event.detail !== 0) return;
+    if (mobileSheetSize === "closed") openMobileSearch();
+    else setMobileSheetSize(mobileSheetSize === "full" ? "half" : "full");
+  });
+
+  function getMaxPanelWidth() {
+    return Math.min(640, Math.floor(document.documentElement.clientWidth * 0.6));
+  }
+
+  function clampPanelWidth(width) {
+    return Math.min(getMaxPanelWidth(), Math.max(minPanelWidth, Math.round(width)));
+  }
+
+  function setPanelWidth(width) {
+    const panelWidth = clampPanelWidth(width);
+    desktopPanelWidth = panelWidth;
+    const widthInPixels = `${panelWidth}px`;
+    searchMenu.style.width = widthInPixels;
+    mapContainer.style.left = widthInPixels;
+    aboutLocation.style.marginLeft = widthInPixels;
+    resizeHandle.setAttribute("aria-valuemin", String(minPanelWidth));
+    resizeHandle.setAttribute("aria-valuemax", String(getMaxPanelWidth()));
+    resizeHandle.setAttribute("aria-valuenow", String(panelWidth));
+    map.resize();
+  }
+
+  function syncSearchLayout() {
+    cancelPanelDrag();
+    setMobileSheetSize("closed");
+    if (desktopSearch.matches) {
+      setPanelWidth(desktopPanelWidth ?? searchMenu.offsetWidth);
+      searchField.focus({ preventScroll: true });
+    } else {
+      searchMenu.style.width = "";
+      mapContainer.style.left = "";
+      aboutLocation.style.marginLeft = "";
+      map.resize();
     }
   }
 
+  function cancelPanelDrag() {
+    if (!panelDrag) return;
+    const { pointerId } = panelDrag;
+    panelDrag = null;
+    resizeGuide.classList.add("d-none");
+    if (resizeHandle.hasPointerCapture(pointerId)) resizeHandle.releasePointerCapture(pointerId);
+  }
+
+  function getDraggedPanelWidth(event) {
+    return panelDrag.startWidth + event.clientX - panelDrag.startX;
+  }
+
+  function moveResizeGuide(width) {
+    resizeGuide.style.transform = `translateX(${clampPanelWidth(width)}px)`;
+  }
+
+  resizeHandle.addEventListener("pointerdown", event => {
+    if (!desktopSearch.matches || !event.isPrimary || event.button !== 0 || panelDrag) return;
+    panelDrag = { pointerId: event.pointerId, startX: event.clientX, startWidth: searchMenu.offsetWidth };
+    resizeHandle.setPointerCapture(event.pointerId);
+    moveResizeGuide(panelDrag.startWidth);
+    resizeGuide.classList.remove("d-none");
+  });
+  resizeHandle.addEventListener("pointermove", event => {
+    if (panelDrag?.pointerId === event.pointerId) moveResizeGuide(getDraggedPanelWidth(event));
+  });
+  resizeHandle.addEventListener("pointerup", event => {
+    if (panelDrag?.pointerId !== event.pointerId) return;
+    const width = getDraggedPanelWidth(event);
+    cancelPanelDrag();
+    setPanelWidth(width);
+  });
+  resizeHandle.addEventListener("lostpointercapture", event => {
+    if (panelDrag?.pointerId === event.pointerId) cancelPanelDrag();
+  });
+  resizeHandle.addEventListener("keydown", event => {
+    const width = searchMenu.offsetWidth;
+    const widths = { ArrowLeft: width - 20, ArrowRight: width + 20, Home: 0, End: Infinity };
+    if (!Object.hasOwn(widths, event.key)) return;
+    event.preventDefault();
+    cancelPanelDrag();
+    setPanelWidth(widths[event.key]);
+  });
+  window.addEventListener("resize", () => {
+    if (desktopSearch.matches) setPanelWidth(searchMenu.offsetWidth);
+  });
+  desktopSearch.addEventListener("change", syncSearchLayout);
+  syncSearchLayout();
 
   function showWashrooms() {
     washroomsVisible = !washroomsVisible;
@@ -129,7 +281,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     clearMarkers(markerLayer);
     clearMarkers(pinLayer);
     closePopup();
-    clickSearch();
+    closeMobileSearch();
   }
 
   function showBuilding(b) {
@@ -143,7 +295,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     } else locationDetails.selectLocation({ lng: b.center[1], lat: b.center[0] }, b.name, b);
     map.jumpTo({ center: toLngLat(b.center), zoom: 18 });
     searchStatus.textContent = "";
-    if (searchMenu.classList.contains("d-flex")) clickSearch();
+    closeMobileSearch();
   }
 
   async function searchRecent(target) {
@@ -179,15 +331,23 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
 
   function search() {
-    const text = document.getElementById("searchField").value.trim().toLowerCase()
+    const text = searchField.value.trim().toLowerCase()
     searchRecent(text)
   }
 
-  searchBarButton.addEventListener("click", clickSearch)
+  searchField.addEventListener("click", openMobileSearch);
+  searchField.addEventListener("input", openMobileSearch);
+  closeSearchButton.addEventListener("click", closeMobileSearch);
+  searchMenu.addEventListener("keydown", event => {
+    if (event.key !== "Escape" || desktopSearch.matches || mobileSheetSize === "closed") return;
+    event.preventDefault();
+    setMobileSheetSize("closed");
+    searchField.focus({ preventScroll: true });
+  });
   washroomFilter.addEventListener("click", showWashrooms);
 
   window.addEventListener("show-bookmarked-location", async ({ detail }) => {
-    if (searchMenu.classList.contains("d-flex")) clickSearch();
+    closeMobileSearch();
     clearMarkers(markerLayer);
     await Promise.all([buildingsReady, mapReady]);
     const building = findBuildingAt({ lat: detail.latitude, lng: detail.longitude });
@@ -199,10 +359,15 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   //prevent reload when button is submitted and call search()
   searchForm.addEventListener("submit", function (event) {
       event.preventDefault();
+      if (!desktopSearch.matches && mobileSheetSize === "closed") {
+        openMobileSearch();
+        return;
+      }
       search();
   });
 
   map.on('click', async event => {
+    closeMobileSearch();
     await Promise.all([buildingsReady, mapReady]);
     const { lat, lng } = event.lngLat;
     const building = findBuildingAt(event.lngLat);

@@ -14,38 +14,16 @@
 <body class="m-0 overflow-hidden w-100 h-100">
 
   <div id="content" class="position-relative w-100 h-100">
-    <div id="mapCanvasDiv" class="z-0 position-absolute w-100 h-100 top-0 start-0">
+    <div id="mapCanvasDiv" class="z-0 position-absolute top-0 end-0 bottom-0">
       <div id="map" class="w-100 h-100"></div>
     </div>
 
-    <!-- Bottom section -->
-    <div id="searchSection" class="d-flex flex-column gap-3 position-absolute bottom-0 end-0 w-100 p-3">
-      <!-- Bookmarks -->
-      <div class="d-flex flex-row-reverse">
-        <button id="bookmark-button" type="button" aria-controls="bookmark-popup" aria-expanded="false"
-                class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center">
-          <img src="../res/img/bookmark-icon.svg" class="object-fit-contain w-50 h-50" alt="Bookmarks">
-        </button>
-        <div id="bookmark-popup" class="bg-white rounded shadow p-3" hidden>
-          <h5 class="fw-bold mb-2">Bookmarks</h5>
-        </div>
-      </div>
-
-      <!-- Search bar -->
-      <div id="searchBar" class="z-1">
-        <button id="searchBarButton" type="button"
-            class="btn btn-light w-100 text-start text-secondary rounded-pill shadow border-0 px-4 py-2">
-          Search Location...
-        </button>
-      </div>
-    </div>
 
     <!--About location-->
     <section
         id="aboutLocation" class="d-none position-absolute bottom-0 start-0 end-0 z-3 h-50
           bg-dark-subtle border border-secondary rounded-top-4 shadow px-3 pb-3 pt-0 overflow-y-auto"
-        aria-labelledby="aboutLocationTitle"
-    >
+        aria-labelledby="aboutLocationTitle">
       <button type="button" id="aboutLocationDragHandle"
         class="location-drag-handle btn border-0 bg-transparent w-100 d-flex align-items-center justify-content-center p-0 mb-1"
         aria-label="Expand location details" aria-controls="aboutLocation" aria-expanded="false">
@@ -133,16 +111,29 @@
     </div>
 
     <!-- Search menu -->
-    <div id="searchMenu"
-      class="d-none position-absolute top-0 start-0 end-0 bottom-0 z-3 flex-column col-md-5 col-lg-4 shadow bg-dark-subtle border border-secondary rounded-4 overflow-hidden pb-3">
+    <aside id="searchMenu" aria-label="Location search"
+      class="position-absolute start-0 bottom-0 d-flex flex-column overflow-hidden bg-dark-subtle border border-secondary shadow pb-3">
+      <button id="searchSheetHandle" type="button"
+        class="location-drag-handle btn border-0 bg-transparent w-100 d-flex d-md-none align-items-center justify-content-center p-0 flex-shrink-0"
+        aria-label="Expand search menu" aria-controls="searchMenu" aria-expanded="false">
+        <span class="d-block rounded-pill bg-secondary" aria-hidden="true"></span>
+      </button>
       <form id="searchForm" role="search" class="d-flex p-3 gap-2 flex-shrink-0">
         <input id="searchField" size="1"
           class="form-control flex-grow-1 rounded-pill border-dark bg-body-secondary text-dark px-3 py-2" type="search"
           placeholder="Search Location..." aria-label="Search">
-        <button type="submit"
+        <button type="submit" id="submitSearch"
           class="btn btn-outline-dark rounded-pill bg-body-secondary flex-shrink-0 px-3">
 
           <img src="../res/img/search-icon.svg" class="object-fit-contain w-100 h-100" alt="Bookmarks">
+        </button>
+        <button id="closeSearchMenu" type="button"
+          class="btn btn-outline-dark rounded-circle bg-body-secondary flex-shrink-0 d-md-none d-inline-flex align-items-center justify-content-center"
+          aria-label="Close search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
         </button>
       </form>
 
@@ -173,6 +164,24 @@
         </div>
 
         <div id="searchMenuResults" class="list-group gap-2"></div>
+      </div>
+      <div id="searchResizeHandle" role="separator" tabindex="0" aria-orientation="vertical"
+        class="position-absolute top-0 bottom-0 end-0 d-none d-md-flex align-items-center justify-content-center"
+        aria-label="Search panel width" aria-controls="searchMenu">
+        <span class="rounded-pill bg-secondary" aria-hidden="true"></span>
+      </div>
+    </aside>
+    <div id="searchResizeGuide" class="position-absolute top-0 bottom-0 start-0 z-3 d-none pe-none bg-primary"
+      aria-hidden="true"></div>
+
+    <!-- Bookmarks -->
+    <div id="bookmark-controls" class="position-absolute end-0 me-3 d-flex flex-column-reverse align-items-end">
+      <button id="bookmark-button" type="button" aria-controls="bookmark-popup" aria-expanded="false"
+        class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center btn-lg">
+        <img src="../res/img/bookmark-icon.svg" class="object-fit-contain w-50 h-50" alt="Bookmarks">
+      </button>
+      <div id="bookmark-popup" class="popup-hidden bg-white p-3 rounded shadow mb-2" inert>
+        <h5 class="fw-bold mb-2">Bookmarks</h5>
       </div>
     </div>
   </div>
