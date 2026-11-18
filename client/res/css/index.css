@@ -11,9 +11,131 @@
   width: 100%;
 }
 
+#washroomFilter {
+  height: 60px;
+}
+
+#mapCanvasDiv {
+  left: 0;
+}
+
+#searchMenu {
+  width: 100%;
+  z-index: 1;
+}
+
+#searchField {
+  min-width: 0;
+}
+
+#closeSearchMenu {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+#searchResizeGuide {
+  width: 2px;
+}
+
+@media (max-width: 767.98px) {
+  #content {
+    --mobile-search-height: 88px;
+  }
+
+  #searchMenu {
+    height: var(--mobile-search-height);
+    transition: height 240ms cubic-bezier(.2, .7, .25, 1);
+  }
+
+  #searchMenu.search-dragging {
+    transition: none;
+  }
+
+  #aboutLocation:not(.popup-hidden) ~ #searchMenu,
+  #searchMenu:not(.search-open) > :not(#searchForm):not(#searchSheetHandle),
+  #searchMenu:not(.search-open) #submitSearch,
+  #searchMenu:not(.search-open) #closeSearchMenu {
+    display: none !important;
+  }
+
+  #searchMenu:not(.search-open) #searchField {
+    background: #f8f9fa !important;
+    border-color: transparent !important;
+    box-shadow: 0 .25rem .75rem #0002;
+  }
+
+  #searchMenu:not(.search-open) #searchField:focus-visible {
+    outline: 2px solid #1a3a8a;
+  }
+
+  #searchMenu:not(.search-open) {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    padding-bottom: 0 !important;
+  }
+
+  #searchMenu.search-open {
+    z-index: 3;
+    height: 100%;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  #searchMenu.search-half {
+    height: 50%;
+  }
+
+  #searchMenu:not(.search-open) #searchForm {
+    padding-top: 0 !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #searchMenu {
+    top: 0;
+    z-index: 3;
+    width: 360px;
+  }
+
+  #mapCanvasDiv {
+    left: 360px;
+  }
+
+  #aboutLocation {
+    margin-left: 360px;
+  }
+
+  #searchResizeHandle {
+    width: 12px;
+    cursor: ew-resize;
+    touch-action: none;
+    user-select: none;
+  }
+
+  #searchResizeHandle span {
+    width: 4px;
+    height: 40px;
+  }
+
+  #searchResizeHandle:is(:hover, :active, :focus-visible) {
+    background: #e9ecef;
+    outline-offset: -2px;
+  }
+}
+
 #bookmark-controls {
+  --bookmark-size: 72px;
+  --bookmark-bottom: 3rem;
+  bottom: var(--bookmark-bottom);
   z-index: 2;
   pointer-events: none;
+}
+
+@media (max-width: 767.98px) {
+  #bookmark-controls {
+    --bookmark-bottom: calc(var(--mobile-search-height) + 12px);
+  }
 }
 
 #bookmark-controls > * {
@@ -21,9 +143,8 @@
 }
 
 #bookmark-button {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 30px;
+  width: var(--bookmark-size);
+  height: var(--bookmark-size);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -43,12 +164,43 @@
   width: max-content;
   min-width: min(240px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  max-height: calc(100dvh - 160px);
+  max-height: calc(100dvh - var(--bookmark-bottom) - var(--bookmark-size) - 24px);
   overflow-y: auto;
 }
 
-#bookmark-popup[hidden] {
-  display: none !important;
+#aboutLocation,
+#bookmark-popup {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 180ms ease-out, transform 240ms cubic-bezier(.2, .7, .25, 1), visibility 0s;
+}
+
+#aboutLocation {
+  transition: height 240ms cubic-bezier(.2, .7, .25, 1), opacity 180ms ease-out,
+    transform 240ms cubic-bezier(.2, .7, .25, 1), visibility 0s;
+}
+
+#aboutLocation.popup-hidden,
+#bookmark-popup.popup-hidden {
+  opacity: 0;
+  transform: translateY(16px);
+  visibility: hidden;
+  pointer-events: none;
+  transition-delay: 0s, 0s, 240ms;
+}
+
+#aboutLocation.popup-hidden {
+  transition-delay: 0s, 0s, 0s, 240ms;
+}
+
+#floorChooser.show,
+.maplibregl-popup-content {
+  animation: popup-appear 180ms ease-out both;
+}
+
+@keyframes popup-appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .bookmark-edit-button {
@@ -71,6 +223,14 @@
 .bookmark-edit-button[aria-expanded="true"] {
   color: #1a3a8a;
   background-color: #eaf0fa;
+}
+
+#searchField {
+  height: 60px;
+}
+
+#searchBarButton {
+  height: 60px;
 }
 
 .bookmark-edit-button:focus-visible {
@@ -167,9 +327,6 @@
   box-shadow: 0 1px 4px #0004;
 }
 .washroom-marker[hidden] { display: none; }
-#aboutLocation {
-  transition: height 220ms ease;
-}
 #aboutLocation.location-dragging { transition: none; }
 #aboutLocation.location-collapsed {
   overflow: hidden !important;
@@ -182,6 +339,7 @@
   height: 28px;
   cursor: grab;
   touch-action: none;
+  user-select: none;
 }
 .location-drag-handle:active { cursor: grabbing; }
 .location-drag-handle span {
@@ -207,4 +365,29 @@
 .floor-plan-area { fill: var(--bs-light); stroke: var(--bs-secondary-color); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
 .floor-plan-label { fill: var(--bs-body-color); font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
 
+@media (prefers-reduced-motion: reduce) {
+  #searchMenu,
+  #aboutLocation,
+  #bookmark-popup {
+    transition: none;
+  }
+
+  #floorChooser.show,
+  .maplibregl-popup-content {
+    animation: none;
+  }
+}
+
 /* Make sure design is mobile-first and responsive */
+
+
+.wh-60px {
+  width: 60px;
+  height: 60px;
+}
+
+
+.wh-50px {
+  width: 50px;
+  height: 50px;
+}

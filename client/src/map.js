@@ -21,6 +21,7 @@ export function createCampusMap() {
     style: `https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=${mapTilerKey}`,
     center: [-123.001192, 49.248087],
     zoom: 17, maxBounds: zoomOutBounds, renderWorldCopies: false,
+    maxPitch: 0,
     transformCameraUpdate: ({ center }) => ({
       center: new LngLat(center.lng, Math.max(bounds[0][1], Math.min(bounds[1][1], center.lat)))
     }),

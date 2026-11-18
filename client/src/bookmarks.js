@@ -119,14 +119,15 @@ Object.assign(window, { bookmarkT })
 export { bookmarkT }
 
 function setBookmarkMenuOpen(open) {
-  popup.hidden = !open;
+  popup.classList.toggle("popup-hidden", !open);
+  popup.inert = !open;
   button.setAttribute("aria-expanded", String(open));
 }
 
 // Replace the handler on hot reload so one click only toggles the menu once.
 button.onclick = function (event) {
   event.stopPropagation();
-  setBookmarkMenuOpen(popup.hidden);
+  setBookmarkMenuOpen(popup.inert);
 };
 
 async function saveBookmarkToFirestore(
