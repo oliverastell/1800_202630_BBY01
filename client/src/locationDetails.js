@@ -170,21 +170,12 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
 
   function popupContent(title, building) {
     const type = locationTypeLabel(building);
-    const details = locationDetailItems(building);
     const container = document.createElement("div");
     container.append(title);
-    if (!type && !details.length) return container;
+    if (!type) return container;
     const metadata = document.createElement("div");
     metadata.className = "small text-body-secondary text-break";
-    if (type) metadata.append(`Type: ${type}`);
-    if (details.length) {
-      const heading = document.createElement("div");
-      heading.textContent = "Details";
-      const list = document.createElement("ul");
-      list.className = "mb-0 ps-3";
-      list.append(...detailListItems(details));
-      metadata.append(heading, list);
-    }
+    metadata.textContent = `Type: ${type}`;
     container.append(metadata);
     return container;
   }
