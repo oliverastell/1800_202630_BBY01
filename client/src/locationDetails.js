@@ -1,16 +1,39 @@
-import { getNextMarkedLocationNumber, getCachedMarkedLocationNumber, syncLocationBookmark } from "./bookmarks.js";
+import { getNextMarkedLocationNumber, getCachedMarkedLocationNumber, getPersonalBookmarks, syncLocationBookmark } from "./bookmarks.js";
 import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { findBuildingAt, highlightBuilding } from "./buildings.js";
+import { buildings, findBuildingAt, highlightBuilding } from "./buildings.js";
+import { bookmarkForBuilding } from "./personalNames.js";
 import { showBuildingFloor } from "./floorPlan.js";
+
+function locationTypeLabel(building) {
+  const type = typeof building?.type === "string" ? building.type.trim() : "";
+  return type.toLowerCase() === "parking" ? "Parking lot" : type;
+}
+
+function locationDetailItems(building) {
+  if (!Array.isArray(building?.details)) return [];
+  return building.details.filter(value => typeof value === "string").map(value => value.trim()).filter(Boolean);
+}
+
+function detailListItems(details) {
+  return details.map(detail => {
+    const item = document.createElement("li");
+    item.textContent = detail;
+    return item;
+  });
+}
 
 export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, closePopup }) {
   const aboutLocation = document.getElementById("aboutLocation");
   const dragHandle = document.getElementById("aboutLocationDragHandle");
   const locationTitle = document.getElementById("aboutLocationTitle");
+  const locationTypeRow = document.getElementById("selectedLocationTypeRow");
+  const locationType = document.getElementById("selectedLocationType");
+  const locationDetailsRow = document.getElementById("selectedLocationDetailsRow");
+  const locationDetails = document.getElementById("selectedLocationDetails");
   const locationBookmarkButton = document.getElementById("bookmarkSelectedLocation");
   const savedPins = new Map();
-  const savedDetails = new Map();
+  const bookmarkLayer = new Set();
   const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
   const floorChooser = document.getElementById("floorChooser");
@@ -25,6 +48,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     floorChooser.replaceChildren();
     const levels = building ? [...new Set(building.floorLevels ?? [1])].filter(Number.isInteger).sort((a, b) => a - b) : [];
     floorDropdown.classList.toggle("d-none", !levels.length);
+    floorPlanButton.classList.toggle("d-none", !levels.length);
     for (const level of levels) {
       const button = document.createElement("button");
       button.type = "button";
@@ -38,6 +62,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
           item.setAttribute("aria-pressed", String(item === button));
         }
         closeFloorChooser();
+        floorPlanButton.focus({ preventScroll: true });
         showBuildingFloor(map, building, level);
       });
       floorChooser.append(button);
@@ -47,12 +72,8 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   floorPlanButton.addEventListener("click", () => {
     const open = floorChooser.classList.toggle("show");
     floorPlanButton.setAttribute("aria-expanded", String(open));
+    if (open) floorChooser.querySelector(".active")?.focus({ preventScroll: true });
   });
-  //if (myElementToCheckIfClicksAreInsideOf.contains(event.target)) {
-  //         console.log('clicked inside');
-  //     } else {
-  //         console.log('clicked outside');
-  //     }
   document.addEventListener("click", event => {
     if (floorPlanButton.contains(event.target) || floorChooser.contains(event.target)) {
       return
@@ -60,9 +81,11 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     if (!floorDropdown.contains(event.target)) closeFloorChooser();
   });
   floorDropdown.addEventListener("keydown", event => {
-    if (event.key !== "Escape") return;
-    closeFloorChooser();
-    floorPlanButton.focus();
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      closeFloorChooser();
+      floorPlanButton.focus({ preventScroll: true });
+    }
   });
   let selectedMarker = null;
   let selectedBookmark = null;
@@ -136,8 +159,42 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     setSheetExpanded(!aboutLocation.classList.contains("h-100"));
   });
 
-  function savedLocationPopup(details, marker) {
+  function setLocationMetadata(building) {
+    const type = locationTypeLabel(building);
+    const details = locationDetailItems(building);
+    locationType.textContent = type;
+    locationTypeRow.hidden = !type;
+    locationDetails.replaceChildren(...detailListItems(details));
+    locationDetailsRow.hidden = !details.length;
+  }
+
+  function popupContent(title, building) {
+    const type = locationTypeLabel(building);
+    const details = locationDetailItems(building);
     const container = document.createElement("div");
+    container.append(title);
+    if (!type && !details.length) return container;
+    const metadata = document.createElement("div");
+    metadata.className = "small text-body-secondary text-break";
+    if (type) metadata.append(`Type: ${type}`);
+    if (details.length) {
+      const heading = document.createElement("div");
+      heading.textContent = "Details";
+      const list = document.createElement("ul");
+      list.className = "mb-0 ps-3";
+      list.append(...detailListItems(details));
+      metadata.append(heading, list);
+    }
+    container.append(metadata);
+    return container;
+  }
+
+  function buildingForBookmark(details) {
+    return buildings.find(building => building.id === details.buildingId)
+      ?? findBuildingAt({ lat: details.latitude, lng: details.longitude });
+  }
+
+  function savedLocationPopup(details, marker) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "btn btn-link rounded-pill p-0";
@@ -147,8 +204,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       showSavedLocation(details, marker);
 
     });
-    container.append(button);
-    return container;
+    return popupContent(button, buildingForBookmark(details));
   }
 
   function showSavedLocation(details, marker) {
@@ -156,11 +212,12 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     locationBookmarkButton.dataset.selectionVersion = selectionVersion;
     selectedMarker = marker;
     selectedBookmark = details;
-    const building = findBuildingAt({ lat: details.latitude, lng: details.longitude });
+    const building = buildingForBookmark(details);
     setFloorBuilding(building);
     if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
     setLocationPopupOpen(true);
     locationTitle.textContent = details.name;
+    setLocationMetadata(building);
     marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
     document.getElementById("selectedLatitude").textContent = details.latitude;
     document.getElementById("selectedLongitude").textContent = details.longitude;
@@ -188,23 +245,80 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     selectedMarker = null;
     selectedBookmark = null;
   }
-  function retain(details, marker) {
-    savedPins.set(details.searchTarget, marker);
-    savedDetails.set(details.searchTarget, details);
-    marker.getElement().onclick = event => {
-      event.stopPropagation();
-      showSavedLocation(details, marker);
-      if (!marker.getPopup().isOpen()) marker.togglePopup();
-    };
-    showSavedLocation(details, marker);
+  function syncBookmarkMarkers() {
+    const visible = new Set();
+    for (const bookmark of getPersonalBookmarks()) {
+      let { latitude, longitude } = bookmark;
+      let buildingId = bookmark.buildingId;
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)
+          || Math.abs(latitude) > 90 || Math.abs(longitude) > 180) {
+        const building = buildings.find(building => building.id === buildingId)
+          ?? buildings.find(building => bookmarkForBuilding(building, [bookmark]));
+        if (!building) continue;
+        [latitude, longitude] = building.center;
+        buildingId = building.id;
+      }
+
+      const { searchTarget, text: name } = bookmark;
+      visible.add(searchTarget);
+      const existing = savedPins.get(searchTarget);
+      if (existing) {
+        const { details, marker } = existing;
+        if (details.latitude !== latitude || details.longitude !== longitude) {
+          marker.setLngLat([longitude, latitude]);
+        }
+        const nameChanged = details.name !== name;
+        Object.assign(details, { name, buildingId, latitude, longitude });
+        if (nameChanged) {
+          marker.getElement().title = name;
+          marker.getElement().setAttribute("aria-label", `Open bookmark: ${name}`);
+          marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
+          if (selectedBookmark === details) locationTitle.textContent = name;
+        }
+        continue;
+      }
+
+      const details = { searchTarget, name, buildingId, latitude, longitude };
+      const element = document.createElement("button");
+      element.type = "button";
+      element.className = "bookmark-marker";
+      element.title = name;
+      element.setAttribute("aria-label", `Open bookmark: ${name}`);
+      const icon = document.createElement("img");
+      icon.src = "/res/img/bookmark-icon-filled.svg";
+      icon.alt = "";
+      element.append(icon);
+      const marker = addMarker([longitude, latitude], name, bookmarkLayer, { element, anchor: "center" });
+      marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
+      // Let the native button's click handle keyboard activation as well.
+      element.addEventListener("keypress", event => event.stopImmediatePropagation(), true);
+      element.addEventListener("click", event => {
+        event.stopPropagation();
+        clearMarkers(pinLayer);
+        closePopup();
+        showSavedLocation(details, marker);
+        marker.togglePopup();
+      });
+      savedPins.set(searchTarget, { details, marker });
+    }
+
+    for (const [key, { marker }] of savedPins) {
+      if (visible.has(key)) continue;
+      if (selectedMarker === marker) close();
+      marker.remove();
+      bookmarkLayer.delete(marker);
+      savedPins.delete(key);
+    }
   }
   async function selectLocation(point, label = "Selected location", building = null) {
     setFloorBuilding(building);
+    setLocationMetadata(building);
     setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
     const version = ++selectionVersion;
-    const marker = addMarker([point.lng, point.lat], label, pinLayer);
+    const content = building ? popupContent(label, building) : label;
+    const marker = addMarker([point.lng, point.lat], content, pinLayer);
     marker.getElement().addEventListener("click", event => {
       event.stopPropagation();
       if (!marker.getPopup().isOpen()) marker.togglePopup();
@@ -254,65 +368,53 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     }
   }
   window.addEventListener("bookmarks-loaded", () => {
+    syncBookmarkMarkers();
     if (selectedMarker) syncLocationBookmark(locationBookmarkButton, locationTitle.textContent);
   });
   window.addEventListener("location-bookmark-saved", ({ detail }) => {
+    syncBookmarkMarkers();
     if (!selectedMarker || !pinLayer.has(selectedMarker)) return;
     const point = selectedMarker.getLngLat();
     if (point.lat !== detail.latitude || point.lng !== detail.longitude) return;
     if (detail.searchTarget !== locationTitle.textContent.toLowerCase().trim()) return;
-    pinLayer.delete(selectedMarker);
-    retain(detail, selectedMarker);
+    const saved = savedPins.get(detail.searchTarget);
+    if (!saved) return;
+    clearMarkers(pinLayer);
+    showSavedLocation(saved.details, saved.marker);
+    saved.marker.togglePopup();
   });
   window.addEventListener("location-bookmark-removed", ({ detail }) => {
-    if (locationBookmarkButton.dataset.bookmarkKey === detail.searchTarget) {
-      document.getElementById("selectedBookmarkEditor").replaceChildren();
-    }
-    const marker = savedPins.get(detail.searchTarget);
-    savedPins.delete(detail.searchTarget);
-    savedDetails.delete(detail.searchTarget);
-    if (marker && marker !== selectedMarker) marker.remove();
-    if (selectedBookmark?.searchTarget !== detail.searchTarget) return;
-    selectedBookmark = null;
-    pinLayer.add(selectedMarker);
-    selectedMarker.getElement().onclick = null;
-    locationTitle.textContent = detail.name;
-    delete locationBookmarkButton.dataset.bookmarkKey;
-    locationBookmarkButton.querySelector("img").src = "/res/img/bookmark-icon.svg";
-    locationBookmarkButton.setAttribute("aria-pressed", "false");
-    locationBookmarkButton.setAttribute("aria-label", "Bookmark this location");
+    const point = selectedBookmark?.searchTarget === detail.searchTarget ? selectedMarker.getLngLat() : null;
+    syncBookmarkMarkers();
+    if (point) selectLocation(point, detail.name, findBuildingAt(point));
+    else if (selectedMarker) syncLocationBookmark(locationBookmarkButton, locationTitle.textContent);
   });
   window.addEventListener("show-bookmarked-location", ({ detail }) => {
-    if (!Number.isFinite(detail.latitude) || !Number.isFinite(detail.longitude)) return;
+    const saved = savedPins.get(detail.searchTarget);
+    if (!saved) return;
     close();
-    const point = [detail.longitude, detail.latitude];
-    let marker = savedPins.get(detail.searchTarget);
-    if (!marker) marker = addMarker(point, detail.name, new Set());
-    retain(detail, marker);
-    map.jumpTo({ center: point, zoom: 18 });
-    marker.togglePopup();
+    showSavedLocation(saved.details, saved.marker);
+    map.jumpTo({ center: saved.marker.getLngLat(), zoom: 18 });
+    saved.marker.togglePopup();
   });
   window.addEventListener("location-bookmark-renamed", ({ detail }) => {
     if (locationBookmarkButton.dataset.bookmarkKey === detail.searchTarget) {
       locationTitle.textContent = detail.name;
       syncLocationBookmark(locationBookmarkButton, detail.name);
     }
-    const details = savedDetails.get(detail.searchTarget);
-    const marker = savedPins.get(detail.searchTarget);
-    if (!details || !marker) return;
-    details.name = detail.name;
-    marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
-    if (selectedBookmark === details) {
-      locationTitle.textContent = detail.name;
-      syncLocationBookmark(locationBookmarkButton, detail.name);
-    }
   });
-  document.getElementById("closeAboutLocation").addEventListener("click", close);
-  onAuthStateChanged(auth, () => {
+  function dismissDetails() {
+    const bookmarkMarker = selectedBookmark && selectedMarker?.getElement();
     close();
-    for (const marker of savedPins.values()) marker.remove();
-    savedPins.clear();
-    savedDetails.clear();
+    (bookmarkMarker ?? map.getCanvas()).focus({ preventScroll: true });
+  }
+  document.getElementById("closeAboutLocation").addEventListener("click", dismissDetails);
+  aboutLocation.addEventListener("keydown", event => {
+    if (event.key !== "Escape" || event.defaultPrevented) return;
+    event.stopPropagation();
+    dismissDetails();
   });
-  return { selectLocation, close };
+  onAuthStateChanged(auth, close);
+  syncBookmarkMarkers();
+  return { selectLocation, close, syncBookmarkMarkers };
 }

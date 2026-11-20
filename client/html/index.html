@@ -41,9 +41,9 @@
               <img class="w-100 h-100 ratio-1x1" src="../res/img/bookmark-icon.svg" alt="Bookmark Icon">
             </button>
 
-            <button type="button" id="floorPlanButton" aria-label="Select floor" aria-pressed="false"
-                    class="wh-50px btn border-0 btn-light rounded-circle shadow">
-              <img class="w-100 h-100 ratio-1x1" src="../res/img/floor-select-icon.svg" alt="Floor Select Icon">
+            <button type="button" id="floorPlanButton" aria-label="Select floor" aria-controls="floorChooser" aria-expanded="false"
+                    class="d-none wh-50px btn border-0 btn-light rounded-circle shadow">
+              <img class="w-100 h-100 ratio-1x1" src="../res/img/floor-select-icon.svg" alt="">
             </button>
 
             <div class="d-flex align-items-center gap-1 flex-shrink-0">
@@ -64,25 +64,39 @@
 
           <!-- X -->
           <div class="d-flex flex-row">
-            <button type="button" id="closeAboutLocation" aria-label="Select floor" aria-pressed="false"
+            <button type="button" id="closeAboutLocation" aria-label="Close location details"
                     class="wh-50px btn border-0 btn-light rounded-circle shadow">
-              <img class="w-100 h-100 ratio-1x1" src="../res/img/close-icon.svg" width="20" height="24" alt="Floor Select Icon">
+              <img class="w-100 h-100 ratio-1x1" src="../res/img/close-icon.svg" width="20" height="24" alt="">
             </button>
           </div>
         </div>
 
-        <!-- Second row: coords -->
+        <!-- Location metadata -->
         <div class="bg-body-secondary rounded-5 p-3">
           <dl class="mb-0">
-            <dt class="small fw-semibold text-dark mb-1">Latitude</dt>
-            <dd class="bg-light rounded-pill px-3 py-2 text-break mb-3">
-              <output id="selectedLatitude">—</output>
-            </dd>
+            <div id="selectedLocationTypeRow" hidden>
+              <dt class="small fw-semibold text-dark mb-1">Type</dt>
+              <dd id="selectedLocationType" class="bg-light rounded-pill px-3 py-2 text-break mb-3"></dd>
+            </div>
+            <div id="selectedLocationDetailsRow" hidden>
+              <dt class="small fw-semibold text-dark mb-1">Details</dt>
+              <dd class="bg-light rounded-4 px-3 py-2 text-break mb-3">
+                <ul id="selectedLocationDetails" class="mb-0 ps-3"></ul>
+              </dd>
+            </div>
+            <div>
+              <dt class="small fw-semibold text-dark mb-1">Latitude</dt>
+              <dd class="bg-light rounded-pill px-3 py-2 text-break mb-3">
+                <output id="selectedLatitude">—</output>
+              </dd>
+            </div>
 
-            <dt class="small fw-semibold text-dark mb-1">Longitude</dt>
-            <dd class="bg-light rounded-pill px-3 py-2 text-break mb-0">
-              <output id="selectedLongitude">—</output>
-            </dd>
+            <div>
+              <dt class="small fw-semibold text-dark mb-1">Longitude</dt>
+              <dd class="bg-light rounded-pill px-3 py-2 text-break mb-0">
+                <output id="selectedLongitude">—</output>
+              </dd>
+            </div>
           </dl>
         </div>
       </div>
@@ -122,10 +136,10 @@
         <input id="searchField" size="1"
           class="form-control flex-grow-1 rounded-pill border-dark bg-body-secondary text-dark px-3 py-2" type="search"
           placeholder="Search Location..." aria-label="Search">
-        <button type="submit" id="submitSearch"
+        <button type="submit" id="submitSearch" aria-label="Search locations"
           class="btn btn-outline-dark rounded-pill bg-body-secondary flex-shrink-0 px-3">
 
-          <img src="../res/img/search-icon.svg" class="object-fit-contain w-100 h-100" alt="Bookmarks">
+          <img src="../res/img/search-icon.svg" class="object-fit-contain w-100 h-100" alt="">
         </button>
         <button id="closeSearchMenu" type="button"
           class="btn btn-outline-dark rounded-circle bg-body-secondary flex-shrink-0 d-md-none d-inline-flex align-items-center justify-content-center"
