@@ -1,10 +1,11 @@
 import { loadBuildings, highlightBuilding, findBuildingAt, findBuildingByText, isInside, toLngLat, buildings } from "./buildings.js";
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, deleteDoc, getDoc } from "firebase/firestore";
 import { bookmarkT, getPersonalBookmarks } from "./bookmarks.js";
 import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
 import { setWashroomFilter } from "./washrooms.js";
+import { showBuildingFloor } from "./floorPlan.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
   const searchMenu = document.getElementById("searchMenu");
@@ -29,6 +30,10 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchingText = document.getElementById("searchMenuSearching");
   const searchingText2 = document.getElementById("searchMenuSearching2");
   const washroomFilter = document.getElementById("washroomFilter");
+  const roomsearchForm = document.getElementById("roomsearchForm");
+  const roomsearchField = document.getElementById("roomsearchField");
+  const submitRoomSearch = document.getElementById("submitRoomSearch");
+  const aboutLocationTitle = document.getElementById("aboutLocationTitle");
   let washroomsVisible = false;
   let buildingsLoadError = false;
   const buildingsReady = loadBuildings().catch(error => {
@@ -295,6 +300,9 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     } else locationDetails.selectLocation({ lng: b.center[1], lat: b.center[0] }, b.name, b);
     map.jumpTo({ center: toLngLat(b.center), zoom: 18 });
     searchStatus.textContent = "";
+    roomsearchField.classList.toggle('d-flex');
+    submitRoomSearch.classList.toggle('d-flex');
+    //roomsearch.classList.toggle('d-flex');
     closeMobileSearch();
   }
 
@@ -328,7 +336,45 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   }
 
-
+  async function searchRoom(){
+    console.log(aboutLocationTitle.textContent);
+    const currentbuilding = aboutLocationTitle.textContent;
+    console.log(roomsearchField.value[0]);
+    if (typeof roomsearchField.value[0] == "string"){
+      showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[1]));
+    }
+    else{
+      showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[0]));
+    }
+    //showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[0]));
+    const floorDocRef = doc(db, "buildings", `${aboutLocationTitle.textContent}`.toLowerCase(), "floors", `f${roomsearchField.value[0]}`);
+    const floorDoc = await getDoc(floorDocRef);
+      if (floorDoc.exists()) {
+        console.log("Floor document exists:", floorDoc.data());
+        let roomexist = false; 
+        const rooms = floorDoc.data().features
+        for (let i = 0; i < rooms.length; i++){
+          //console.log(rooms[i].properties.name)
+          if (rooms[i].properties.name == roomsearchField.value){
+            roomexist = true;
+            console.log(rooms[i].properties.label_anchor[0]);
+             console.log(rooms[i].properties.label_anchor[1]);
+            const roomCoords3 = {"lng":rooms[i].properties.label_anchor[0],"lat":rooms[i].properties.label_anchor[1]}
+            //searchRecent(currentbuilding);
+            locationDetails.selectLocation(roomCoords3,currentbuilding.concat(" ",roomsearchField.value));
+            //showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[0]));
+            roomsearchField.value = "";
+          } 
+        }
+        if (roomexist == false){
+          console.log("invalid room");
+        }
+        //console.log(floorDoc.data().features[0].properties.name);
+      }
+      else{
+        console.log("Floor document does not exist.");
+      }
+  }
 
   function search() {
     const text = searchField.value.trim().toLowerCase()
@@ -366,6 +412,15 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       search();
   });
 
+    roomsearchForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (!desktopSearch.matches && mobileSheetSize === "closed") {
+        openMobileSearch();
+        return;
+      }
+      searchRoom();
+  });
+
   map.on('click', async event => {
     closeMobileSearch();
     await Promise.all([buildingsReady, mapReady]);
@@ -377,6 +432,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       locationDetails.close();
       return;
     }
+    console.log(event.lngLat);
     locationDetails.selectLocation(event.lngLat);
   });
 

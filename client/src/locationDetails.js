@@ -14,6 +14,9 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
   const floorChooser = document.getElementById("floorChooser");
+  const roomsearchForm = document.getElementById("roomsearchForm");
+  const roomsearchField = document.getElementById("roomsearchField");
+  const submitRoomSearch = document.getElementById("submitRoomSearch");
 
   function closeFloorChooser() {
     floorChooser.classList.remove("show");
@@ -159,8 +162,10 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     const building = findBuildingAt({ lat: details.latitude, lng: details.longitude });
     setFloorBuilding(building);
     if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
+    
     setLocationPopupOpen(true);
     locationTitle.textContent = details.name;
+    
     marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
     document.getElementById("selectedLatitude").textContent = details.latitude;
     document.getElementById("selectedLongitude").textContent = details.longitude;
@@ -226,6 +231,9 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
     marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
+    roomsearchField.classList.toggle('d-flex', !open);
+    submitRoomSearch.classList.toggle('d-flex', !open);
+    //roomsearch.classList.toggle('d-flex', !open);
     setLocationPopupOpen(true);
     if (building) locationBookmarkButton.dataset.buildingId = building.id;
     else delete locationBookmarkButton.dataset.buildingId;
