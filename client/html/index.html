@@ -37,13 +37,16 @@
           <!-- bookmark, floors -->
           <div class="d-flex flex-row gap-2">
             <button type="button" id="bookmarkSelectedLocation" aria-label="Bookmark this location" aria-pressed="false"
-                    class="wh-50px btn border-0 btn-light rounded-circle shadow bookmark-toggle">
-              <img class="w-100 h-100 ratio-1x1" src="../res/img/bookmark-icon.svg" alt="Bookmark Icon">
+                    class="labeled-icon-btn btn border-0 btn-light rounded-4 shadow bookmark-toggle">
+              <img src="../res/img/bookmark-icon.svg" width="24" height="24" alt="">
+              <span class="label-off" aria-hidden="true">Save</span>
+              <span class="label-on" aria-hidden="true">Saved</span>
             </button>
 
-            <button type="button" id="floorPlanButton" aria-label="Select floor" aria-controls="floorChooser" aria-expanded="false"
-                    class="d-none wh-50px btn border-0 btn-light rounded-circle shadow">
-              <img class="w-100 h-100 ratio-1x1" src="../res/img/floor-select-icon.svg" alt="">
+            <button type="button" id="floorPlanButton" aria-controls="floorChooser" aria-expanded="false"
+                    class="d-none labeled-icon-btn btn border-0 btn-light rounded-4 shadow">
+              <img src="../res/img/floor-select-icon.svg" width="24" height="24" alt="">
+              <span>Floors</span>
             </button>
 
             <div class="d-flex align-items-center gap-1 flex-shrink-0">
@@ -211,14 +214,16 @@
     <!-- Bookmarks -->
     <div id="bookmark-controls" class="position-absolute end-0 me-3 d-flex flex-column-reverse align-items-end">
       <button id="bookmark-button" type="button" aria-controls="bookmark-popup" aria-expanded="false"
-        class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center btn-lg">
-        <img src="../res/img/bookmark-icon.svg" class="object-fit-contain w-50 h-50" alt="Bookmarks">
+        class="map-fab btn btn-light rounded-pill shadow d-flex align-items-center gap-2">
+        <img src="../res/img/bookmark-icon.svg" width="26" height="26" alt="">
+        <span>Bookmarks</span>
       </button>
       <div id="map-floor-control" class="position-relative mb-2">
-        <button id="map-floor-button" type="button" aria-label="Default map floor"
+        <button id="map-floor-button" type="button"
           aria-controls="map-floor-popup" aria-expanded="false"
-          class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center btn-lg">
-          <img src="../res/img/floor-select-icon.svg" class="object-fit-contain w-50 h-50" alt="">
+          class="map-fab btn btn-light rounded-pill shadow d-flex align-items-center gap-2">
+          <img src="../res/img/floor-select-icon.svg" width="26" height="26" alt="">
+          <span>Default floor</span>
         </button>
         <form id="map-floor-popup" class="position-absolute bottom-100 end-0 mb-2 p-3 rounded shadow bg-white" hidden>
           <label for="map-floor-select" class="form-label fw-semibold text-nowrap">Default map floor</label>
