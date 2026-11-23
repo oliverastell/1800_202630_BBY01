@@ -171,6 +171,12 @@
               <circle cx="17" cy="4" r="2" />
               <path d="M4 7h6v7H8.5v7h-3v-7H4zM15 7h4l3 9h-3.5v5h-3v-5H12z" />
             </svg></span><span>Washroom</span></button>
+        <button id="bookmarkPinFilter" type="button"
+          class="btn btn-primary border rounded-pill shadow-sm d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold flex-shrink-0"
+          aria-pressed="true">
+          <img src="../res/img/bookmark-icon-filled.svg" width="16" height="20" alt="">
+          <span>Bookmark pins</span>
+        </button>
       </div>
       <p id="searchStatus" class="px-3 mb-2 text-dark" role="status" aria-live="polite"></p>
       <div id="searchMenuSearching" class="overflow-y-auto flex-shrink-1 mx-3 mt-2 px-3 pt-3 pb-4 rounded-5 bg-body-secondary" >
@@ -183,7 +189,8 @@
       <div id="searchMenuResults11" class="overflow-y-auto flex-shrink-1 mx-3 mt-2 px-3 pt-3 pb-4 rounded-5 bg-body-secondary">
         <div class="d-flex align-items-center gap-2 mb-2">
           <p class="m-0 px-3 py-2 fs-5 text-center text-dark flex-grow-1">Recents</p>
-          <button type=button class="btn border-0 rounded-pill flex-shrink-0" onclick="clearRecent()">Clear All</button>
+          <button type="button" class="btn border-0 rounded-pill flex-shrink-0 recent-search-clear"
+            onclick="clearRecent()">Clear All</button>
         </div>
 
         <div id="searchMenuResults" class="list-group gap-2"></div>
@@ -203,6 +210,20 @@
         class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center btn-lg">
         <img src="../res/img/bookmark-icon.svg" class="object-fit-contain w-50 h-50" alt="Bookmarks">
       </button>
+      <div id="map-floor-control" class="position-relative mb-2">
+        <button id="map-floor-button" type="button" aria-label="Default map floor"
+          aria-controls="map-floor-popup" aria-expanded="false"
+          class="btn btn-light rounded-circle shadow p-0 d-flex justify-content-center align-items-center btn-lg">
+          <img src="../res/img/floor-select-icon.svg" class="object-fit-contain w-50 h-50" alt="">
+        </button>
+        <form id="map-floor-popup" class="position-absolute bottom-100 end-0 mb-2 p-3 rounded shadow bg-white" hidden>
+          <label for="map-floor-select" class="form-label fw-semibold text-nowrap">Default map floor</label>
+          <select id="map-floor-select" class="form-select">
+            <option value="1">1st floor</option>
+          </select>
+          <button type="submit" class="btn btn-primary btn-sm mt-2">Apply</button>
+        </form>
+      </div>
       <div id="bookmark-popup" class="popup-hidden bg-white p-3 rounded shadow mb-2" inert>
         <h5 class="fw-bold mb-2">Bookmarks</h5>
       </div>

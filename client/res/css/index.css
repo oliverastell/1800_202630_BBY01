@@ -28,6 +28,39 @@
   min-width: 0;
 }
 
+#searchMenu :is(input, button, [role="separator"]) {
+  transition: background-color 160ms ease, color 160ms ease, filter 160ms ease;
+}
+
+#searchMenu :is(#searchSheetHandle, #searchResizeHandle) span {
+  transition: transform 160ms ease;
+}
+
+@media (hover: hover) {
+  #searchMenu :is(input, button):hover:not(:disabled) {
+    filter: brightness(0.93);
+  }
+
+  #searchMenu .recent-search-action.bookmark-toggle:hover:not(:disabled) {
+    background-color: #cfe2ff;
+    filter: none;
+  }
+
+  #searchMenu :is(.recent-search-clear, .recent-search-remove):hover:not(:disabled) {
+    background-color: #f8d7da;
+    color: #58151c;
+    filter: none;
+  }
+
+  #searchMenu :is(#searchSheetHandle, #searchResizeHandle):hover span {
+    transform: scale(1.15);
+  }
+}
+
+.bookmark-marker[hidden] {
+  display: none;
+}
+
 .bookmark-list:not(:empty) + .bookmark-empty {
   display: none;
 }
@@ -48,12 +81,8 @@
 }
 
 @media (max-width: 767.98px) {
-  #content {
-    --mobile-search-height: 88px;
-  }
-
   #searchMenu {
-    height: var(--mobile-search-height);
+    height: 88px;
     transition: height 240ms cubic-bezier(.2, .7, .25, 1);
   }
 
@@ -134,30 +163,24 @@
 }
 
 #bookmark-controls {
-  --bookmark-size: 72px;
-  --bookmark-bottom: 3rem;
-  bottom: var(--bookmark-bottom);
+  bottom: 3rem;
   z-index: 2;
   pointer-events: none;
-}
-
-@media (max-width: 767.98px) {
-  #bookmark-controls {
-    --bookmark-bottom: calc(var(--mobile-search-height) + 12px);
-  }
 }
 
 #bookmark-controls > * {
   pointer-events: auto;
 }
 
-#bookmark-button {
-  width: var(--bookmark-size);
-  height: var(--bookmark-size);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+#bookmark-button,
+#map-floor-button {
+  width: 72px;
+  height: 72px;
+  transition: transform 0.15s ease;
 }
 
-#bookmark-button:hover {
+#bookmark-button:hover,
+#map-floor-button:hover {
   transform: scale(1.06);
 }
 
@@ -173,8 +196,18 @@
   width: max-content;
   min-width: min(240px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  max-height: calc(100dvh - var(--bookmark-bottom) - var(--bookmark-size) - 24px);
+  max-height: calc(100dvh - 3rem - 176px);
   overflow-y: auto;
+}
+
+@media (max-width: 767.98px) {
+  #bookmark-controls {
+    bottom: 100px;
+  }
+
+  #bookmark-popup {
+    max-height: calc(100dvh - 276px);
+  }
 }
 
 #aboutLocation,
@@ -378,21 +411,31 @@
   width: 100vw;
   height: 100dvh;
   padding: 12px;
-  background: var(--bs-body-bg);
+  background: #fff;
 }
 .floor-plan-fullscreen .floor-plan-canvas {
   height: 100%;
   max-height: none;
 }
 .floor-plan-svg { width: max(100%, 850px); }
-.floor-plan-area { fill: var(--bs-light); stroke: var(--bs-secondary-color); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
-.floor-plan-label { fill: var(--bs-body-color); font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.floor-plan-area { fill: #f8f9fa; stroke: #6c7074; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.floor-plan-label { fill: #212529; font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
   #searchMenu,
+  #searchMenu :is(input, button, [role="separator"]),
+  #searchMenu :is(#searchSheetHandle, #searchResizeHandle) span,
+  #bookmark-button,
+  #map-floor-button,
   #aboutLocation,
   #bookmark-popup {
     transition: none;
+  }
+
+  #searchMenu :is(#searchSheetHandle, #searchResizeHandle):hover span,
+  #bookmark-button:hover,
+  #map-floor-button:hover {
+    transform: none;
   }
 
   #floorChooser.show,
