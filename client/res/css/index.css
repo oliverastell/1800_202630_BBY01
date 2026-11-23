@@ -28,6 +28,15 @@
   min-width: 0;
 }
 
+.bookmark-list:not(:empty) + .bookmark-empty {
+  display: none;
+}
+
+#searchMenuSearching2 button:focus-visible {
+  outline: 2px solid #164d78;
+  outline-offset: -3px;
+}
+
 #closeSearchMenu {
   width: 44px;
   height: 44px;
@@ -314,9 +323,8 @@
 }
 
 #aboutLocationTitle { min-width: 0; }
-.washroom-marker {
-  width: 30px;
-  height: 30px;
+.washroom-marker,
+.bookmark-marker {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -325,6 +333,21 @@
   border: 2px solid #164d78;
   border-radius: 50%;
   box-shadow: 0 1px 4px #0004;
+}
+.washroom-marker {
+  width: 30px;
+  height: 30px;
+}
+.bookmark-marker {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  cursor: pointer;
+}
+.bookmark-marker img {
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
 }
 .washroom-marker[hidden] { display: none; }
 #aboutLocation.location-dragging { transition: none; }

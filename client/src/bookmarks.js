@@ -13,6 +13,10 @@ list.classList.add("bookmark-list")
 list.style.listStyle = "none"
 list.style.padding = "0"
 popup.appendChild(list)
+const emptyMessage = document.createElement("p");
+emptyMessage.className = "bookmark-empty small text-body-secondary mb-0";
+emptyMessage.textContent = "No bookmarks yet.";
+popup.appendChild(emptyMessage);
 
 //select every bookmark icon that is clickable
 const bookmarkButton = document.querySelectorAll(".bookmark-toggle")
@@ -123,6 +127,19 @@ function setBookmarkMenuOpen(open) {
   popup.inert = !open;
   button.setAttribute("aria-expanded", String(open));
 }
+
+document.addEventListener("click", event => {
+  if (!popup.inert && !popup.contains(event.target) && !button.contains(event.target)) {
+    setBookmarkMenuOpen(false);
+  }
+}, { capture: true });
+
+button.parentElement.addEventListener("keydown", event => {
+  if (event.key !== "Escape" || popup.inert) return;
+  event.stopPropagation();
+  setBookmarkMenuOpen(false);
+  button.focus({ preventScroll: true });
+});
 
 // Replace the handler on hot reload so one click only toggles the menu once.
 button.onclick = function (event) {
@@ -273,10 +290,10 @@ function addBookmarkToList(searchTarget, displayText, coordinates = null) {
           longitude: coordinates.longitude
         }
       }));
-      setBookmarkMenuOpen(false);
     } else {
       searchRecent(searchTarget, false);
     }
+    setBookmarkMenuOpen(false);
   };
 
   item.appendChild(anchor);

@@ -25,6 +25,8 @@ Path: `buildings/{buildingId}`. Read by `client/src/buildings.js`.
 | Field | Type | Purpose |
 | --- | --- | --- |
 | `name` | string | Required shared display name, for example `SW9`. |
+| `type` | string, optional | Classification displayed in the map popup and location details. `parking` is displayed as Parking lot. |
+| `details` | array of strings, optional | Additional lines displayed in the map popup and location details. An empty array hides the section. |
 | `searchAliases` | array of strings | Shared alternative search terms. Defaults to an empty array. |
 | `center` | GeoPoint | Required building center. Older `[latitude, longitude]` arrays are also accepted. |
 | `outline` | array of GeoPoints or JSON string | Required footprint with at least three valid points. A JSON string can encode one ring or multiple footprint rings in `[latitude, longitude]` order. |

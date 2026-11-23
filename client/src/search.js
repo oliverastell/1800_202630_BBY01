@@ -1,11 +1,10 @@
 import { loadBuildings, highlightBuilding, findBuildingAt, findBuildingByText, isInside, toLngLat, buildings } from "./buildings.js";
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, collection, getDocs, deleteDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { bookmarkT, getPersonalBookmarks } from "./bookmarks.js";
 import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
 import { setWashroomFilter } from "./washrooms.js";
-import { showBuildingFloor } from "./floorPlan.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
   const searchMenu = document.getElementById("searchMenu");
@@ -30,10 +29,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchingText = document.getElementById("searchMenuSearching");
   const searchingText2 = document.getElementById("searchMenuSearching2");
   const washroomFilter = document.getElementById("washroomFilter");
-  const roomsearchForm = document.getElementById("roomsearchForm");
-  const roomsearchField = document.getElementById("roomsearchField");
-  const submitRoomSearch = document.getElementById("submitRoomSearch");
-  const aboutLocationTitle = document.getElementById("aboutLocationTitle");
   let washroomsVisible = false;
   let buildingsLoadError = false;
   const buildingsReady = loadBuildings().catch(error => {
@@ -41,6 +36,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     searchStatus.textContent = "Buildings could not be loaded. Please reload to try again.";
     console.error("Error loading buildings:", error);
   });
+  buildingsReady.then(locationDetails.syncBookmarkMarkers);
 
   function addToRecent(name, persist = true, storedKey = null){
       const entry = searchLocations("", buildings, getPersonalBookmarks()).find(entry => entry.key === name || entry.bookmark?.searchTarget === name || entry.aliases.some(alias => alias.toLowerCase() === name.toLowerCase()));
@@ -300,9 +296,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     } else locationDetails.selectLocation({ lng: b.center[1], lat: b.center[0] }, b.name, b);
     map.jumpTo({ center: toLngLat(b.center), zoom: 18 });
     searchStatus.textContent = "";
-    roomsearchField.classList.toggle('d-flex');
-    submitRoomSearch.classList.toggle('d-flex');
-    //roomsearch.classList.toggle('d-flex');
     closeMobileSearch();
   }
 
@@ -336,46 +329,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   }
 
-  async function searchRoom(){
-    console.log(aboutLocationTitle.textContent);
-    const currentbuilding = aboutLocationTitle.textContent;
-    console.log(roomsearchField.value[0]);
-    if (typeof roomsearchField.value[0] == "string"){
-      showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[1]));
-    }
-    else{
-      showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[0]));
-    }
-    //showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[0]));
-    const floorDocRef = doc(db, "buildings", `${aboutLocationTitle.textContent}`.toLowerCase(), "floors", `f${roomsearchField.value[0]}`);
-    const floorDoc = await getDoc(floorDocRef);
-      if (floorDoc.exists()) {
-        console.log("Floor document exists:", floorDoc.data());
-        let roomexist = false; 
-        const rooms = floorDoc.data().features
-        for (let i = 0; i < rooms.length; i++){
-          //console.log(rooms[i].properties.name)
-          if (rooms[i].properties.name == roomsearchField.value){
-            roomexist = true;
-            console.log(rooms[i].properties.label_anchor[0]);
-             console.log(rooms[i].properties.label_anchor[1]);
-            const roomCoords3 = {"lng":rooms[i].properties.label_anchor[0],"lat":rooms[i].properties.label_anchor[1]}
-            //searchRecent(currentbuilding);
-            locationDetails.selectLocation(roomCoords3,currentbuilding.concat(" ",roomsearchField.value));
-            //showBuildingFloor(map,findBuildingByText(aboutLocationTitle.textContent),Number(roomsearchField.value[0]));
-            roomsearchField.value = "";
-          } 
-        }
-        if (roomexist == false){
-          console.log("invalid room");
-        }
-        //console.log(floorDoc.data().features[0].properties.name);
-      }
-      else{
-        console.log("Floor document does not exist.");
-      }
-  }
-
   function search() {
     const text = searchField.value.trim().toLowerCase()
     searchRecent(text)
@@ -383,11 +336,30 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   searchField.addEventListener("click", openMobileSearch);
   searchField.addEventListener("input", openMobileSearch);
-  closeSearchButton.addEventListener("click", closeMobileSearch);
+  closeSearchButton.addEventListener("click", () => {
+    closeMobileSearch();
+    searchField.focus({ preventScroll: true });
+  });
   searchMenu.addEventListener("keydown", event => {
-    if (event.key !== "Escape" || desktopSearch.matches || mobileSheetSize === "closed") return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      const fromInput = event.target === searchField;
+      if (!fromInput && !searchingText2.contains(event.target)) return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const results = [...searchingText2.querySelectorAll("button")];
+      if (!results.length || searchingText.classList.contains("d-none")) return;
+      const index = results.indexOf(event.target);
+      const next = event.key === "ArrowDown"
+        ? results[Math.min(index + 1, results.length - 1)]
+        : fromInput ? results.at(-1) : results[index - 1] ?? searchField;
+      event.preventDefault();
+      next.focus();
+      return;
+    }
+    if (event.key !== "Escape") return;
+    if (desktopSearch.matches && !searchingText2.contains(event.target)) return;
+    if (!desktopSearch.matches && mobileSheetSize === "closed") return;
     event.preventDefault();
-    setMobileSheetSize("closed");
+    closeMobileSearch();
     searchField.focus({ preventScroll: true });
   });
   washroomFilter.addEventListener("click", showWashrooms);
@@ -410,15 +382,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
         return;
       }
       search();
-  });
-
-    roomsearchForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-      if (!desktopSearch.matches && mobileSheetSize === "closed") {
-        openMobileSearch();
-        return;
-      }
-      searchRoom();
   });
 
   map.on('click', async event => {
@@ -475,42 +438,52 @@ function toggleSearchingText(isSearching) {
 }
 
 
-let previousSuggestionQuery = "";
-function searchKeyboard(event) {
-    {
-      const searchtext = document.getElementById("searchField").value.trim().toLowerCase();
-      toggleSearchingText(searchtext.length > 0);
-      const matches = searchtext ? searchLocations(searchtext, buildings, getPersonalBookmarks()).slice(0, 10) : [];
-      const keepPreviousMatches = searchtext.length > 0 && previousSuggestionQuery.length > 0 && searchtext.startsWith(previousSuggestionQuery) && matches.length === 0;
-      previousSuggestionQuery = searchtext;
-      if (keepPreviousMatches) return;
-      searchingText2.innerHTML = "";
-      if (searchtext.length > 0){
-          matches.forEach(showtext => {
-          {
-            let newRow = document.createElement("div");
-            newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
-            let newSearch = document.createElement("button");
-            newSearch.setAttribute("type", "button");
-            newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-            newSearch.addEventListener("click", () => searchRecent(showtext.key));
-            newSearch.textContent = showtext.building && showtext.name !== showtext.building.name ? `${showtext.name} · ${showtext.building.name}` : showtext.name;
-            newRow.appendChild(newSearch)
-            searchingText2.insertBefore(newRow, searchingText2.firstChild);
-          }
-        });
-      }
-          }
-      }
-document.getElementById("searchField").addEventListener("input", searchKeyboard, false);
-searchForm.addEventListener("reset", () => {
-  document.getElementById("searchField").value = "";
-  searchKeyboard();
+function renderSuggestions() {
+  const query = searchField.value.trim();
+  toggleSearchingText(Boolean(query));
+  const hadResultFocus = searchingText2.contains(document.activeElement);
+  searchingText2.replaceChildren();
+  if (hadResultFocus) searchField.focus({ preventScroll: true });
+  if (!query) return;
+
+  const matches = searchLocations(query, buildings, getPersonalBookmarks()).slice(0, 10);
+  if (!matches.length) {
+    const message = document.createElement("p");
+    message.className = "small text-body-secondary mb-0";
+    message.setAttribute("role", "status");
+    message.textContent = buildingsLoading ? "Loading locations…" : "No matching locations.";
+    searchingText2.append(message);
+    return;
+  }
+
+  for (const { key, name, building } of matches) {
+    const row = document.createElement("div");
+    row.className = "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row";
+    const result = document.createElement("button");
+    result.type = "button";
+    result.className = "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5";
+    result.textContent = building && name !== building.name ? `${name} · ${building.name}` : name;
+    result.addEventListener("click", () => searchRecent(key));
+    row.append(result);
+    searchingText2.append(row);
+  }
+}
+
+searchField.addEventListener("input", () => {
+  if (!buildingsLoadError) searchStatus.textContent = "";
+  renderSuggestions();
 });
-buildingsReady.then(searchKeyboard);
+searchForm.addEventListener("reset", () => {
+  searchField.value = "";
+  renderSuggestions();
+});
+let buildingsLoading = true;
+buildingsReady.then(() => {
+  buildingsLoading = false;
+  renderSuggestions();
+});
 function refreshPersonalNames() {
-  previousSuggestionQuery = "";
-  searchKeyboard();
+  renderSuggestions();
   const targets = [...searchMenuResults.children].map(row => ({ target: row.dataset.searchTarget, storedKey: row.dataset.recentKey })).filter(row => row.target);
   searchMenuResults.replaceChildren();
   targets.reverse().forEach(row => addToRecent(row.target, false, row.storedKey));
