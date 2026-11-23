@@ -4,7 +4,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { bookmarkT, getPersonalBookmarks } from "./bookmarks.js";
 import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
-import { setWashroomFilter } from "./washrooms.js";
+import { setMapFilter } from "./mapFilters.js";
+import { enableMapHold, trackRecentTouch } from "./mobileInteractions.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
   const searchMenu = document.getElementById("searchMenu");
@@ -28,8 +29,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchStatus = document.getElementById("searchStatus");
   const searchingText = document.getElementById("searchMenuSearching");
   const searchingText2 = document.getElementById("searchMenuSearching2");
-  const washroomFilter = document.getElementById("washroomFilter");
-  let washroomsVisible = false;
   let buildingsLoadError = false;
   const buildingsReady = loadBuildings().catch(error => {
     buildingsLoadError = true;
@@ -113,6 +112,10 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   }
 
   function setMobileSheetSize(size) {
+    if (!desktopSearch.matches && size !== "closed") {
+      if (!aboutLocation.inert) locationDetails.close();
+      closePopup();
+    }
     mobileSheetSize = size;
     sheetDrag = null;
     searchMenu.classList.remove("search-dragging");
@@ -270,18 +273,12 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   desktopSearch.addEventListener("change", syncSearchLayout);
   syncSearchLayout();
 
-  function showWashrooms() {
-    washroomsVisible = !washroomsVisible;
-    setWashroomFilter(map, washroomsVisible);
-    washroomFilter.setAttribute("aria-pressed", String(washroomsVisible));
-    washroomFilter.setAttribute("aria-label", washroomsVisible ? "Hide washrooms" : "Show washrooms");
-    washroomFilter.classList.toggle("btn-primary", washroomsVisible);
-    washroomFilter.classList.toggle("btn-light", !washroomsVisible);
-    locationDetails.close();
-    if (map.isStyleLoaded()) highlightBuilding(map, null, locationDetails.getDefaultFloor());
-    clearMarkers(markerLayer);
-    clearMarkers(pinLayer);
-    closePopup();
+  function toggleMapFilter(button) {
+    const enabled = button.getAttribute("aria-pressed") !== "true";
+    setMapFilter(map, button.dataset.mapFilter, enabled);
+    button.setAttribute("aria-pressed", String(enabled));
+    button.classList.toggle("btn-primary", enabled);
+    button.classList.toggle("btn-light", !enabled);
     closeMobileSearch();
   }
 
@@ -361,7 +358,24 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     closeMobileSearch();
     searchField.focus({ preventScroll: true });
   });
-  washroomFilter.addEventListener("click", showWashrooms);
+  for (const button of document.querySelectorAll("[data-map-filter]")) {
+    button.addEventListener("click", () => toggleMapFilter(button));
+  }
+  document.getElementById("bookmarkPinFilter").addEventListener("click", closeMobileSearch);
+  document.getElementById("bookmark-button").addEventListener("click", () => {
+    if (desktopSearch.matches) return;
+    if (!aboutLocation.inert) locationDetails.close();
+    closePopup();
+    closeMobileSearch();
+  });
+  // On mobile, get the sheets out of the way so the pin's popup is visible.
+  function revealPinPopup() {
+    if (desktopSearch.matches) return;
+    locationDetails.collapse();
+    closeMobileSearch();
+  }
+  map.on("filterpinopen", revealPinPopup);
+  map.on("pinhold", revealPinPopup);
 
   window.addEventListener("show-bookmarked-location", async ({ detail }) => {
     closeMobileSearch();
@@ -383,20 +397,31 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       search();
   });
 
-  map.on('click', async event => {
+  // Touch screens: a tap on the map never drops a pin; holding the map does.
+  const wasTouch = trackRecentTouch(map.getCanvasContainer());
+  map.on('click', event => {
+    if (event.originalEvent?.target?.closest?.(".holdable-pin")) return;
     closeMobileSearch();
+    if (wasTouch()) return;
+    selectMapPoint(event.lngLat);
+  });
+  enableMapHold(map, ({ lngLat }) => {
+    closeMobileSearch();
+    selectMapPoint(lngLat);
+  });
+
+  async function selectMapPoint(lngLat) {
     await Promise.all([buildingsReady, mapReady]);
-    const { lat, lng } = event.lngLat;
-    const building = findBuildingAt(event.lngLat);
+    const { lat, lng } = lngLat;
+    const building = findBuildingAt(lngLat);
     if (building) { showBuilding(building); return; }
     highlightBuilding(map, null, locationDetails.getDefaultFloor());
     if (!getCampusBorder() || !isInside([lat, lng], getCampusBorder())) {
       locationDetails.close();
       return;
     }
-    console.log(event.lngLat);
-    locationDetails.selectLocation(event.lngLat);
-  });
+    locationDetails.selectLocation(lngLat);
+  }
 
 
   async function addtoRecentFS(searchTarget, displayText) {

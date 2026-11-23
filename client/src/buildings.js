@@ -45,6 +45,7 @@ export function highlightBuilding(map, building, level = 1) {
   showBuildingFloor(map, building, level);
   const sourceId = "selected-building";
   if (!map.getSource(sourceId)) {
+    if (!building) return;
     map.addSource(sourceId, {
       type: "geojson",
       data: { type: "FeatureCollection", features: [] }

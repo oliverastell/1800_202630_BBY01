@@ -161,16 +161,20 @@
       </form>
 
 
-      <div class="d-flex gap-2 px-3 pb-2 flex-shrink-0 overflow-x-auto" aria-label="Search categories">
-        <button id="washroomFilter" type="button"
+      <div class="map-filter-bar d-flex flex-wrap gap-2 px-3 pb-2 flex-shrink-0" role="group" aria-label="Map filters">
+        <button id="washroomFilter" type="button" data-map-filter="washroom"
           class="btn btn-light border rounded-pill shadow-sm d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold flex-shrink-0"
-          aria-label="Show washrooms" aria-pressed="false"><span aria-hidden="true"><svg
+          aria-pressed="false"><span aria-hidden="true"><svg
               xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
               aria-hidden="true">
               <circle cx="7" cy="4" r="2" />
               <circle cx="17" cy="4" r="2" />
               <path d="M4 7h6v7H8.5v7h-3v-7H4zM15 7h4l3 9h-3.5v5h-3v-5H12z" />
             </svg></span><span>Washroom</span></button>
+        <button type="button" data-map-filter="dining" aria-pressed="false"
+          class="btn btn-light border rounded-pill shadow-sm d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold flex-shrink-0">
+          <img src="../res/img/restaurant-icon.svg" width="20" height="20" alt=""><span>Dining</span>
+        </button>
         <button id="bookmarkPinFilter" type="button"
           class="btn btn-primary border rounded-pill shadow-sm d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold flex-shrink-0"
           aria-pressed="true">

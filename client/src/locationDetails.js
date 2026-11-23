@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { buildings, findBuildingAt, highlightBuilding } from "./buildings.js";
 import { bookmarkForBuilding } from "./personalNames.js";
 import { loadFloorFeatures, showBuildingFloor } from "./floorPlan.js";
-import { setDefaultWashroomFloor } from "./washrooms.js";
+import { setDefaultFilterFloor } from "./mapFilters.js";
 
 function locationTypeLabel(building) {
   const type = typeof building?.type === "string" ? building.type.trim() : "";
@@ -81,7 +81,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   mapFloorPopup.addEventListener("submit", event => {
     event.preventDefault();
     defaultFloor = Number(mapFloorSelect.value);
-    setDefaultWashroomFloor(map, defaultFloor);
+    setDefaultFilterFloor(map, defaultFloor);
     if (roomSearchBuilding) {
       const building = roomSearchBuilding;
       const level = getDefaultFloor(building);
@@ -273,6 +273,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     locationBookmarkButton.dataset.selectionVersion = selectionVersion;
     selectedMarker = marker;
     selectedBookmark = details;
+    if (sheetSize === "collapsed") setSheetSize("half");
     const building = buildingForBookmark(details);
     const level = getDefaultFloor(building);
     setFloorBuilding(building, level);
@@ -523,7 +524,11 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     event.stopPropagation();
     dismissDetails();
   });
+  // Shrink the open sheet to its handle so a map popup is not covered.
+  function collapse() {
+    if (!aboutLocation.inert) setSheetSize("collapsed");
+  }
   onAuthStateChanged(auth, close);
   syncBookmarkMarkers();
-  return { selectLocation, close, syncBookmarkMarkers, getDefaultFloor };
+  return { selectLocation, close, collapse, syncBookmarkMarkers, getDefaultFloor };
 }
