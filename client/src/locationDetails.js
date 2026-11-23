@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { buildings, findBuildingAt, highlightBuilding } from "./buildings.js";
 import { bookmarkForBuilding } from "./personalNames.js";
 import { loadFloorFeatures, showBuildingFloor } from "./floorPlan.js";
+import { setDefaultWashroomFloor } from "./washrooms.js";
 
 function locationTypeLabel(building) {
   const type = typeof building?.type === "string" ? building.type.trim() : "";
@@ -21,6 +22,14 @@ function detailListItems(details) {
     item.textContent = detail;
     return item;
   });
+}
+
+function floorLevels(building) {
+  return [...new Set(building.floorLevels ?? [1])].filter(Number.isInteger).sort((a, b) => a - b);
+}
+
+function floorLabel(level) {
+  return ({ 1: "1st floor", 2: "2nd floor", 3: "3rd floor", 4: "4th floor" })[level] ?? `Floor ${level}`;
 }
 
 export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, closePopup }) {
@@ -41,8 +50,58 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const roomsearchField = document.getElementById("roomsearchField");
   const roomSearch = document.getElementById("roomSearch");
   const roomSearchStatus = document.getElementById("roomSearchStatus");
+  const mapFloorControl = document.getElementById("map-floor-control");
+  const mapFloorButton = document.getElementById("map-floor-button");
+  const mapFloorPopup = document.getElementById("map-floor-popup");
+  const mapFloorSelect = document.getElementById("map-floor-select");
+  let defaultFloor = 1;
   let roomSearchBuilding = null;
   let roomSearchRequest = 0;
+
+  function getDefaultFloor(building) {
+    if (!building) return defaultFloor;
+    const levels = floorLevels(building);
+    return levels.includes(defaultFloor) ? defaultFloor : levels.includes(1) ? 1 : levels[0] ?? 1;
+  }
+
+  function setMapFloorPickerOpen(open) {
+    mapFloorPopup.hidden = !open;
+    mapFloorButton.setAttribute("aria-expanded", String(open));
+    if (open) mapFloorSelect.focus({ preventScroll: true });
+  }
+
+  mapFloorButton.addEventListener("click", () => {
+    if (mapFloorPopup.hidden) {
+      const levels = [...new Set([1, ...buildings.flatMap(floorLevels)])].sort((a, b) => a - b);
+      mapFloorSelect.replaceChildren(...levels.map(level => new Option(floorLabel(level), level)));
+      mapFloorSelect.value = String(defaultFloor);
+    }
+    setMapFloorPickerOpen(mapFloorPopup.hidden);
+  });
+  mapFloorPopup.addEventListener("submit", event => {
+    event.preventDefault();
+    defaultFloor = Number(mapFloorSelect.value);
+    setDefaultWashroomFloor(map, defaultFloor);
+    if (roomSearchBuilding) {
+      const building = roomSearchBuilding;
+      const level = getDefaultFloor(building);
+      setFloorBuilding(building, level);
+      showBuildingFloor(map, building, level);
+    } else {
+      showBuildingFloor(map, null, defaultFloor);
+    }
+    setMapFloorPickerOpen(false);
+    mapFloorButton.focus({ preventScroll: true });
+  });
+  document.addEventListener("click", event => {
+    if (!mapFloorPopup.hidden && !mapFloorControl.contains(event.target)) setMapFloorPickerOpen(false);
+  });
+  mapFloorControl.addEventListener("keydown", event => {
+    if (event.key !== "Escape" || mapFloorPopup.hidden) return;
+    event.stopPropagation();
+    setMapFloorPickerOpen(false);
+    mapFloorButton.focus({ preventScroll: true });
+  });
 
   function closeFloorChooser() {
     floorChooser.classList.remove("show");
@@ -52,7 +111,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   function setFloorBuilding(building, activeLevel = 1) {
     closeFloorChooser();
     floorChooser.replaceChildren();
-    const levels = building ? [...new Set(building.floorLevels ?? [1])].filter(Number.isInteger).sort((a, b) => a - b) : [];
+    const levels = building ? floorLevels(building) : [];
     roomSearchBuilding = levels.length ? building : null;
     roomSearchRequest++;
     roomSearch.hidden = !roomSearchBuilding;
@@ -64,7 +123,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       const button = document.createElement("button");
       button.type = "button";
       button.className = "dropdown-item";
-      button.textContent = ({ 1: "1st floor", 2: "2nd floor", 3: "3rd floor", 4: "4th floor" })[level] ?? `Floor ${level}`;
+      button.textContent = floorLabel(level);
       button.classList.toggle("active", level === activeLevel);
       button.setAttribute("aria-pressed", String(level === activeLevel));
       button.addEventListener("click", () => {
@@ -215,8 +274,9 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     selectedMarker = marker;
     selectedBookmark = details;
     const building = buildingForBookmark(details);
-    setFloorBuilding(building);
-    if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
+    const level = getDefaultFloor(building);
+    setFloorBuilding(building, level);
+    if (map.isStyleLoaded()) highlightBuilding(map, building ?? null, level);
     setLocationPopupOpen(true);
     locationTitle.textContent = details.name;
     setLocationMetadata(building);
@@ -247,6 +307,19 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     selectedMarker = null;
     selectedBookmark = null;
   }
+  const bookmarkPinFilter = document.getElementById("bookmarkPinFilter");
+  let bookmarkPinsVisible = true;
+  bookmarkPinFilter.addEventListener("click", () => {
+    bookmarkPinsVisible = !bookmarkPinsVisible;
+    bookmarkPinFilter.setAttribute("aria-pressed", String(bookmarkPinsVisible));
+    bookmarkPinFilter.classList.toggle("btn-primary", bookmarkPinsVisible);
+    bookmarkPinFilter.classList.toggle("btn-light", !bookmarkPinsVisible);
+    for (const { marker } of savedPins.values()) {
+      marker.getElement().hidden = !bookmarkPinsVisible;
+      if (!bookmarkPinsVisible) marker.getPopup().remove();
+    }
+  });
+
   function syncBookmarkMarkers() {
     const visible = new Set();
     for (const bookmark of getPersonalBookmarks()) {
@@ -284,6 +357,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       const element = document.createElement("button");
       element.type = "button";
       element.className = "bookmark-marker";
+      element.hidden = !bookmarkPinsVisible;
       element.title = name;
       element.setAttribute("aria-label", `Open bookmark: ${name}`);
       const icon = document.createElement("img");
@@ -316,7 +390,8 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
-    setFloorBuilding(building, roomLevel ?? 1);
+    const level = roomLevel ?? getDefaultFloor(building);
+    setFloorBuilding(building, level);
     setLocationMetadata(building);
     const version = ++selectionVersion;
     const content = building ? popupContent(label, building) : label;
@@ -339,7 +414,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     });
     selectedMarker = marker;
     selectedBookmark = null;
-    if (map.isStyleLoaded()) highlightBuilding(map, building, roomLevel ?? 1);
+    if (map.isStyleLoaded()) highlightBuilding(map, building, level);
     marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
     setLocationPopupOpen(true);
@@ -415,7 +490,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     if (!saved) return;
     clearMarkers(pinLayer);
     showSavedLocation(saved.details, saved.marker);
-    saved.marker.togglePopup();
+    if (bookmarkPinsVisible) saved.marker.togglePopup();
   });
   window.addEventListener("location-bookmark-removed", ({ detail }) => {
     const point = selectedBookmark?.searchTarget === detail.searchTarget ? selectedMarker.getLngLat() : null;
@@ -429,7 +504,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     close();
     showSavedLocation(saved.details, saved.marker);
     map.jumpTo({ center: saved.marker.getLngLat(), zoom: 18 });
-    saved.marker.togglePopup();
+    if (bookmarkPinsVisible) saved.marker.togglePopup();
   });
   window.addEventListener("location-bookmark-renamed", ({ detail }) => {
     if (locationBookmarkButton.dataset.bookmarkKey === detail.searchTarget) {
@@ -440,7 +515,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   function dismissDetails() {
     const bookmarkMarker = selectedBookmark && selectedMarker?.getElement();
     close();
-    (bookmarkMarker ?? map.getCanvas()).focus({ preventScroll: true });
+    (bookmarkPinsVisible && bookmarkMarker ? bookmarkMarker : map.getCanvas()).focus({ preventScroll: true });
   }
   document.getElementById("closeAboutLocation").addEventListener("click", dismissDetails);
   aboutLocation.addEventListener("keydown", event => {
@@ -450,5 +525,5 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   });
   onAuthStateChanged(auth, close);
   syncBookmarkMarkers();
-  return { selectLocation, close, syncBookmarkMarkers };
+  return { selectLocation, close, syncBookmarkMarkers, getDefaultFloor };
 }

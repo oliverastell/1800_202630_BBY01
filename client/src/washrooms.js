@@ -9,22 +9,33 @@ const washroomIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height=
 </svg>`;
 
 function stateFor(map) {
-  if (!mapStates.has(map)) mapStates.set(map, { records: [], buildingId: null, floorId: "f1", enabled: false });
+  if (!mapStates.has(map)) {
+    mapStates.set(map, { records: [], buildingId: null, floorId: "f1", defaultFloorId: "f1", enabled: false });
+  }
   return mapStates.get(map);
 }
 
 export function setWashroomFilter(map, enabled) {
+  stateFor(map).enabled = enabled;
+  updateWashroomVisibility(map);
+}
+
+export function setDefaultWashroomFloor(map, level) {
   const state = stateFor(map);
-  state.enabled = enabled;
-  updateWashroomVisibility(map, state.buildingId, Number(state.floorId.slice(1)));
+  state.defaultFloorId = `f${level}`;
+  renderWashroomVisibility(state);
 }
 
 export function updateWashroomVisibility(map, buildingId = null, level = 1) {
   const state = stateFor(map);
   state.buildingId = buildingId;
   state.floorId = `f${level}`;
+  renderWashroomVisibility(state);
+}
+
+function renderWashroomVisibility(state) {
   for (const record of state.records) {
-    const floorId = record.buildingId === buildingId ? state.floorId : "f1";
+    const floorId = record.buildingId === state.buildingId ? state.floorId : state.defaultFloorId;
     record.marker.getElement().hidden = !state.enabled || record.floorId !== floorId;
   }
 }
@@ -58,7 +69,7 @@ export async function setupWashrooms({ map, mapReady }) {
         .setLngLat([longitude, latitude]).addTo(map);
       state.records.push({ buildingId: washroom.buildingId, floorId: washroom.floorId, marker });
     });
-    updateWashroomVisibility(map, state.buildingId, Number(state.floorId.slice(1)));
+    renderWashroomVisibility(state);
   } catch (error) {
     console.error("Could not load washrooms from Firebase:", error);
   }

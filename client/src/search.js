@@ -68,7 +68,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       bookmarkT(bookmarkButton);
       let xButton = document.createElement("button");
       xButton.setAttribute("type", "button");
-      xButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action");
+      xButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action recent-search-remove");
       xButton.textContent = "X";
       xButton.setAttribute("aria-label", "Remove recent search");
       xButton.setAttribute("onclick", "removeFromRecent(this)");
@@ -278,7 +278,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     washroomFilter.classList.toggle("btn-primary", washroomsVisible);
     washroomFilter.classList.toggle("btn-light", !washroomsVisible);
     locationDetails.close();
-    if (map.isStyleLoaded()) highlightBuilding(map, null);
+    if (map.isStyleLoaded()) highlightBuilding(map, null, locationDetails.getDefaultFloor());
     clearMarkers(markerLayer);
     clearMarkers(pinLayer);
     closePopup();
@@ -286,7 +286,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   }
 
   function showBuilding(b) {
-    highlightBuilding(map, b);
     clearMarkers(markerLayer);
     clearMarkers(pinLayer);
     closePopup();
@@ -369,7 +368,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     clearMarkers(markerLayer);
     await Promise.all([buildingsReady, mapReady]);
     const building = findBuildingAt({ lat: detail.latitude, lng: detail.longitude });
-    highlightBuilding(map, building ?? null);
+    highlightBuilding(map, building ?? null, locationDetails.getDefaultFloor(building));
   });
 
   Object.assign(window, {searchRecent,removeFromRecent,clearRecent})
@@ -390,7 +389,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     const { lat, lng } = event.lngLat;
     const building = findBuildingAt(event.lngLat);
     if (building) { showBuilding(building); return; }
-    highlightBuilding(map, null);
+    highlightBuilding(map, null, locationDetails.getDefaultFloor());
     if (!getCampusBorder() || !isInside([lat, lng], getCampusBorder())) {
       locationDetails.close();
       return;
