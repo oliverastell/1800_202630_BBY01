@@ -78,7 +78,9 @@ export function loadFloorFeatures(buildingId, level) {
         } else if (isPoint(room.center)) {
           geometry = { type: "Point", coordinates: coordinate(room.center) };
         } else return [];
-        return [{ type: "Feature", properties: { name: room.name, kind: room.kind, use: room.use, building: buildingId, level }, geometry }];
+        const properties = { name: room.name, kind: room.kind, use: room.use, building: buildingId, level };
+        if (isPoint(room.center)) properties.label_anchor = coordinate(room.center);
+        return [{ type: "Feature", properties, geometry }];
       });
       if (!features.length) throw new Error("Floor document has no valid rooms or room coordinates");
       return features;

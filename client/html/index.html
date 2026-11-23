@@ -71,6 +71,15 @@
           </div>
         </div>
 
+        <div id="roomSearch" hidden>
+          <form id="roomsearchForm" role="search" aria-label="Room search" class="d-flex gap-2">
+            <input id="roomsearchField" type="search" class="form-control rounded-pill" aria-label="Room number"
+                   aria-describedby="roomSearchStatus" placeholder="Search room number" required>
+            <button type="submit" class="btn btn-outline-dark rounded-pill">Search</button>
+          </form>
+          <div id="roomSearchStatus" class="small" role="status"></div>
+        </div>
+
         <!-- Location metadata -->
         <div class="bg-body-secondary rounded-5 p-3">
           <dl class="mb-0">

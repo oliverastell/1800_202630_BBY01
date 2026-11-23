@@ -3,7 +3,7 @@ import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { buildings, findBuildingAt, highlightBuilding } from "./buildings.js";
 import { bookmarkForBuilding } from "./personalNames.js";
-import { showBuildingFloor } from "./floorPlan.js";
+import { loadFloorFeatures, showBuildingFloor } from "./floorPlan.js";
 
 function locationTypeLabel(building) {
   const type = typeof building?.type === "string" ? building.type.trim() : "";
@@ -37,16 +37,27 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
   const floorChooser = document.getElementById("floorChooser");
+  const roomsearchForm = document.getElementById("roomsearchForm");
+  const roomsearchField = document.getElementById("roomsearchField");
+  const roomSearch = document.getElementById("roomSearch");
+  const roomSearchStatus = document.getElementById("roomSearchStatus");
+  let roomSearchBuilding = null;
+  let roomSearchRequest = 0;
 
   function closeFloorChooser() {
     floorChooser.classList.remove("show");
     floorPlanButton.setAttribute("aria-expanded", "false");
   }
 
-  function setFloorBuilding(building) {
+  function setFloorBuilding(building, activeLevel = 1) {
     closeFloorChooser();
     floorChooser.replaceChildren();
     const levels = building ? [...new Set(building.floorLevels ?? [1])].filter(Number.isInteger).sort((a, b) => a - b) : [];
+    roomSearchBuilding = levels.length ? building : null;
+    roomSearchRequest++;
+    roomSearch.hidden = !roomSearchBuilding;
+    roomsearchForm.reset();
+    roomSearchStatus.textContent = "";
     floorDropdown.classList.toggle("d-none", !levels.length);
     floorPlanButton.classList.toggle("d-none", !levels.length);
     for (const level of levels) {
@@ -54,8 +65,8 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       button.type = "button";
       button.className = "dropdown-item";
       button.textContent = ({ 1: "1st floor", 2: "2nd floor", 3: "3rd floor", 4: "4th floor" })[level] ?? `Floor ${level}`;
-      button.classList.toggle("active", level === 1);
-      button.setAttribute("aria-pressed", String(level === 1));
+      button.classList.toggle("active", level === activeLevel);
+      button.setAttribute("aria-pressed", String(level === activeLevel));
       button.addEventListener("click", () => {
         for (const item of floorChooser.children) {
           item.classList.toggle("active", item === button);
@@ -170,21 +181,12 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
 
   function popupContent(title, building) {
     const type = locationTypeLabel(building);
-    const details = locationDetailItems(building);
     const container = document.createElement("div");
     container.append(title);
-    if (!type && !details.length) return container;
+    if (!type) return container;
     const metadata = document.createElement("div");
     metadata.className = "small text-body-secondary text-break";
-    if (type) metadata.append(`Type: ${type}`);
-    if (details.length) {
-      const heading = document.createElement("div");
-      heading.textContent = "Details";
-      const list = document.createElement("ul");
-      list.className = "mb-0 ps-3";
-      list.append(...detailListItems(details));
-      metadata.append(heading, list);
-    }
+    metadata.textContent = `Type: ${type}`;
     container.append(metadata);
     return container;
   }
@@ -310,12 +312,12 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       savedPins.delete(key);
     }
   }
-  async function selectLocation(point, label = "Selected location", building = null) {
-    setFloorBuilding(building);
-    setLocationMetadata(building);
+  async function selectLocation(point, label = "Selected location", building = null, roomLevel = null) {
     setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
+    setFloorBuilding(building, roomLevel ?? 1);
+    setLocationMetadata(building);
     const version = ++selectionVersion;
     const content = building ? popupContent(label, building) : label;
     const marker = addMarker([point.lng, point.lat], content, pinLayer);
@@ -331,17 +333,17 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
         selectionVersion++;
         selectedMarker = null;
         selectedBookmark = null;
-    
+        setFloorBuilding(null);
         setLocationPopupOpen(false);
       }
     });
     selectedMarker = marker;
     selectedBookmark = null;
-    if (map.isStyleLoaded()) highlightBuilding(map, building ?? null);
+    if (map.isStyleLoaded()) highlightBuilding(map, building, roomLevel ?? 1);
     marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
     setLocationPopupOpen(true);
-    if (building) locationBookmarkButton.dataset.buildingId = building.id;
+    if (building && roomLevel === null) locationBookmarkButton.dataset.buildingId = building.id;
     else delete locationBookmarkButton.dataset.buildingId;
     locationTitle.textContent = label === "Selected location" ? "Marked location " + getCachedMarkedLocationNumber() : label;
     document.getElementById("selectedLatitude").textContent = point.lat;
@@ -367,6 +369,38 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
       console.error("Could not get location number:", error);
     }
   }
+  roomsearchForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const building = roomSearchBuilding;
+    if (!building) return;
+    const request = ++roomSearchRequest;
+    const query = roomsearchField.value.trim().toLowerCase();
+    const floor = query.match(/^[a-z]*([0-9])/);
+    const level = floor ? Number(floor[1]) : NaN;
+    if (!(building.floorLevels ?? [1]).includes(level)) {
+      roomSearchStatus.textContent = "Enter a room number on an available floor.";
+      return;
+    }
+
+    roomSearchStatus.textContent = "Searching for room...";
+    try {
+      const features = await loadFloorFeatures(building.id, level);
+      if (request !== roomSearchRequest) return;
+      const room = features.find(feature => String(feature.properties.name).trim().toLowerCase() === query);
+      if (!room) {
+        roomSearchStatus.textContent = "Room not found.";
+        return;
+      }
+      const [lng, lat] = room.properties.label_anchor ?? (room.geometry.type === "Point"
+        ? room.geometry.coordinates : room.geometry.coordinates[0][0]);
+      if (!Number.isFinite(lng) || !Number.isFinite(lat)) throw new Error("Invalid room coordinates");
+      await selectLocation({ lng, lat }, building.name + " " + room.properties.name, building, level);
+    } catch (error) {
+      if (request !== roomSearchRequest) return;
+      roomSearchStatus.textContent = "Room search is unavailable for this floor.";
+      console.error("Could not search floor rooms:", error);
+    }
+  });
   window.addEventListener("bookmarks-loaded", () => {
     syncBookmarkMarkers();
     if (selectedMarker) syncLocationBookmark(locationBookmarkButton, locationTitle.textContent);

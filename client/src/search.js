@@ -329,8 +329,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   }
 
-
-
   function search() {
     const text = searchField.value.trim().toLowerCase()
     searchRecent(text)
@@ -397,6 +395,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       locationDetails.close();
       return;
     }
+    console.log(event.lngLat);
     locationDetails.selectLocation(event.lngLat);
   });
 
