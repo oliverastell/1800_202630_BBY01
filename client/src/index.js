@@ -4,6 +4,7 @@ import { setupSearch } from "./search.js";
 
 import { setupLocationDetails } from "./locationDetails.js";
 import { setupMapFilters } from "./mapFilters.js";
+import {redirectToWelcomeIfNecessary} from "./redirectToWelcome.js";
 
 const campusMap = createCampusMap();
 setupMapFilters(campusMap);
@@ -11,3 +12,6 @@ setupMapFilters(campusMap);
 setupLocation(campusMap.map);
 const locationDetails = setupLocationDetails(campusMap);
 setupSearch(campusMap, locationDetails);
+
+
+redirectToWelcomeIfNecessary()
