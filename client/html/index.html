@@ -74,6 +74,11 @@
           </div>
         </div>
 
+        <div>
+          <button id="directionsToBuilding" type="button" class="btn btn-primary w-100 rounded-pill d-none">Show walking route</button>
+          <p id="routeStatus" class="small text-dark mt-2 mb-0 d-none" role="status" aria-live="polite"></p>
+        </div>
+
         <div id="roomSearch" hidden>
           <form id="roomsearchForm" role="search" aria-label="Room search" class="d-flex gap-2">
             <input id="roomsearchField" type="search" class="form-control rounded-pill" aria-label="Room number"
@@ -110,10 +115,6 @@
               </dd>
             </div>
           </dl>
-        </div>
-        <div>
-          <button id="directionsToBuilding" type="button" class="btn btn-primary w-100 rounded-pill d-none">Show walking route</button>
-          <p id="routeStatus" class="small text-dark mt-2 mb-0 d-none" role="status" aria-live="polite"></p>
         </div>
       </div>
     </section>

@@ -6,6 +6,7 @@ import { buildings, findBuildingAt, highlightBuilding } from "./buildings.js";
 import { bookmarkForBuilding } from "./personalNames.js";
 import { loadFloorFeatures, showBuildingFloor } from "./floorPlan.js";
 import { setDefaultFilterFloor } from "./mapFilters.js";
+import { findWalkingRoute } from "./walkingRoute.js";
 
 function locationTypeLabel(building) {
   const type = typeof building?.type === "string" ? building.type.trim() : "";
@@ -87,25 +88,12 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     routeStatus.textContent = "Finding walking route…";
     routeStatus.classList.remove("d-none");
     try {
-      const url = new URL("https://valhalla1.openstreetmap.de/route");
-      url.searchParams.set("json", JSON.stringify({
-        locations: [
-          { lat: current.latitude, lon: current.longitude },
-          { lat: building.center[0], lon: building.center[1] }
-        ],
-        costing: "pedestrian", format: "osrm", shape_format: "geojson"
-      }));
-      const response = await fetch(url, {
-        signal: request.signal,
-        headers: { "X-Client-Id": "bcit-bby-campus-map" }
+      const route = await findWalkingRoute({
+        current,
+        originBuilding: findBuildingAt({ lat: current.latitude, lng: current.longitude }),
+        destinationBuilding: building,
+        signal: request.signal
       });
-      if (!response.ok) throw new Error(`Routing service returned ${response.status}`);
-      const data = await response.json();
-      const route = data.routes?.[0];
-      if (data.code !== "Ok" || route?.geometry?.type !== "LineString" ||
-          !Array.isArray(route.geometry.coordinates) || route.geometry.coordinates.length < 2) {
-        throw new Error("No walking route found");
-      }
       if (request.signal.aborted || directionsBuilding !== building) return;
       await mapReady;
       if (request.signal.aborted || directionsBuilding !== building) return;
