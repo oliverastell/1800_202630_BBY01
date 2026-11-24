@@ -1,25 +1,30 @@
 import { db } from "./firebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
-import { updateWashroomVisibility } from "./washrooms.js";
+import { updateMapFilterVisibility } from "./mapFilters.js";
 
 const pendingFloors = new Map();
 const svgNS = "http://www.w3.org/2000/svg";
 const mapSelections = new WeakMap();
+const sourceId = "building-floor-rooms";
+const emptyFloor = { type: "FeatureCollection", features: [] };
+
+export function clearFloorPlan(map) {
+  mapSelections.delete(map);
+  map.getSource(sourceId)?.setData(emptyFloor);
+}
 
 // Display the selected building's first floor in its geographic position.
 export async function showBuildingFloor(map, building, level = 1) {
-  updateWashroomVisibility(map, building?.id ?? null, level);
+  updateMapFilterVisibility(map, building?.id ?? null, level);
+  clearFloorPlan(map);
   const selection = {};
   mapSelections.set(map, selection);
-  const sourceId = "building-floor-rooms";
-  const empty = { type: "FeatureCollection", features: [] };
-  map.getSource(sourceId)?.setData(empty);
   if (!building || (Array.isArray(building.floorLevels) && !building.floorLevels.includes(level))) return;
   try {
     const features = await loadFloorFeatures(building.id, level);
     if (mapSelections.get(map) !== selection) return;
     if (!map.getSource(sourceId)) {
-      map.addSource(sourceId, { type: "geojson", data: empty });
+      map.addSource(sourceId, { type: "geojson", data: emptyFloor });
       map.addLayer({
         id: "building-floor-fill", type: "fill", source: sourceId,
         filter: ["==", "$type", "Polygon"],
@@ -78,7 +83,9 @@ export function loadFloorFeatures(buildingId, level) {
         } else if (isPoint(room.center)) {
           geometry = { type: "Point", coordinates: coordinate(room.center) };
         } else return [];
-        return [{ type: "Feature", properties: { name: room.name, kind: room.kind, use: room.use, building: buildingId, level }, geometry }];
+        const properties = { name: room.name, kind: room.kind, use: room.use, building: buildingId, level };
+        if (isPoint(room.center)) properties.label_anchor = coordinate(room.center);
+        return [{ type: "Feature", properties, geometry }];
       });
       if (!features.length) throw new Error("Floor document has no valid rooms or room coordinates");
       return features;

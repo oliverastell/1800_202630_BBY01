@@ -3,8 +3,10 @@ import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { bookmarkT, getPersonalBookmarks } from "./bookmarks.js";
+import { confirmAction, showError } from "./alerts.js";
 import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
-import { setWashroomFilter } from "./washrooms.js";
+import { setMapFilter } from "./mapFilters.js";
+import { enableMapHold, trackRecentTouch } from "./mobileInteractions.js";
 
 export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
   const searchMenu = document.getElementById("searchMenu");
@@ -28,14 +30,13 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchStatus = document.getElementById("searchStatus");
   const searchingText = document.getElementById("searchMenuSearching");
   const searchingText2 = document.getElementById("searchMenuSearching2");
-  const washroomFilter = document.getElementById("washroomFilter");
-  let washroomsVisible = false;
   let buildingsLoadError = false;
   const buildingsReady = loadBuildings().catch(error => {
     buildingsLoadError = true;
     searchStatus.textContent = "Buildings could not be loaded. Please reload to try again.";
     console.error("Error loading buildings:", error);
   });
+  buildingsReady.then(locationDetails.syncBookmarkMarkers);
 
   function addToRecent(name, persist = true, storedKey = null){
       const entry = searchLocations("", buildings, getPersonalBookmarks()).find(entry => entry.key === name || entry.bookmark?.searchTarget === name || entry.aliases.some(alias => alias.toLowerCase() === name.toLowerCase()));
@@ -67,7 +68,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       bookmarkT(bookmarkButton);
       let xButton = document.createElement("button");
       xButton.setAttribute("type", "button");
-      xButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action");
+      xButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 recent-search-action recent-search-remove");
       xButton.textContent = "X";
       xButton.setAttribute("aria-label", "Remove recent search");
       xButton.setAttribute("onclick", "removeFromRecent(this)");
@@ -86,14 +87,29 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       });
   }
 
-  function removeFromRecent(target){
+  async function removeFromRecent(target){
       const row = target.parentElement;
       const searchTarget = row.dataset.recentKey || row.dataset.searchTarget || row.firstElementChild.textContent;
+      const confirmed = await confirmAction({
+          title: "Remove from recents?",
+          text: `"${row.firstElementChild.textContent}" will be removed from your recent searches.`,
+          confirmText: "Remove",
+          danger: true
+      });
+      if (!confirmed) return;
       row.remove();
       removeRecentSearchFromFirestore(searchTarget);
   }
 
   async function clearRecent(){
+      if (!searchMenuResults.children.length) return;
+      const confirmed = await confirmAction({
+          title: "Clear all recent searches?",
+          text: "This can't be undone.",
+          confirmText: "Clear all",
+          danger: true
+      });
+      if (!confirmed) return;
       const user = auth.currentUser
       if (!user) {
           searchMenuResults.innerHTML = "";
@@ -108,10 +124,15 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
           searchMenuResults.innerHTML = "";
       } catch (error) {
           console.error("Error clearing recent searches:", error)
+          showError("Could not clear your recent searches. Please try again.")
       }
   }
 
   function setMobileSheetSize(size) {
+    if (!desktopSearch.matches && size !== "closed") {
+      if (!aboutLocation.inert) locationDetails.close();
+      closePopup();
+    }
     mobileSheetSize = size;
     sheetDrag = null;
     searchMenu.classList.remove("search-dragging");
@@ -269,23 +290,16 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   desktopSearch.addEventListener("change", syncSearchLayout);
   syncSearchLayout();
 
-  function showWashrooms() {
-    washroomsVisible = !washroomsVisible;
-    setWashroomFilter(map, washroomsVisible);
-    washroomFilter.setAttribute("aria-pressed", String(washroomsVisible));
-    washroomFilter.setAttribute("aria-label", washroomsVisible ? "Hide washrooms" : "Show washrooms");
-    washroomFilter.classList.toggle("btn-primary", washroomsVisible);
-    washroomFilter.classList.toggle("btn-light", !washroomsVisible);
-    locationDetails.close();
-    if (map.isStyleLoaded()) highlightBuilding(map, null);
-    clearMarkers(markerLayer);
-    clearMarkers(pinLayer);
-    closePopup();
+  function toggleMapFilter(button) {
+    const enabled = button.getAttribute("aria-pressed") !== "true";
+    setMapFilter(map, button.dataset.mapFilter, enabled);
+    button.setAttribute("aria-pressed", String(enabled));
+    button.classList.toggle("btn-primary", enabled);
+    button.classList.toggle("btn-light", !enabled);
     closeMobileSearch();
   }
 
   function showBuilding(b) {
-    highlightBuilding(map, b);
     clearMarkers(markerLayer);
     clearMarkers(pinLayer);
     closePopup();
@@ -328,8 +342,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   }
 
-
-
   function search() {
     const text = searchField.value.trim().toLowerCase()
     searchRecent(text)
@@ -337,21 +349,57 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
 
   searchField.addEventListener("click", openMobileSearch);
   searchField.addEventListener("input", openMobileSearch);
-  closeSearchButton.addEventListener("click", closeMobileSearch);
-  searchMenu.addEventListener("keydown", event => {
-    if (event.key !== "Escape" || desktopSearch.matches || mobileSheetSize === "closed") return;
-    event.preventDefault();
-    setMobileSheetSize("closed");
+  closeSearchButton.addEventListener("click", () => {
+    closeMobileSearch();
     searchField.focus({ preventScroll: true });
   });
-  washroomFilter.addEventListener("click", showWashrooms);
+  searchMenu.addEventListener("keydown", event => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      const fromInput = event.target === searchField;
+      if (!fromInput && !searchingText2.contains(event.target)) return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const results = [...searchingText2.querySelectorAll("button")];
+      if (!results.length || searchingText.classList.contains("d-none")) return;
+      const index = results.indexOf(event.target);
+      const next = event.key === "ArrowDown"
+        ? results[Math.min(index + 1, results.length - 1)]
+        : fromInput ? results.at(-1) : results[index - 1] ?? searchField;
+      event.preventDefault();
+      next.focus();
+      return;
+    }
+    if (event.key !== "Escape") return;
+    if (desktopSearch.matches && !searchingText2.contains(event.target)) return;
+    if (!desktopSearch.matches && mobileSheetSize === "closed") return;
+    event.preventDefault();
+    closeMobileSearch();
+    searchField.focus({ preventScroll: true });
+  });
+  for (const button of document.querySelectorAll("[data-map-filter]")) {
+    button.addEventListener("click", () => toggleMapFilter(button));
+  }
+  document.getElementById("bookmarkPinFilter").addEventListener("click", closeMobileSearch);
+  document.getElementById("bookmark-button").addEventListener("click", () => {
+    if (desktopSearch.matches) return;
+    if (!aboutLocation.inert) locationDetails.close();
+    closePopup();
+    closeMobileSearch();
+  });
+  // On mobile, get the sheets out of the way so the pin's popup is visible.
+  function revealPinPopup() {
+    if (desktopSearch.matches) return;
+    locationDetails.collapse();
+    closeMobileSearch();
+  }
+  map.on("filterpinopen", revealPinPopup);
+  map.on("pinhold", revealPinPopup);
 
   window.addEventListener("show-bookmarked-location", async ({ detail }) => {
     closeMobileSearch();
     clearMarkers(markerLayer);
     await Promise.all([buildingsReady, mapReady]);
     const building = findBuildingAt({ lat: detail.latitude, lng: detail.longitude });
-    highlightBuilding(map, building ?? null);
+    highlightBuilding(map, building ?? null, locationDetails.getDefaultFloor(building));
   });
 
   Object.assign(window, {searchRecent,removeFromRecent,clearRecent})
@@ -366,19 +414,31 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       search();
   });
 
-  map.on('click', async event => {
+  // Touch screens: a tap on the map never drops a pin; holding the map does.
+  const wasTouch = trackRecentTouch(map.getCanvasContainer());
+  map.on('click', event => {
+    if (event.originalEvent?.target?.closest?.(".holdable-pin")) return;
     closeMobileSearch();
+    if (wasTouch()) return;
+    selectMapPoint(event.lngLat);
+  });
+  enableMapHold(map, ({ lngLat }) => {
+    closeMobileSearch();
+    selectMapPoint(lngLat);
+  });
+
+  async function selectMapPoint(lngLat) {
     await Promise.all([buildingsReady, mapReady]);
-    const { lat, lng } = event.lngLat;
-    const building = findBuildingAt(event.lngLat);
+    const { lat, lng } = lngLat;
+    const building = findBuildingAt(lngLat);
     if (building) { showBuilding(building); return; }
-    highlightBuilding(map, null);
+    highlightBuilding(map, null, locationDetails.getDefaultFloor());
     if (!getCampusBorder() || !isInside([lat, lng], getCampusBorder())) {
       locationDetails.close();
       return;
     }
-    locationDetails.selectLocation(event.lngLat);
-  });
+    locationDetails.selectLocation(lngLat);
+  }
 
 
   async function addtoRecentFS(searchTarget, displayText) {
@@ -419,42 +479,52 @@ function toggleSearchingText(isSearching) {
 }
 
 
-let previousSuggestionQuery = "";
-function searchKeyboard(event) {
-    {
-      const searchtext = document.getElementById("searchField").value.trim().toLowerCase();
-      toggleSearchingText(searchtext.length > 0);
-      const matches = searchtext ? searchLocations(searchtext, buildings, getPersonalBookmarks()).slice(0, 10) : [];
-      const keepPreviousMatches = searchtext.length > 0 && previousSuggestionQuery.length > 0 && searchtext.startsWith(previousSuggestionQuery) && matches.length === 0;
-      previousSuggestionQuery = searchtext;
-      if (keepPreviousMatches) return;
-      searchingText2.innerHTML = "";
-      if (searchtext.length > 0){
-          matches.forEach(showtext => {
-          {
-            let newRow = document.createElement("div");
-            newRow.setAttribute("class", "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row");
-            let newSearch = document.createElement("button");
-            newSearch.setAttribute("type", "button");
-            newSearch.setAttribute("class", "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5");
-            newSearch.addEventListener("click", () => searchRecent(showtext.key));
-            newSearch.textContent = showtext.building && showtext.name !== showtext.building.name ? `${showtext.name} · ${showtext.building.name}` : showtext.name;
-            newRow.appendChild(newSearch)
-            searchingText2.insertBefore(newRow, searchingText2.firstChild);
-          }
-        });
-      }
-          }
-      }
-document.getElementById("searchField").addEventListener("input", searchKeyboard, false);
-searchForm.addEventListener("reset", () => {
-  document.getElementById("searchField").value = "";
-  searchKeyboard();
+function renderSuggestions() {
+  const query = searchField.value.trim();
+  toggleSearchingText(Boolean(query));
+  const hadResultFocus = searchingText2.contains(document.activeElement);
+  searchingText2.replaceChildren();
+  if (hadResultFocus) searchField.focus({ preventScroll: true });
+  if (!query) return;
+
+  const matches = searchLocations(query, buildings, getPersonalBookmarks()).slice(0, 10);
+  if (!matches.length) {
+    const message = document.createElement("p");
+    message.className = "small text-body-secondary mb-0";
+    message.setAttribute("role", "status");
+    message.textContent = buildingsLoading ? "Loading locations…" : "No matching locations.";
+    searchingText2.append(message);
+    return;
+  }
+
+  for (const { key, name, building } of matches) {
+    const row = document.createElement("div");
+    row.className = "list-group-item p-0 d-flex align-items-center gap-2 border-0 rounded-pill bg-light overflow-hidden recent-search-row";
+    const result = document.createElement("button");
+    result.type = "button";
+    result.className = "btn list-group-item-action text-start text-dark text-break w-100 border-0 rounded-pill py-3 ps-3 pe-5";
+    result.textContent = building && name !== building.name ? `${name} · ${building.name}` : name;
+    result.addEventListener("click", () => searchRecent(key));
+    row.append(result);
+    searchingText2.append(row);
+  }
+}
+
+searchField.addEventListener("input", () => {
+  if (!buildingsLoadError) searchStatus.textContent = "";
+  renderSuggestions();
 });
-buildingsReady.then(searchKeyboard);
+searchForm.addEventListener("reset", () => {
+  searchField.value = "";
+  renderSuggestions();
+});
+let buildingsLoading = true;
+buildingsReady.then(() => {
+  buildingsLoading = false;
+  renderSuggestions();
+});
 function refreshPersonalNames() {
-  previousSuggestionQuery = "";
-  searchKeyboard();
+  renderSuggestions();
   const targets = [...searchMenuResults.children].map(row => ({ target: row.dataset.searchTarget, storedKey: row.dataset.recentKey })).filter(row => row.target);
   searchMenuResults.replaceChildren();
   targets.reverse().forEach(row => addToRecent(row.target, false, row.storedKey));

@@ -1,5 +1,6 @@
 import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { confirmAction } from "./alerts.js";
 
 const button = document.getElementById("login-button");
 const label = button.querySelector(".login-status");
@@ -21,9 +22,11 @@ onAuthStateChanged(auth, function (user) {
   button.disabled = false;
 });
 
-button.addEventListener("click", function () {
+button.addEventListener("click", async function () {
   if (auth.currentUser) {
     //log out
+    const confirmed = await confirmAction({ title: "Log out?", confirmText: "Log out" });
+    if (!confirmed || !auth.currentUser) return;
     button.disabled = true;
     signOut(auth).catch((error) => {
       console.error("Logout failed:", error);

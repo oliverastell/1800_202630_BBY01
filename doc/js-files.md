@@ -12,7 +12,7 @@ Most app code is in `client/src/`.
 | `floorPlan.js` | Loads and caches `buildings/{buildingId}/floors/f{level}` from Firestore. Converts GeoPoint rooms or imported GeoJSON features into map geometry, draws room fills/outlines/labels, and ignores stale requests after selection changes. Also contains the older SVG renderer, which location details no longer uses. |
 | `locationDetails.js` | Shows location details, manages saved pins and the draggable panel, and builds the floor selector from `floorLevels`. Keeps pin popups and the selected title synchronized with bookmark renames/removals. Floor changes and saved-location selections display floorplans on the main map. |
 | `location.js` | Shows the user's location and compass direction. |
-| `washrooms.js` | Reads the top-level Firestore `washrooms` collection and places circular washroom icons at GeoPoint `location` coordinates. Matches `buildingId` and `floorId`; defaults every building to `f1` and updates the selected building when its floor changes. |
+| `mapFilters.js` | Reads Firestore `washrooms` and `dining` and displays markers for the enabled filters. Floor-specific markers follow the selected or default floor. Dining venues with an unknown floor remain visible on all floors. |
 | `bookmarks.js` | Loads, saves, renames, and removes the signed-in user's bookmarks. Caches bookmark names and coordinates, synchronizes bookmark icons, and supplies the shared pencil/editor UI for the bookmark menu and location panel. |
 | `homeAuth.js` | Updates the login button and handles logout. |
 | `login.js` | Handles login and account creation. |

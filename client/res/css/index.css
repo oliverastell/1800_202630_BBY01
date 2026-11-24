@@ -11,8 +11,8 @@
   width: 100%;
 }
 
-#washroomFilter {
-  height: 60px;
+.map-filter-bar .btn {
+  min-height: 44px;
 }
 
 #mapCanvasDiv {
@@ -28,6 +28,48 @@
   min-width: 0;
 }
 
+#searchMenu :is(input, button, [role="separator"]) {
+  transition: background-color 160ms ease, color 160ms ease, filter 160ms ease;
+}
+
+#searchMenu :is(#searchSheetHandle, #searchResizeHandle) span {
+  transition: transform 160ms ease;
+}
+
+@media (hover: hover) {
+  #searchMenu :is(input, button):hover:not(:disabled) {
+    filter: brightness(0.93);
+  }
+
+  #searchMenu .recent-search-action.bookmark-toggle:hover:not(:disabled) {
+    background-color: #cfe2ff;
+    filter: none;
+  }
+
+  #searchMenu :is(.recent-search-clear, .recent-search-remove):hover:not(:disabled) {
+    background-color: #f8d7da;
+    color: #58151c;
+    filter: none;
+  }
+
+  #searchMenu :is(#searchSheetHandle, #searchResizeHandle):hover span {
+    transform: scale(1.15);
+  }
+}
+
+.bookmark-marker[hidden] {
+  display: none;
+}
+
+.bookmark-list:not(:empty) + .bookmark-empty {
+  display: none;
+}
+
+#searchMenuSearching2 button:focus-visible {
+  outline: 2px solid #164d78;
+  outline-offset: -3px;
+}
+
 #closeSearchMenu {
   width: 44px;
   height: 44px;
@@ -39,12 +81,8 @@
 }
 
 @media (max-width: 767.98px) {
-  #content {
-    --mobile-search-height: 88px;
-  }
-
   #searchMenu {
-    height: var(--mobile-search-height);
+    height: 88px;
     transition: height 240ms cubic-bezier(.2, .7, .25, 1);
   }
 
@@ -89,6 +127,22 @@
   #searchMenu:not(.search-open) #searchForm {
     padding-top: 0 !important;
   }
+
+  #content:has(#searchMenu.search-open, #aboutLocation:not(.popup-hidden):not(.location-collapsed)) #map .maplibregl-popup {
+    display: none;
+  }
+
+  #map .filter-pin-popup {
+    top: 4.5rem;
+    left: 50%;
+    width: max-content;
+    max-width: calc(100% - 2rem) !important;
+    transform: translateX(-50%) !important;
+  }
+
+  #map .filter-pin-popup .maplibregl-popup-tip {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {
@@ -125,30 +179,46 @@
 }
 
 #bookmark-controls {
-  --bookmark-size: 72px;
-  --bookmark-bottom: 3rem;
-  bottom: var(--bookmark-bottom);
+  bottom: 3rem;
   z-index: 2;
   pointer-events: none;
-}
-
-@media (max-width: 767.98px) {
-  #bookmark-controls {
-    --bookmark-bottom: calc(var(--mobile-search-height) + 12px);
-  }
 }
 
 #bookmark-controls > * {
   pointer-events: auto;
 }
 
-#bookmark-button {
-  width: var(--bookmark-size);
-  height: var(--bookmark-size);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+#bookmark-button,
+#map-floor-button {
+  min-width: 10rem;
+  height: 56px;
+  padding: 0 1.25rem 0 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform 0.15s ease;
 }
 
-#bookmark-button:hover {
+.labeled-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 50px;
+  padding: 0 0.875rem 0 0.625rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.labeled-icon-btn .label-on,
+.labeled-icon-btn[aria-pressed="true"] .label-off {
+  display: none;
+}
+
+.labeled-icon-btn[aria-pressed="true"] .label-on {
+  display: inline;
+}
+
+#bookmark-button:hover,
+#map-floor-button:hover {
   transform: scale(1.06);
 }
 
@@ -164,8 +234,18 @@
   width: max-content;
   min-width: min(240px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  max-height: calc(100dvh - var(--bookmark-bottom) - var(--bookmark-size) - 24px);
+  max-height: calc(100dvh - 3rem - 176px);
   overflow-y: auto;
+}
+
+@media (max-width: 767.98px) {
+  #bookmark-controls {
+    bottom: 100px;
+  }
+
+  #bookmark-popup {
+    max-height: calc(100dvh - 276px);
+  }
 }
 
 #aboutLocation,
@@ -314,9 +394,9 @@
 }
 
 #aboutLocationTitle { min-width: 0; }
-.washroom-marker {
-  width: 30px;
-  height: 30px;
+.washroom-marker,
+.dining-marker,
+.bookmark-marker {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -326,7 +406,33 @@
   border-radius: 50%;
   box-shadow: 0 1px 4px #0004;
 }
-.washroom-marker[hidden] { display: none; }
+.washroom-marker,
+.dining-marker {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  cursor: pointer;
+}
+.holdable-pin { user-select: none; -webkit-touch-callout: none; }
+.dining-marker {
+  color: #794217;
+  border-color: currentColor;
+  padding: 0;
+  cursor: pointer;
+}
+.bookmark-marker {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  cursor: pointer;
+}
+.bookmark-marker img {
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+.washroom-marker[hidden],
+.dining-marker[hidden] { display: none; }
 #aboutLocation.location-dragging { transition: none; }
 #aboutLocation.location-collapsed {
   overflow: hidden !important;
@@ -355,21 +461,31 @@
   width: 100vw;
   height: 100dvh;
   padding: 12px;
-  background: var(--bs-body-bg);
+  background: #fff;
 }
 .floor-plan-fullscreen .floor-plan-canvas {
   height: 100%;
   max-height: none;
 }
 .floor-plan-svg { width: max(100%, 850px); }
-.floor-plan-area { fill: var(--bs-light); stroke: var(--bs-secondary-color); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
-.floor-plan-label { fill: var(--bs-body-color); font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.floor-plan-area { fill: #f8f9fa; stroke: #6c7074; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.floor-plan-label { fill: #212529; font-size: 10px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
   #searchMenu,
+  #searchMenu :is(input, button, [role="separator"]),
+  #searchMenu :is(#searchSheetHandle, #searchResizeHandle) span,
+  #bookmark-button,
+  #map-floor-button,
   #aboutLocation,
   #bookmark-popup {
     transition: none;
+  }
+
+  #searchMenu :is(#searchSheetHandle, #searchResizeHandle):hover span,
+  #bookmark-button:hover,
+  #map-floor-button:hover {
+    transform: none;
   }
 
   #floorChooser.show,

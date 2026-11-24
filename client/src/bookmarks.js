@@ -1,6 +1,7 @@
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, updateDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
+import { confirmAction, promptRename } from "./alerts.js";
 
 const button = document.getElementById("bookmark-button")
 const popup = document.getElementById("bookmark-popup")
@@ -13,6 +14,10 @@ list.classList.add("bookmark-list")
 list.style.listStyle = "none"
 list.style.padding = "0"
 popup.appendChild(list)
+const emptyMessage = document.createElement("p");
+emptyMessage.className = "bookmark-empty small text-body-secondary mb-0";
+emptyMessage.textContent = "No bookmarks yet.";
+popup.appendChild(emptyMessage);
 
 //select every bookmark icon that is clickable
 const bookmarkButton = document.querySelectorAll(".bookmark-toggle")
@@ -83,6 +88,13 @@ function bookmarkT(currentButton) {
         }));
       }
     } else {
+      const confirmed = await confirmAction({
+        title: "Remove bookmark?",
+        text: `"${bookmark.text}" will be removed from your bookmarks.`,
+        confirmText: "Remove",
+        danger: true
+      });
+      if (!confirmed) return;
       currentButton.disabled = true;
       const removed = await removeBookmarkFromFirestore(searchTarget);
       currentButton.disabled = false;
@@ -124,6 +136,21 @@ function setBookmarkMenuOpen(open) {
   button.setAttribute("aria-expanded", String(open));
 }
 
+document.addEventListener("click", event => {
+  // Clicking inside a confirmation dialog shouldn't close the bookmarks menu.
+  if (event.target.closest?.(".swal2-container")) return;
+  if (!popup.inert && !popup.contains(event.target) && !button.contains(event.target)) {
+    setBookmarkMenuOpen(false);
+  }
+}, { capture: true });
+
+button.parentElement.addEventListener("keydown", event => {
+  if (event.key !== "Escape" || popup.inert) return;
+  event.stopPropagation();
+  setBookmarkMenuOpen(false);
+  button.focus({ preventScroll: true });
+});
+
 // Replace the handler on hot reload so one click only toggles the menu once.
 button.onclick = function (event) {
   event.stopPropagation();
@@ -138,7 +165,13 @@ async function saveBookmarkToFirestore(
   searchTarget = searchTarget.toLowerCase().trim();
   const user = auth.currentUser;
   if (!user) {
-    window.alert("Please log in to save a bookmark.");
+    confirmAction({
+      title: "Log in to save bookmarks",
+      text: "You need an account to keep bookmarks.",
+      confirmText: "Log in"
+    }).then(goToLogin => {
+      if (goToLogin) window.location.href = "/login";
+    });
     return false;
   }
 
@@ -273,10 +306,10 @@ function addBookmarkToList(searchTarget, displayText, coordinates = null) {
           longitude: coordinates.longitude
         }
       }));
-      setBookmarkMenuOpen(false);
     } else {
       searchRecent(searchTarget, false);
     }
+    setBookmarkMenuOpen(false);
   };
 
   item.appendChild(anchor);
@@ -381,14 +414,20 @@ function createBookmarkEditor(searchTarget, displayText, directRename = false) {
     edit.setAttribute("aria-expanded", "false");
     edit.focus();
   }
+  async function renameBookmark() {
+    await promptRename({
+      title: "Rename bookmark",
+      currentName: displayText,
+      save: name => renameLocationBookmark(searchTarget, name)
+    });
+    if (!directRename && edit.isConnected) closeEditor();
+  }
   edit.addEventListener("click", () => {
-    edit.classList.add("d-none");
     if (directRename) {
-      actions.hidden = false;
-      edit.setAttribute("aria-expanded", "true");
-      rename.click();
+      renameBookmark();
       return;
     }
+    edit.classList.add("d-none");
     actions.hidden = !actions.hidden;
     edit.setAttribute("aria-expanded", String(!actions.hidden));
     rename.focus();
@@ -409,43 +448,15 @@ function createBookmarkEditor(searchTarget, displayText, directRename = false) {
   const status = document.createElement("div");
   status.className = "small text-danger";
   status.setAttribute("role", "status");
-  rename.addEventListener("click", () => {
-    const form = document.createElement("form");
-    form.className = "d-flex flex-wrap gap-2";
-    const input = document.createElement("input");
-    input.className = "form-control form-control-sm";
-    input.value = displayText;
-    input.required = true;
-    input.setAttribute("aria-label", "Bookmark name");
-    const save = document.createElement("button");
-    save.type = "submit";
-    save.className = "btn btn-sm btn-primary";
-    save.textContent = "Save";
-    const cancel = document.createElement("button");
-    cancel.type = "button";
-    cancel.className = "btn btn-sm btn-light";
-    cancel.textContent = "Cancel";
-    cancel.addEventListener("click", closeEditor);
-    form.append(input, save, cancel);
-    actions.replaceChildren(form, status);
-    input.focus();
-    input.select();
-    form.addEventListener("submit", async event => {
-      event.preventDefault();
-      if (!input.value.trim()) {
-        status.textContent = "Enter a name for this bookmark.";
-        return;
-      }
-      save.disabled = cancel.disabled = input.disabled = edit.disabled = true;
-      try {
-        await renameLocationBookmark(searchTarget, input.value);
-      } catch (error) {
-        status.textContent = "Could not save the name. Please try again.";
-        save.disabled = cancel.disabled = input.disabled = edit.disabled = false;
-      }
-    });
-  });
+  rename.addEventListener("click", renameBookmark);
   remove.addEventListener("click", async () => {
+    const confirmed = await confirmAction({
+      title: "Remove bookmark?",
+      text: `"${displayText}" will be removed from your bookmarks.`,
+      confirmText: "Remove",
+      danger: true
+    });
+    if (!confirmed) return;
     remove.disabled = rename.disabled = edit.disabled = true;
     if (!await removeBookmarkFromFirestore(searchTarget)) {
       status.textContent = "Could not remove the bookmark. Please try again.";

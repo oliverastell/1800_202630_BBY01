@@ -41,10 +41,11 @@ export async function loadBuildings() {
 
 // Call after the map loads. Firestore stores coordinates as [latitude, longitude].
 // Both map clicks and searches use this function to replace the selected building.
-export function highlightBuilding(map, building) {
-  showBuildingFloor(map, building);
+export function highlightBuilding(map, building, level = 1) {
+  showBuildingFloor(map, building, level);
   const sourceId = "selected-building";
   if (!map.getSource(sourceId)) {
+    if (!building) return;
     map.addSource(sourceId, {
       type: "geojson",
       data: { type: "FeatureCollection", features: [] }

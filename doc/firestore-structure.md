@@ -7,6 +7,7 @@ an export of the live database. Example names and coordinates are illustrative.
 buildings/{buildingId}                 Shared building information
   floors/{floorId}                     Rooms or imported floor geometry
 washrooms/{washroomId}                 Shared washroom locations
+dining/{venueId}                      Shared campus dining locations
 users/{uid}
   bookmarks/{searchTarget}             Personal names and saved locations
   recentSearches/{searchTarget}        Personal search history
@@ -25,6 +26,8 @@ Path: `buildings/{buildingId}`. Read by `client/src/buildings.js`.
 | Field | Type | Purpose |
 | --- | --- | --- |
 | `name` | string | Required shared display name, for example `SW9`. |
+| `type` | string, optional | Classification displayed in the map popup and location details. `parking` is displayed as Parking lot. |
+| `details` | array of strings, optional | Additional lines displayed in the map popup and location details. An empty array hides the section. |
 | `searchAliases` | array of strings | Shared alternative search terms. Defaults to an empty array. |
 | `center` | GeoPoint | Required building center. Older `[latitude, longitude]` arrays are also accepted. |
 | `outline` | array of GeoPoints or JSON string | Required footprint with at least three valid points. A JSON string can encode one ring or multiple footprint rings in `[latitude, longitude]` order. |
@@ -83,7 +86,7 @@ center, or footprint. See [room import instructions](../server/scripts/README.md
 
 ## Washrooms
 
-Path: `washrooms/{washroomId}`. Read by `client/src/washrooms.js`.
+Path: `washrooms/{washroomId}`. Read by `client/src/mapFilters.js`.
 
 | Field | Type | Purpose |
 | --- | --- | --- |
@@ -97,6 +100,18 @@ Path: `washrooms/{washroomId}`. Read by `client/src/washrooms.js`.
 The app reads all washrooms once. With the washroom filter enabled, it shows
 the selected floor for the selected building and floor `f1` for other buildings.
 Records with invalid building/floor identifiers or coordinates are skipped.
+
+## Dining
+
+Path: `dining/{venueId}`. Read by `client/src/mapFilters.js`.
+
+| Field | Type | Purpose |
+| --- | --- | --- |
+| `name` | string | Venue name shown on the map. |
+| `type` | string | `cafe` or `restaurant`. |
+| `buildingId` | string | Building document ID. |
+| `location` | GeoPoint | Marker position. |
+| `floorId` | string, optional | Verified floor ID, such as `f1`. A venue with no floor appears on all floors. |
 
 ## Personal bookmarks
 

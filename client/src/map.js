@@ -1,6 +1,7 @@
 import {Map, Marker, Popup, LngLat, NavigationControl, setWorkerUrl} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+import { enablePinHold } from "./mobileInteractions.js";
 
 
 setWorkerUrl(workerUrl);
@@ -78,21 +79,29 @@ export function createCampusMap() {
     if (typeof content === 'string') popup.setText(content);
     else popup.setDOMContent(content);
     const marker = new Marker(options).setLngLat(point).setPopup(popup).addTo(map);
+    // Holding a pin only reveals its popup, without opening the details sheet.
+    enablePinHold(marker.getElement(), () => {
+      map.fire('pinhold');
+      if (!popup.isOpen()) marker.togglePopup();
+    });
     markers.add(marker);
+    trackPopup(popup);
+    if (removeOnClose) popup.on('close', () => { markers.delete(marker); marker.remove(); });
+    return marker;
+  }
+  function trackPopup(popup) {
     popup.on('open', () => {
       if (activePopup && activePopup !== popup) activePopup.remove();
       activePopup = popup;
     });
     popup.on('close', () => {
       if (activePopup === popup) activePopup = null;
-      if (removeOnClose) { markers.delete(marker); marker.remove(); }
     });
-    return marker;
   }
 
 
   return {
-    map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker,
+    map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker, trackPopup,
     getCampusBorder: () => campusBorder,
     closePopup: () => { if (activePopup) activePopup.remove(); }
   };
