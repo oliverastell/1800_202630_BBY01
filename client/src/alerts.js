@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 
 const base = Swal.mixin({
+  heightAuto: false,
   reverseButtons: true,
   focusCancel: true,
   confirmButtonColor: "#0d6efd",
