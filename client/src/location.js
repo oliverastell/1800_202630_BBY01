@@ -5,6 +5,7 @@ export function setupLocation(map) {
   let locationDot = null;
   let compassHeading = null;
   let hasCenteredOnUser = false;
+  let currentLocation = null;
 
   const locationIcon = document.createElement('div');
   locationIcon.className = 'user-location-marker';
@@ -90,6 +91,7 @@ export function setupLocation(map) {
       position => {
         const { latitude, longitude, accuracy } = position.coords;
         const point = [longitude, latitude];
+        currentLocation = { latitude, longitude, timestamp: position.timestamp };
 
         console.log({
           latitude,
@@ -120,6 +122,5 @@ export function setupLocation(map) {
       }
     );
   }
-
-
+  return { getCurrentLocation: () => currentLocation };
 }

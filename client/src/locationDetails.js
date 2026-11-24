@@ -1,6 +1,7 @@
 import { getNextMarkedLocationNumber, getCachedMarkedLocationNumber, getPersonalBookmarks, syncLocationBookmark } from "./bookmarks.js";
 import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
+import { LngLatBounds } from "maplibre-gl";
 import { buildings, findBuildingAt, highlightBuilding } from "./buildings.js";
 import { bookmarkForBuilding } from "./personalNames.js";
 import { loadFloorFeatures, showBuildingFloor } from "./floorPlan.js";
@@ -32,7 +33,7 @@ function floorLabel(level) {
   return ({ 1: "1st floor", 2: "2nd floor", 3: "3rd floor", 4: "4th floor" })[level] ?? `Floor ${level}`;
 }
 
-export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, closePopup }) {
+export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, addMarker, closePopup, getCurrentLocation }) {
   const aboutLocation = document.getElementById("aboutLocation");
   const dragHandle = document.getElementById("aboutLocationDragHandle");
   const locationTitle = document.getElementById("aboutLocationTitle");
@@ -46,6 +47,99 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
   const floorDropdown = document.getElementById("floorDropdown");
   const floorPlanButton = document.getElementById("floorPlanButton");
   const floorChooser = document.getElementById("floorChooser");
+  const directionsButton = document.getElementById("directionsToBuilding");
+  const routeStatus = document.getElementById("routeStatus");
+  let directionsBuilding = null;
+  let routeRequest = null;
+  let routeVisible = false;
+  const emptyRoute = { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: [] } };
+
+  function clearRoute() {
+    routeRequest?.abort();
+    routeRequest = null;
+    routeVisible = false;
+    directionsButton.disabled = false;
+    directionsButton.textContent = "Show walking route";
+    routeStatus.textContent = "";
+    routeStatus.classList.add("d-none");
+    map.getSource("walking-route")?.setData(emptyRoute);
+  }
+
+  function setDirectionsBuilding(building) {
+    clearRoute();
+    directionsBuilding = building;
+    directionsButton.classList.toggle("d-none", !building);
+  }
+
+  directionsButton.addEventListener("click", async () => {
+    if (!directionsBuilding) return;
+    if (routeVisible) { clearRoute(); return; }
+    const current = getCurrentLocation?.();
+    if (!current || Date.now() - current.timestamp > 120000) {
+      routeStatus.textContent = "Waiting for your location. Allow location access, then try again.";
+      routeStatus.classList.remove("d-none");
+      return;
+    }
+    const building = directionsBuilding;
+    const request = new AbortController();
+    routeRequest = request;
+    directionsButton.disabled = true;
+    routeStatus.textContent = "Finding walking route…";
+    routeStatus.classList.remove("d-none");
+    try {
+      const url = new URL("https://valhalla1.openstreetmap.de/route");
+      url.searchParams.set("json", JSON.stringify({
+        locations: [
+          { lat: current.latitude, lon: current.longitude },
+          { lat: building.center[0], lon: building.center[1] }
+        ],
+        costing: "pedestrian", format: "osrm", shape_format: "geojson"
+      }));
+      const response = await fetch(url, {
+        signal: request.signal,
+        headers: { "X-Client-Id": "bcit-bby-campus-map" }
+      });
+      if (!response.ok) throw new Error(`Routing service returned ${response.status}`);
+      const data = await response.json();
+      const route = data.routes?.[0];
+      if (data.code !== "Ok" || route?.geometry?.type !== "LineString" ||
+          !Array.isArray(route.geometry.coordinates) || route.geometry.coordinates.length < 2) {
+        throw new Error("No walking route found");
+      }
+      if (request.signal.aborted || directionsBuilding !== building) return;
+      await mapReady;
+      if (request.signal.aborted || directionsBuilding !== building) return;
+      if (!map.getSource("walking-route")) {
+        map.addSource("walking-route", { type: "geojson", data: emptyRoute });
+        map.addLayer({ id: "walking-route-casing", type: "line", source: "walking-route",
+          layout: { "line-cap": "round", "line-join": "round" },
+          paint: { "line-color": "#ffffff", "line-width": 9 } });
+        map.addLayer({ id: "walking-route-line", type: "line", source: "walking-route",
+          layout: { "line-cap": "round", "line-join": "round" },
+          paint: { "line-color": "#1677ff", "line-width": 6 } });
+      }
+      map.getSource("walking-route").setData({ type: "Feature", properties: {}, geometry: route.geometry });
+      map.moveLayer("walking-route-casing");
+      map.moveLayer("walking-route-line");
+      const coordinates = route.geometry.coordinates;
+      const bounds = coordinates.reduce((bounds, point) => bounds.extend(point), new LngLatBounds(coordinates[0], coordinates[0]));
+      map.fitBounds(bounds, { padding: { top: 80, right: 40, bottom: Math.min(map.getContainer().clientHeight / 2 + 30, 350), left: 40 }, maxZoom: 18 });
+      routeStatus.textContent = `${Math.round(route.distance)} m · about ${Math.max(1, Math.round(route.duration / 60))} min walk`;
+      directionsButton.textContent = "Clear walking route";
+      routeVisible = true;
+    } catch (error) {
+      if (!request.signal.aborted) {
+        console.error("Walking route error:", error);
+        routeStatus.textContent = "Walking route unavailable. Please try again.";
+      }
+    } finally {
+      if (routeRequest === request) {
+        routeRequest = null;
+        directionsButton.disabled = false;
+      }
+    }
+  });
+
   const roomsearchForm = document.getElementById("roomsearchForm");
   const roomsearchField = document.getElementById("roomsearchField");
   const roomSearch = document.getElementById("roomSearch");
@@ -277,6 +371,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     const building = buildingForBookmark(details);
     const level = getDefaultFloor(building);
     setFloorBuilding(building, level);
+    setDirectionsBuilding(building);
     if (map.isStyleLoaded()) highlightBuilding(map, building ?? null, level);
     setLocationPopupOpen(true);
     locationTitle.textContent = details.name;
@@ -299,6 +394,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
 
   function close() {
     setFloorBuilding(null);
+    setDirectionsBuilding(null);
     selectionVersion++;
 
     setLocationPopupOpen(false);
@@ -388,6 +484,7 @@ export function setupLocationDetails({ map, pinLayer, clearMarkers, addMarker, c
     }
   }
   async function selectLocation(point, label = "Selected location", building = null, roomLevel = null) {
+    setDirectionsBuilding(building);
     setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();

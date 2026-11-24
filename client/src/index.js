@@ -8,6 +8,6 @@ import { setupMapFilters } from "./mapFilters.js";
 const campusMap = createCampusMap();
 setupMapFilters(campusMap);
 
-setupLocation(campusMap.map);
-const locationDetails = setupLocationDetails(campusMap);
+const userLocation = setupLocation(campusMap.map);
+const locationDetails = setupLocationDetails({ ...campusMap, ...userLocation });
 setupSearch(campusMap, locationDetails);
