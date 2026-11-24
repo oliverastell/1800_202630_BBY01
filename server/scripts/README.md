@@ -123,6 +123,13 @@ writes `features`, not `rooms`; if a floor document contains both, the app prefe
 The importer only sets `buildingId` on the parent building. Add its `name`,
 `searchNames` array, GeoPoint `center`, GeoPoint `outline` array, and numeric
 `floorLevels` array separately so the app can find and display the building.
+For buildings with separate structures (such as NW3), store `polygon` as a JSON
+string containing an array of outline rings:
+`[[[latitude, longitude], ...], [[latitude, longitude], ...]]`.
+Firestore does not support nested arrays directly. A single ring remains supported.
+The app prefers `outline` over `polygon`, so remove an older `outline` field or
+update it to the same JSON string when switching formats. Both structures select
+the same building and are highlighted separately, leaving the gap unfilled.
 Selecting a building displays floor 1 on the main map; the floor button lists
 `floorLevels` and loads `buildings/{buildingId}/floors/f{level}`.
 

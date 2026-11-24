@@ -3,10 +3,10 @@ import { setupLocation } from "./location.js";
 import { setupSearch } from "./search.js";
 
 import { setupLocationDetails } from "./locationDetails.js";
-import { setupWashrooms } from "./washrooms.js";
+import { setupMapFilters } from "./mapFilters.js";
 
 const campusMap = createCampusMap();
-setupWashrooms(campusMap);
+setupMapFilters(campusMap);
 
 setupLocation(campusMap.map);
 const locationDetails = setupLocationDetails(campusMap);

@@ -1,6 +1,7 @@
 import {Map, Marker, Popup, LngLat, NavigationControl, setWorkerUrl} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+import { enablePinHold } from "./mobileInteractions.js";
 
 
 setWorkerUrl(workerUrl);
@@ -21,6 +22,7 @@ export function createCampusMap() {
     style: `https://api.maptiler.com/maps/01a15fad-137e-765e-8247-17854eac7c15/style.json?key=${mapTilerKey}`,
     center: [-123.001192, 49.248087],
     zoom: 17, maxBounds: zoomOutBounds, renderWorldCopies: false,
+    maxPitch: 0,
     transformCameraUpdate: ({ center }) => ({
       center: new LngLat(center.lng, Math.max(bounds[0][1], Math.min(bounds[1][1], center.lat)))
     }),
@@ -30,18 +32,18 @@ export function createCampusMap() {
   map.addControl(new NavigationControl({ showCompass: true}), 'top-left');
   map.getCanvas().focus();
 
-  // Custom SW1 footprint traced from the supplied coordinates.
+  // Custom building footprints traced from the supplied coordinates.
   let campusBorder = null;
   const mapReady = new Promise(resolve => map.once('load', resolve));
   mapReady.then(() => {
-    
-    map.addSource('sw1', { type: 'geojson', data: '/data/sw1Fill.geojson' });
-    map.addLayer({
-      id: 'sw1-fill', type: 'fill', source: 'sw1',
-      paint: { 'fill-color': '#e6e9e6', 'fill-opacity': 1 }
-    });
-    
-  }).catch(error => console.error('Error adding SW1 overlay:', error));
+    for (const buildingId of ['sw1', 'nw7']) {
+      map.addSource(buildingId, { type: 'geojson', data: `/data/${buildingId}Fill.geojson` });
+      map.addLayer({
+        id: `${buildingId}-fill`, type: 'fill', source: buildingId,
+        paint: { 'fill-color': '#e6e9e6', 'fill-opacity': 1 }
+      });
+    }
+  }).catch(error => console.error('Error adding building overlays:', error));
   Promise.all([mapReady, fetch('/data/campus-block.geojson').then(r => {
     if (!r.ok) throw new Error('Campus border could not be loaded');
     return r.json();
@@ -77,21 +79,29 @@ export function createCampusMap() {
     if (typeof content === 'string') popup.setText(content);
     else popup.setDOMContent(content);
     const marker = new Marker(options).setLngLat(point).setPopup(popup).addTo(map);
+    // Holding a pin only reveals its popup, without opening the details sheet.
+    enablePinHold(marker.getElement(), () => {
+      map.fire('pinhold');
+      if (!popup.isOpen()) marker.togglePopup();
+    });
     markers.add(marker);
+    trackPopup(popup);
+    if (removeOnClose) popup.on('close', () => { markers.delete(marker); marker.remove(); });
+    return marker;
+  }
+  function trackPopup(popup) {
     popup.on('open', () => {
       if (activePopup && activePopup !== popup) activePopup.remove();
       activePopup = popup;
     });
     popup.on('close', () => {
       if (activePopup === popup) activePopup = null;
-      if (removeOnClose) { markers.delete(marker); marker.remove(); }
     });
-    return marker;
   }
 
 
   return {
-    map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker,
+    map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker, trackPopup,
     getCampusBorder: () => campusBorder,
     closePopup: () => { if (activePopup) activePopup.remove(); }
   };
