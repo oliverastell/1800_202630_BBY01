@@ -30,6 +30,11 @@ app.get("/login", function(req,res){
     res.send(doc);
 })
 
+app.get("/welcome", function(req,res){
+    let doc = fs.readFileSync(new URL("../../client/html/welcome.html", import.meta.url), "utf-8");
+    res.send(doc);
+})
+
 app.use(ViteExpress.static());
 
 // for resource not found (i.e., 404)
