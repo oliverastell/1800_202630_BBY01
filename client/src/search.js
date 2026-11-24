@@ -3,6 +3,7 @@ import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { bookmarkT, getPersonalBookmarks } from "./bookmarks.js";
+import { confirmAction, showError } from "./alerts.js";
 import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
 import { setMapFilter } from "./mapFilters.js";
 import { enableMapHold, trackRecentTouch } from "./mobileInteractions.js";
@@ -86,14 +87,29 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       });
   }
 
-  function removeFromRecent(target){
+  async function removeFromRecent(target){
       const row = target.parentElement;
       const searchTarget = row.dataset.recentKey || row.dataset.searchTarget || row.firstElementChild.textContent;
+      const confirmed = await confirmAction({
+          title: "Remove from recents?",
+          text: `"${row.firstElementChild.textContent}" will be removed from your recent searches.`,
+          confirmText: "Remove",
+          danger: true
+      });
+      if (!confirmed) return;
       row.remove();
       removeRecentSearchFromFirestore(searchTarget);
   }
 
   async function clearRecent(){
+      if (!searchMenuResults.children.length) return;
+      const confirmed = await confirmAction({
+          title: "Clear all recent searches?",
+          text: "This can't be undone.",
+          confirmText: "Clear all",
+          danger: true
+      });
+      if (!confirmed) return;
       const user = auth.currentUser
       if (!user) {
           searchMenuResults.innerHTML = "";
@@ -108,6 +124,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
           searchMenuResults.innerHTML = "";
       } catch (error) {
           console.error("Error clearing recent searches:", error)
+          showError("Could not clear your recent searches. Please try again.")
       }
   }
 
