@@ -33,6 +33,7 @@ Path: `buildings/{buildingId}`. Read by `client/src/buildings.js`.
 | `outline` | array of GeoPoints or JSON string | Required footprint with at least three valid points. A JSON string can encode one ring or multiple footprint rings in `[latitude, longitude]` order. |
 | `polygon` | same as `outline` | Older fallback used when `outline` is absent. |
 | `floorLevels` | array of integers | Available floor levels, for example `[1, 2, 3, 4]`. The UI defaults to floor 1 when absent. |
+| `entrances` | array of maps, optional | Each map has a `location` GeoPoint for a building entrance. Walking routes use valid entrances when available. |
 | `buildingId` | string, optional | Written by the room importer; runtime identity comes from the document ID. |
 
 Buildings without a valid name, center, or footprint are skipped. The loader
