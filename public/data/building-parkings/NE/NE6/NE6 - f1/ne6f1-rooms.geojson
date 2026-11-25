@@ -1,0 +1,1617 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "127",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99956766,
+              49.25351432
+            ],
+            [
+              -122.9995684,
+              49.25347562
+            ],
+            [
+              -122.99961599,
+              49.253476
+            ],
+            [
+              -122.99961525,
+              49.25351471
+            ],
+            [
+              -122.99956766,
+              49.25351432
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S126",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99956843,
+              49.25347373
+            ],
+            [
+              -122.99956883,
+              49.25345265
+            ],
+            [
+              -122.99961594,
+              49.25345303
+            ],
+            [
+              -122.99961554,
+              49.25347411
+            ],
+            [
+              -122.99956843,
+              49.25347373
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "126",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99961621,
+              49.25351503
+            ],
+            [
+              -122.99961738,
+              49.25345336
+            ],
+            [
+              -122.9996294,
+              49.25345345
+            ],
+            [
+              -122.99962823,
+              49.25351513
+            ],
+            [
+              -122.99961621,
+              49.25351503
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "125",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99963023,
+              49.25348556
+            ],
+            [
+              -122.99963084,
+              49.25345346
+            ],
+            [
+              -122.99967218,
+              49.2534538
+            ],
+            [
+              -122.99967157,
+              49.2534859
+            ],
+            [
+              -122.99963023,
+              49.25348556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "123",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99962967,
+              49.25351514
+            ],
+            [
+              -122.99963021,
+              49.25348682
+            ],
+            [
+              -122.99974895,
+              49.25348779
+            ],
+            [
+              -122.99974841,
+              49.25351611
+            ],
+            [
+              -122.99962967,
+              49.25351514
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "124",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.9996735,
+              49.25348591
+            ],
+            [
+              -122.99967411,
+              49.2534535
+            ],
+            [
+              -122.99974958,
+              49.25345412
+            ],
+            [
+              -122.99974897,
+              49.25348653
+            ],
+            [
+              -122.9996735,
+              49.25348591
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "122",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99974985,
+              49.25351612
+            ],
+            [
+              -122.99975103,
+              49.25345381
+            ],
+            [
+              -122.99978612,
+              49.2534541
+            ],
+            [
+              -122.99978494,
+              49.2535164
+            ],
+            [
+              -122.99974985,
+              49.25351612
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "121",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99978687,
+              49.25351642
+            ],
+            [
+              -122.99978804,
+              49.25345474
+            ],
+            [
+              -122.99986255,
+              49.25345535
+            ],
+            [
+              -122.99986138,
+              49.25351702
+            ],
+            [
+              -122.99978687,
+              49.25351642
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "120A",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99986294,
+              49.25351043
+            ],
+            [
+              -122.99986343,
+              49.25348494
+            ],
+            [
+              -122.99990333,
+              49.25348526
+            ],
+            [
+              -122.99990284,
+              49.25351075
+            ],
+            [
+              -122.99986294,
+              49.25351043
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "120",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99986343,
+              49.25348462
+            ],
+            [
+              -122.999864,
+              49.25345505
+            ],
+            [
+              -122.9999039,
+              49.25345537
+            ],
+            [
+              -122.99990333,
+              49.25348495
+            ],
+            [
+              -122.99986343,
+              49.25348462
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "118",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99990464,
+              49.25351738
+            ],
+            [
+              -122.99990581,
+              49.2534557
+            ],
+            [
+              -122.99992312,
+              49.25345584
+            ],
+            [
+              -122.99992195,
+              49.25351752
+            ],
+            [
+              -122.99990464,
+              49.25351738
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "119",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99992387,
+              49.25351753
+            ],
+            [
+              -122.99992464,
+              49.25347694
+            ],
+            [
+              -122.99997608,
+              49.25347736
+            ],
+            [
+              -122.99997531,
+              49.25351795
+            ],
+            [
+              -122.99992387,
+              49.25351753
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S118",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99992465,
+              49.25347631
+            ],
+            [
+              -122.99992505,
+              49.25345523
+            ],
+            [
+              -122.99996255,
+              49.25345553
+            ],
+            [
+              -122.99996215,
+              49.25347662
+            ],
+            [
+              -122.99992465,
+              49.25347631
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "118A",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "approximate"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99996324,
+              49.2534697
+            ],
+            [
+              -122.9999635,
+              49.25345617
+            ],
+            [
+              -122.99997648,
+              49.25345627
+            ],
+            [
+              -122.99997622,
+              49.25346981
+            ],
+            [
+              -122.99996324,
+              49.2534697
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101B",
+        "use": "ELEC",
+        "kind": "utility",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99992122,
+              49.25345457
+            ],
+            [
+              -122.99992157,
+              49.25343632
+            ],
+            [
+              -122.99997685,
+              49.25343676
+            ],
+            [
+              -122.9999765,
+              49.25345502
+            ],
+            [
+              -122.99992122,
+              49.25345457
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "117",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99993456,
+              49.25343579
+            ],
+            [
+              -122.99993533,
+              49.25339488
+            ],
+            [
+              -122.99997764,
+              49.25339523
+            ],
+            [
+              -122.99997686,
+              49.25343614
+            ],
+            [
+              -122.99993456,
+              49.25343579
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "116",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99993536,
+              49.25339363
+            ],
+            [
+              -122.99993601,
+              49.25335901
+            ],
+            [
+              -122.99997832,
+              49.25335936
+            ],
+            [
+              -122.99997766,
+              49.25339397
+            ],
+            [
+              -122.99993536,
+              49.25339363
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S116",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99993603,
+              49.25335838
+            ],
+            [
+              -122.9999364,
+              49.25333887
+            ],
+            [
+              -122.9999787,
+              49.25333922
+            ],
+            [
+              -122.99997833,
+              49.25335873
+            ],
+            [
+              -122.99993603,
+              49.25335838
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101C",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "approximate"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99978759,
+              49.25345285
+            ],
+            [
+              -122.99978819,
+              49.25342138
+            ],
+            [
+              -122.99992039,
+              49.25342246
+            ],
+            [
+              -122.99991979,
+              49.25345393
+            ],
+            [
+              -122.99978759,
+              49.25345285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101F",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99972574,
+              49.25341836
+            ],
+            [
+              -122.99972609,
+              49.25340011
+            ],
+            [
+              -122.99981598,
+              49.25340084
+            ],
+            [
+              -122.99981564,
+              49.25341909
+            ],
+            [
+              -122.99972574,
+              49.25341836
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101G",
+        "use": "STOR-INST",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99977409,
+              49.25320159
+            ],
+            [
+              -122.99977451,
+              49.25317957
+            ],
+            [
+              -122.99981969,
+              49.25317993
+            ],
+            [
+              -122.99981928,
+              49.25320196
+            ],
+            [
+              -122.99977409,
+              49.25320159
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101E",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99977454,
+              49.25317768
+            ],
+            [
+              -122.99977532,
+              49.25313677
+            ],
+            [
+              -122.99982051,
+              49.25313714
+            ],
+            [
+              -122.99981973,
+              49.25317804
+            ],
+            [
+              -122.99977454,
+              49.25317768
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101D",
+        "use": "SUPP-INST",
+        "kind": "workshop",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99956935,
+              49.25345076
+            ],
+            [
+              -122.99957533,
+              49.25313546
+            ],
+            [
+              -122.99977291,
+              49.25313706
+            ],
+            [
+              -122.99976793,
+              49.2533995
+            ],
+            [
+              -122.99972466,
+              49.25339915
+            ],
+            [
+              -122.99972427,
+              49.25341992
+            ],
+            [
+              -122.99976705,
+              49.25342027
+            ],
+            [
+              -122.99976645,
+              49.25345236
+            ],
+            [
+              -122.99956935,
+              49.25345076
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101A",
+        "use": "SUPP-INST",
+        "kind": "workshop",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99981753,
+              49.25342068
+            ],
+            [
+              -122.99981792,
+              49.25339991
+            ],
+            [
+              -122.99976937,
+              49.25339951
+            ],
+            [
+              -122.9997731,
+              49.25320284
+            ],
+            [
+              -122.99982117,
+              49.25320323
+            ],
+            [
+              -122.99982242,
+              49.25313747
+            ],
+            [
+              -122.99998298,
+              49.25313877
+            ],
+            [
+              -122.9999792,
+              49.25333828
+            ],
+            [
+              -122.99993497,
+              49.25333792
+            ],
+            [
+              -122.99993338,
+              49.25342162
+            ],
+            [
+              -122.99981753,
+              49.25342068
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S102",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99957393,
+              49.25313356
+            ],
+            [
+              -122.99957456,
+              49.2531002
+            ],
+            [
+              -122.99962311,
+              49.2531006
+            ],
+            [
+              -122.99962248,
+              49.25313395
+            ],
+            [
+              -122.99957393,
+              49.25313356
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "103",
+        "use": "LOCKER",
+        "kind": "utility",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99957555,
+              49.25309864
+            ],
+            [
+              -122.99957583,
+              49.25308416
+            ],
+            [
+              -122.9996215,
+              49.25308453
+            ],
+            [
+              -122.99962122,
+              49.25309901
+            ],
+            [
+              -122.99957555,
+              49.25309864
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "103A",
+        "use": "WASH-RM-FI",
+        "kind": "washroom",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99957585,
+              49.2530829
+            ],
+            [
+              -122.99957613,
+              49.25306811
+            ],
+            [
+              -122.99962228,
+              49.25306849
+            ],
+            [
+              -122.999622,
+              49.25308328
+            ],
+            [
+              -122.99957585,
+              49.2530829
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "102A",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99962343,
+              49.25313459
+            ],
+            [
+              -122.99962469,
+              49.25306819
+            ],
+            [
+              -122.99963623,
+              49.25306829
+            ],
+            [
+              -122.99963497,
+              49.25313468
+            ],
+            [
+              -122.99962343,
+              49.25313459
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "104",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99963691,
+              49.25313344
+            ],
+            [
+              -122.99963758,
+              49.25309851
+            ],
+            [
+              -122.99967988,
+              49.25309886
+            ],
+            [
+              -122.99967922,
+              49.25313379
+            ],
+            [
+              -122.99963691,
+              49.25313344
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "105A",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99963808,
+              49.25309726
+            ],
+            [
+              -122.99963863,
+              49.25306831
+            ],
+            [
+              -122.99968045,
+              49.25306865
+            ],
+            [
+              -122.9996799,
+              49.2530976
+            ],
+            [
+              -122.99963808,
+              49.25309726
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "105",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99968162,
+              49.2531338
+            ],
+            [
+              -122.99968286,
+              49.25306867
+            ],
+            [
+              -122.99975737,
+              49.25306927
+            ],
+            [
+              -122.99975613,
+              49.25313441
+            ],
+            [
+              -122.99968162,
+              49.2531338
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "106",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99975757,
+              49.25313474
+            ],
+            [
+              -122.99975881,
+              49.25306928
+            ],
+            [
+              -122.99979438,
+              49.25306957
+            ],
+            [
+              -122.99979314,
+              49.25313503
+            ],
+            [
+              -122.99975757,
+              49.25313474
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "107",
+        "use": "STOR-INST",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.9997941,
+              49.25313503
+            ],
+            [
+              -122.99979534,
+              49.25306958
+            ],
+            [
+              -122.99986937,
+              49.25307018
+            ],
+            [
+              -122.99986813,
+              49.25313564
+            ],
+            [
+              -122.9997941,
+              49.25313503
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "108",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99987006,
+              49.25313565
+            ],
+            [
+              -122.99987072,
+              49.25310041
+            ],
+            [
+              -122.99991159,
+              49.25310074
+            ],
+            [
+              -122.99991092,
+              49.25313598
+            ],
+            [
+              -122.99987006,
+              49.25313565
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "107A",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99987075,
+              49.25309915
+            ],
+            [
+              -122.9998713,
+              49.2530702
+            ],
+            [
+              -122.99991216,
+              49.25307053
+            ],
+            [
+              -122.99991161,
+              49.25309948
+            ],
+            [
+              -122.99987075,
+              49.25309915
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "109",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99991236,
+              49.253136
+            ],
+            [
+              -122.9999136,
+              49.25307054
+            ],
+            [
+              -122.99993187,
+              49.25307069
+            ],
+            [
+              -122.99993063,
+              49.25313614
+            ],
+            [
+              -122.99991236,
+              49.253136
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S109",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99993207,
+              49.25313584
+            ],
+            [
+              -122.99993274,
+              49.2531006
+            ],
+            [
+              -122.99998322,
+              49.25310101
+            ],
+            [
+              -122.99998255,
+              49.25313625
+            ],
+            [
+              -122.99993207,
+              49.25313584
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "110",
+        "use": "MECH",
+        "kind": "utility",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99993276,
+              49.25309965
+            ],
+            [
+              -122.99993331,
+              49.2530707
+            ],
+            [
+              -122.99998379,
+              49.25307111
+            ],
+            [
+              -122.99998324,
+              49.25310006
+            ],
+            [
+              -122.99993276,
+              49.25309965
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "114",
+        "use": "SUPP-INST",
+        "kind": "workshop",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99998219,
+              49.25341627
+            ],
+            [
+              -122.99998373,
+              49.25333521
+            ],
+            [
+              -123.00001383,
+              49.25333546
+            ],
+            [
+              -123.00001399,
+              49.25332719
+            ],
+            [
+              -123.00007566,
+              49.25332769
+            ],
+            [
+              -123.00007525,
+              49.25334931
+            ],
+            [
+              -123.00007282,
+              49.25334929
+            ],
+            [
+              -123.00007154,
+              49.25341667
+            ],
+            [
+              -122.99998219,
+              49.25341627
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "115",
+        "use": "SUPP-INST",
+        "kind": "workshop",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00007445,
+              49.2534167
+            ],
+            [
+              -123.00007614,
+              49.2533277
+            ],
+            [
+              -123.00017131,
+              49.25332847
+            ],
+            [
+              -123.00016963,
+              49.25341747
+            ],
+            [
+              -123.00007445,
+              49.2534167
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M105",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "point_marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.9997514,
+          49.25307961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M107",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "ne6",
+        "level": 1,
+        "tracing_confidence": "point_marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.99980286,
+          49.25307908
+        ]
+      }
+    }
+  ]
+}

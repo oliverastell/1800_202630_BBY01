@@ -1,0 +1,2407 @@
+{
+  "type": "FeatureCollection",
+  "name": "bsw0203-rooms",
+  "properties": {
+    "building": "sw2",
+    "level": 3,
+    "source_floorplan": "bsw0203.pdf",
+    "reference_floor": "sw2f2-rooms.geojson",
+    "georeferencing": "User building outline preserved; matched exterior control points between source drawing and EPSG:4326",
+    "accuracy": "Detailed architectural approximation; not survey-grade; interior partitions checked only visually"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "325",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "225"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0032941,
+              49.2506688
+            ],
+            [
+              -123.0033162,
+              49.250668
+            ],
+            [
+              -123.0033167,
+              49.2505469
+            ],
+            [
+              -123.0033215,
+              49.2505429
+            ],
+            [
+              -123.0033075,
+              49.2505336
+            ],
+            [
+              -123.003294,
+              49.2505429
+            ],
+            [
+              -123.0032941,
+              49.2506688
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "351",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "251"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033104,
+              49.2502205
+            ],
+            [
+              -123.0033245,
+              49.2502102
+            ],
+            [
+              -123.0032919,
+              49.2501886
+            ],
+            [
+              -123.003292,
+              49.2501471
+            ],
+            [
+              -123.0032701,
+              49.2501466
+            ],
+            [
+              -123.0032691,
+              49.2501958
+            ],
+            [
+              -123.0033104,
+              49.2502205
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "323",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "223"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033278,
+              49.2505422
+            ],
+            [
+              -123.0033749,
+              49.2505743
+            ],
+            [
+              -123.0034012,
+              49.250558
+            ],
+            [
+              -123.0034025,
+              49.250555
+            ],
+            [
+              -123.003366,
+              49.2505297
+            ],
+            [
+              -123.0033628,
+              49.2505309
+            ],
+            [
+              -123.0033549,
+              49.2505252
+            ],
+            [
+              -123.0033278,
+              49.2505422
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "321",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "221"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.003359,
+              49.2505218
+            ],
+            [
+              -123.0034048,
+              49.2505531
+            ],
+            [
+              -123.00341,
+              49.2505521
+            ],
+            [
+              -123.0034347,
+              49.2505361
+            ],
+            [
+              -123.0033873,
+              49.2505039
+            ],
+            [
+              -123.003366,
+              49.2505171
+            ],
+            [
+              -123.0033746,
+              49.2505232
+            ],
+            [
+              -123.003373,
+              49.2505244
+            ],
+            [
+              -123.0033647,
+              49.2505188
+            ],
+            [
+              -123.003359,
+              49.2505218
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "319",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "219"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033894,
+              49.2505019
+            ],
+            [
+              -123.0034367,
+              49.2505342
+            ],
+            [
+              -123.0034621,
+              49.2505181
+            ],
+            [
+              -123.0034637,
+              49.2505153
+            ],
+            [
+              -123.0034179,
+              49.2504839
+            ],
+            [
+              -123.0033959,
+              49.2504977
+            ],
+            [
+              -123.0034044,
+              49.2505036
+            ],
+            [
+              -123.0034031,
+              49.2505048
+            ],
+            [
+              -123.0033946,
+              49.2504991
+            ],
+            [
+              -123.0033894,
+              49.2505019
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "317",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "217"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0034199,
+              49.250482
+            ],
+            [
+              -123.0034657,
+              49.2505133
+            ],
+            [
+              -123.0034711,
+              49.2505124
+            ],
+            [
+              -123.0034956,
+              49.2504963
+            ],
+            [
+              -123.0034484,
+              49.2504642
+            ],
+            [
+              -123.0034265,
+              49.2504777
+            ],
+            [
+              -123.003435,
+              49.2504838
+            ],
+            [
+              -123.0034336,
+              49.2504849
+            ],
+            [
+              -123.0034251,
+              49.2504792
+            ],
+            [
+              -123.0034199,
+              49.250482
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "315",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "215"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0034505,
+              49.2504622
+            ],
+            [
+              -123.0034976,
+              49.2504944
+            ],
+            [
+              -123.0035232,
+              49.2504784
+            ],
+            [
+              -123.0035246,
+              49.2504746
+            ],
+            [
+              -123.003479,
+              49.2504442
+            ],
+            [
+              -123.0034573,
+              49.2504578
+            ],
+            [
+              -123.0034656,
+              49.2504638
+            ],
+            [
+              -123.0034642,
+              49.2504649
+            ],
+            [
+              -123.0034559,
+              49.2504594
+            ],
+            [
+              -123.0034505,
+              49.2504622
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "313",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "213"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.003481,
+              49.2504423
+            ],
+            [
+              -123.0035268,
+              49.2504736
+            ],
+            [
+              -123.0035322,
+              49.2504724
+            ],
+            [
+              -123.0035567,
+              49.2504565
+            ],
+            [
+              -123.003519,
+              49.2504306
+            ],
+            [
+              -123.0035149,
+              49.2504318
+            ],
+            [
+              -123.0035068,
+              49.250426
+            ],
+            [
+              -123.003481,
+              49.2504423
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "311",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "211"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0035136,
+              49.2504211
+            ],
+            [
+              -123.0035219,
+              49.2504272
+            ],
+            [
+              -123.003521,
+              49.2504297
+            ],
+            [
+              -123.0035587,
+              49.2504547
+            ],
+            [
+              -123.0035832,
+              49.2504393
+            ],
+            [
+              -123.0035825,
+              49.2504377
+            ],
+            [
+              -123.0035916,
+              49.2504318
+            ],
+            [
+              -123.0035938,
+              49.2504324
+            ],
+            [
+              -123.0036033,
+              49.2504262
+            ],
+            [
+              -123.0035798,
+              49.2504097
+            ],
+            [
+              -123.0035768,
+              49.2504097
+            ],
+            [
+              -123.0035565,
+              49.2504228
+            ],
+            [
+              -123.0035332,
+              49.2504228
+            ],
+            [
+              -123.0035238,
+              49.2504165
+            ],
+            [
+              -123.0035202,
+              49.2504168
+            ],
+            [
+              -123.0035136,
+              49.2504211
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "318",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "218"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033272,
+              49.2504533
+            ],
+            [
+              -123.0033746,
+              49.2504856
+            ],
+            [
+              -123.0033909,
+              49.2504741
+            ],
+            [
+              -123.0033936,
+              49.2504753
+            ],
+            [
+              -123.0034004,
+              49.2504708
+            ],
+            [
+              -123.0033907,
+              49.2504642
+            ],
+            [
+              -123.0033921,
+              49.250463
+            ],
+            [
+              -123.0034006,
+              49.2504686
+            ],
+            [
+              -123.0034031,
+              49.2504676
+            ],
+            [
+              -123.0033557,
+              49.2504355
+            ],
+            [
+              -123.0033272,
+              49.2504533
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "316",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "216"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033578,
+              49.2504335
+            ],
+            [
+              -123.0034051,
+              49.2504657
+            ],
+            [
+              -123.0034298,
+              49.2504502
+            ],
+            [
+              -123.0034213,
+              49.2504442
+            ],
+            [
+              -123.0034226,
+              49.2504431
+            ],
+            [
+              -123.0034309,
+              49.2504487
+            ],
+            [
+              -123.0034337,
+              49.2504477
+            ],
+            [
+              -123.0033876,
+              49.2504164
+            ],
+            [
+              -123.0033822,
+              49.2504176
+            ],
+            [
+              -123.0033578,
+              49.2504335
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "314",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "214"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033899,
+              49.2504145
+            ],
+            [
+              -123.0034355,
+              49.2504458
+            ],
+            [
+              -123.0034613,
+              49.2504297
+            ],
+            [
+              -123.0034527,
+              49.2504236
+            ],
+            [
+              -123.0034541,
+              49.2504226
+            ],
+            [
+              -123.0034626,
+              49.2504282
+            ],
+            [
+              -123.0034654,
+              49.250427
+            ],
+            [
+              -123.0034196,
+              49.2503958
+            ],
+            [
+              -123.0034119,
+              49.2503983
+            ],
+            [
+              -123.0033913,
+              49.2504116
+            ],
+            [
+              -123.0033899,
+              49.2504145
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "358",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "258"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033282,
+              49.2503001
+            ],
+            [
+              -123.0033565,
+              49.2503183
+            ],
+            [
+              -123.0034042,
+              49.2502863
+            ],
+            [
+              -123.0034013,
+              49.2502851
+            ],
+            [
+              -123.0033929,
+              49.2502907
+            ],
+            [
+              -123.0033916,
+              49.2502895
+            ],
+            [
+              -123.0034011,
+              49.2502827
+            ],
+            [
+              -123.0033946,
+              49.2502784
+            ],
+            [
+              -123.0033919,
+              49.2502796
+            ],
+            [
+              -123.003376,
+              49.2502681
+            ],
+            [
+              -123.0033282,
+              49.2503001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "360",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "260"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033585,
+              49.2503202
+            ],
+            [
+              -123.003383,
+              49.2503363
+            ],
+            [
+              -123.0033881,
+              49.2503373
+            ],
+            [
+              -123.0034346,
+              49.2503063
+            ],
+            [
+              -123.0034316,
+              49.2503052
+            ],
+            [
+              -123.0034233,
+              49.2503108
+            ],
+            [
+              -123.0034219,
+              49.2503096
+            ],
+            [
+              -123.0034303,
+              49.2503035
+            ],
+            [
+              -123.0034063,
+              49.2502882
+            ],
+            [
+              -123.0033585,
+              49.2503202
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "362",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "262"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033917,
+              49.2503422
+            ],
+            [
+              -123.0034121,
+              49.2503558
+            ],
+            [
+              -123.0034144,
+              49.2503552
+            ],
+            [
+              -123.0034185,
+              49.2503574
+            ],
+            [
+              -123.0034646,
+              49.2503264
+            ],
+            [
+              -123.0034615,
+              49.2503251
+            ],
+            [
+              -123.0034531,
+              49.2503305
+            ],
+            [
+              -123.0034518,
+              49.2503295
+            ],
+            [
+              -123.0034601,
+              49.2503235
+            ],
+            [
+              -123.0034363,
+              49.2503083
+            ],
+            [
+              -123.0033904,
+              49.2503384
+            ],
+            [
+              -123.0033917,
+              49.2503422
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "353",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "253"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033301,
+              49.2502114
+            ],
+            [
+              -123.0033528,
+              49.2502264
+            ],
+            [
+              -123.0033625,
+              49.2502211
+            ],
+            [
+              -123.0033553,
+              49.250227
+            ],
+            [
+              -123.0033588,
+              49.2502298
+            ],
+            [
+              -123.0034048,
+              49.2501989
+            ],
+            [
+              -123.0034032,
+              49.2501959
+            ],
+            [
+              -123.0033776,
+              49.2501795
+            ],
+            [
+              -123.0033301,
+              49.2502114
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "355",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "255"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033609,
+              49.2502318
+            ],
+            [
+              -123.0033633,
+              49.2502328
+            ],
+            [
+              -123.0033717,
+              49.2502274
+            ],
+            [
+              -123.0033731,
+              49.2502284
+            ],
+            [
+              -123.0033649,
+              49.2502344
+            ],
+            [
+              -123.0033889,
+              49.2502499
+            ],
+            [
+              -123.0034367,
+              49.2502181
+            ],
+            [
+              -123.0034124,
+              49.250202
+            ],
+            [
+              -123.003407,
+              49.2502009
+            ],
+            [
+              -123.0033609,
+              49.2502318
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "357",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "257"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033909,
+              49.2502519
+            ],
+            [
+              -123.0033936,
+              49.250253
+            ],
+            [
+              -123.0034022,
+              49.2502474
+            ],
+            [
+              -123.0034036,
+              49.2502486
+            ],
+            [
+              -123.003395,
+              49.2502545
+            ],
+            [
+              -123.0034192,
+              49.25027
+            ],
+            [
+              -123.0034654,
+              49.250239
+            ],
+            [
+              -123.0034639,
+              49.2502361
+            ],
+            [
+              -123.0034387,
+              49.25022
+            ],
+            [
+              -123.0033909,
+              49.2502519
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "359",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "259"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0034212,
+              49.2502719
+            ],
+            [
+              -123.0034239,
+              49.2502731
+            ],
+            [
+              -123.0034325,
+              49.2502675
+            ],
+            [
+              -123.0034339,
+              49.2502687
+            ],
+            [
+              -123.0034253,
+              49.2502746
+            ],
+            [
+              -123.0034495,
+              49.2502901
+            ],
+            [
+              -123.0034971,
+              49.2502581
+            ],
+            [
+              -123.0034728,
+              49.250242
+            ],
+            [
+              -123.0034674,
+              49.250241
+            ],
+            [
+              -123.0034212,
+              49.2502719
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "361",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "261"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0034516,
+              49.250292
+            ],
+            [
+              -123.0034543,
+              49.2502932
+            ],
+            [
+              -123.0034629,
+              49.2502876
+            ],
+            [
+              -123.0034642,
+              49.2502886
+            ],
+            [
+              -123.0034556,
+              49.2502947
+            ],
+            [
+              -123.0034798,
+              49.2503102
+            ],
+            [
+              -123.0035258,
+              49.250279
+            ],
+            [
+              -123.0035242,
+              49.2502761
+            ],
+            [
+              -123.0034991,
+              49.25026
+            ],
+            [
+              -123.0034516,
+              49.250292
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "363",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "263"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0034819,
+              49.2503121
+            ],
+            [
+              -123.0034846,
+              49.2503133
+            ],
+            [
+              -123.0034934,
+              49.2503078
+            ],
+            [
+              -123.0034945,
+              49.2503089
+            ],
+            [
+              -123.0034859,
+              49.2503148
+            ],
+            [
+              -123.0035099,
+              49.2503301
+            ],
+            [
+              -123.0035577,
+              49.2502982
+            ],
+            [
+              -123.0035335,
+              49.2502822
+            ],
+            [
+              -123.003528,
+              49.2502811
+            ],
+            [
+              -123.0034819,
+              49.2503121
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "324",
+        "use": "JANITOR",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "224"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033152,
+              49.2505022
+            ],
+            [
+              -123.0033217,
+              49.2505065
+            ],
+            [
+              -123.0033246,
+              49.2505055
+            ],
+            [
+              -123.0033284,
+              49.2505089
+            ],
+            [
+              -123.0033509,
+              49.2504934
+            ],
+            [
+              -123.003345,
+              49.2504903
+            ],
+            [
+              -123.0033378,
+              49.2504947
+            ],
+            [
+              -123.0033301,
+              49.2504902
+            ],
+            [
+              -123.0033152,
+              49.2505022
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "320",
+        "use": "WASH-RM-MH",
+        "kind": "washroom",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "220"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033065,
+              49.2504839
+            ],
+            [
+              -123.0033043,
+              49.2504829
+            ],
+            [
+              -123.0033049932859,
+              49.250484853805695
+            ],
+            [
+              -123.00329681403727,
+              49.250479154906834
+            ],
+            [
+              -123.0033036,
+              49.2504747
+            ],
+            [
+              -123.0033106,
+              49.2504785
+            ],
+            [
+              -123.0033194,
+              49.2504739
+            ],
+            [
+              -123.0033181,
+              49.2504725
+            ],
+            [
+              -123.0033108,
+              49.2504774
+            ],
+            [
+              -123.0033054,
+              49.2504744
+            ],
+            [
+              -123.0033245,
+              49.2504618
+            ],
+            [
+              -123.0033386,
+              49.2504713
+            ],
+            [
+              -123.0033449,
+              49.2504682
+            ],
+            [
+              -123.0033725,
+              49.2504875
+            ],
+            [
+              -123.003361,
+              49.2504944
+            ],
+            [
+              -123.0033529,
+              49.2504888
+            ],
+            [
+              -123.0033497,
+              49.2504904
+            ],
+            [
+              -123.0033378,
+              49.2504828
+            ],
+            [
+              -123.00331905742843,
+              49.250494653009696
+            ],
+            [
+              -123.00331101575753,
+              49.250489049968245
+            ],
+            [
+              -123.0033198,
+              49.2504826
+            ],
+            [
+              -123.00331060979337,
+              49.25048876711235
+            ],
+            [
+              -123.0033065,
+              49.250485903610105
+            ],
+            [
+              -123.0033065,
+              49.2504839
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "350",
+        "use": "COMM",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "250"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033161,
+              49.2502533
+            ],
+            [
+              -123.0033381,
+              49.2502687
+            ],
+            [
+              -123.0033546,
+              49.2502587
+            ],
+            [
+              -123.0033402,
+              49.2502482
+            ],
+            [
+              -123.0033364,
+              49.2502516
+            ],
+            [
+              -123.0033288,
+              49.2502459
+            ],
+            [
+              -123.0033161,
+              49.2502533
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "322",
+        "use": "ELEC",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "222"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0033559,
+          49.2505052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "354",
+        "use": "ELEC",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "254"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0033561,
+          49.2502393
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S327",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "S227"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0032798,
+              49.2505307
+            ],
+            [
+              -123.0032917,
+              49.250538
+            ],
+            [
+              -123.0033133,
+              49.2505217
+            ],
+            [
+              -123.0033067,
+              49.2505174
+            ],
+            [
+              -123.0033004,
+              49.2505165
+            ],
+            [
+              -123.0032984,
+              49.2505187
+            ],
+            [
+              -123.0033029,
+              49.2505218
+            ],
+            [
+              -123.0033002,
+              49.2505233
+            ],
+            [
+              -123.003295,
+              49.25052
+            ],
+            [
+              -123.0032855,
+              49.2505261
+            ],
+            [
+              -123.0032904,
+              49.25053
+            ],
+            [
+              -123.0032886,
+              49.250531
+            ],
+            [
+              -123.0032832,
+              49.2505276
+            ],
+            [
+              -123.0032798,
+              49.2505307
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S349",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "S249"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0032822,
+              49.2502222
+            ],
+            [
+              -123.0032856,
+              49.2502256
+            ],
+            [
+              -123.0032899,
+              49.2502225
+            ],
+            [
+              -123.0032931,
+              49.2502236
+            ],
+            [
+              -123.0032883,
+              49.2502274
+            ],
+            [
+              -123.0032968,
+              49.2502331
+            ],
+            [
+              -123.0033034,
+              49.2502303
+            ],
+            [
+              -123.0033047,
+              49.2502316
+            ],
+            [
+              -123.0033002,
+              49.2502344
+            ],
+            [
+              -123.0033022,
+              49.2502366
+            ],
+            [
+              -123.0033085,
+              49.2502359
+            ],
+            [
+              -123.0033151,
+              49.2502318
+            ],
+            [
+              -123.0032938,
+              49.2502153
+            ],
+            [
+              -123.0032822,
+              49.2502222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M322",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "M222"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0033352,
+          49.2505095
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M350",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "M250"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0033369,
+          49.2502416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M302",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "M202"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0034432,
+          49.250399
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M301",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "M201"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0034722,
+          49.250383
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "300A",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "200A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0034649,
+          49.2503422
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "300-west",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "200-sw"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033524,
+              49.2505046
+            ],
+            [
+              -123.0033578,
+              49.2505053
+            ],
+            [
+              -123.003358,
+              49.2505084
+            ],
+            [
+              -123.0033674,
+              49.2505139
+            ],
+            [
+              -123.003518,
+              49.2504149
+            ],
+            [
+              -123.0034898,
+              49.2504135
+            ],
+            [
+              -123.0033596,
+              49.2504983
+            ],
+            [
+              -123.0033663,
+              49.2505036
+            ],
+            [
+              -123.0033648,
+              49.2505045
+            ],
+            [
+              -123.0033574,
+              49.2504998
+            ],
+            [
+              -123.0033524,
+              49.2505046
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "300",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "sw2",
+        "level": 3,
+        "source": "reference_2f_corresponding_footprint",
+        "trace_quality": "reference_transferred",
+        "parent_feature": "200"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0034901,
+              49.2503998
+            ],
+            [
+              -123.0034784,
+              49.2503919
+            ],
+            [
+              -123.0034651,
+              49.250391
+            ],
+            [
+              -123.0034654,
+              49.250387
+            ],
+            [
+              -123.0034694,
+              49.2503866
+            ],
+            [
+              -123.0034699,
+              49.250385
+            ],
+            [
+              -123.0034652,
+              49.2503833
+            ],
+            [
+              -123.0034653,
+              49.2503574
+            ],
+            [
+              -123.0034905,
+              49.250341
+            ],
+            [
+              -123.0033612,
+              49.2502553
+            ],
+            [
+              -123.003368,
+              49.25025
+            ],
+            [
+              -123.0033664,
+              49.2502491
+            ],
+            [
+              -123.0033589,
+              49.2502538
+            ],
+            [
+              -123.0033466,
+              49.2502451
+            ],
+            [
+              -123.0033594,
+              49.2502451
+            ],
+            [
+              -123.0033655,
+              49.2502411
+            ],
+            [
+              -123.0033709,
+              49.2502411
+            ],
+            [
+              -123.0035122,
+              49.2503346
+            ],
+            [
+              -123.00351214557317,
+              49.250348025285064
+            ],
+            [
+              -123.0035044,
+              49.2503556
+            ],
+            [
+              -123.0035043,
+              49.2503619
+            ],
+            [
+              -123.00351208924616,
+              49.250361919280316
+            ],
+            [
+              -123.00351208640835,
+              49.25036261927329
+            ],
+            [
+              -123.0035043,
+              49.2503626
+            ],
+            [
+              -123.0035038,
+              49.2504046
+            ],
+            [
+              -123.00351375016052,
+              49.25041368492918
+            ],
+            [
+              -123.0034909,
+              49.2504129
+            ],
+            [
+              -123.0034901,
+              49.2503998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "301",
+        "use": "MEETING",
+        "kind": "meeting",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0035038,
+              49.2504046
+            ],
+            [
+              -123.0035043,
+              49.2503626
+            ],
+            [
+              -123.0035447,
+              49.2503627
+            ],
+            [
+              -123.0035441,
+              49.2504103
+            ],
+            [
+              -123.0035293,
+              49.2504102
+            ],
+            [
+              -123.0035176,
+              49.2504172
+            ],
+            [
+              -123.0035038,
+              49.2504046
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "301A",
+        "use": "RESOURCE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0035043,
+              49.2503619
+            ],
+            [
+              -123.0035044,
+              49.2503556
+            ],
+            [
+              -123.003518,
+              49.2503423
+            ],
+            [
+              -123.00353,
+              49.2503497
+            ],
+            [
+              -123.0035449,
+              49.2503497
+            ],
+            [
+              -123.0035447,
+              49.250362
+            ],
+            [
+              -123.0035043,
+              49.2503619
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "365",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0035087,
+              49.2503426
+            ],
+            [
+              -123.003542,
+              49.2503147
+            ],
+            [
+              -123.0035734,
+              49.250333
+            ],
+            [
+              -123.0035449,
+              49.2503501
+            ],
+            [
+              -123.0035305,
+              49.25035
+            ],
+            [
+              -123.0035087,
+              49.2503426
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S300",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033825,
+              49.2503764
+            ],
+            [
+              -123.0034079,
+              49.2503512
+            ],
+            [
+              -123.0034664,
+              49.2503513
+            ],
+            [
+              -123.0034658,
+              49.2503989
+            ],
+            [
+              -123.0034082,
+              49.2503988
+            ],
+            [
+              -123.0033825,
+              49.2503764
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M300",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "point_symbol"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0034202,
+          49.2504065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M301",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "point_symbol"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0034362,
+          49.2503474
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "348",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0032991,
+              49.2502866
+            ],
+            [
+              -123.0032677,
+              49.2502673
+            ],
+            [
+              -123.0032921,
+              49.2502509
+            ],
+            [
+              -123.0033267,
+              49.2502674
+            ],
+            [
+              -123.0032991,
+              49.2502866
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "356",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033263,
+              49.2503017
+            ],
+            [
+              -123.0032995,
+              49.2502866
+            ],
+            [
+              -123.0033281,
+              49.2502674
+            ],
+            [
+              -123.0033373,
+              49.2502741
+            ],
+            [
+              -123.0033584,
+              49.2502601
+            ],
+            [
+              -123.0033726,
+              49.2502706
+            ],
+            [
+              -123.0033263,
+              49.2503017
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "326",
+        "use": "WASH-RM",
+        "kind": "washroom",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0032639,
+              49.2505018
+            ],
+            [
+              -123.0032953,
+              49.2504781
+            ],
+            [
+              -123.003323,
+              49.2504974
+            ],
+            [
+              -123.0032986,
+              49.2505169
+            ],
+            [
+              -123.0032639,
+              49.2505018
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S312",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "manual_image_trace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00346007547202,
+              49.25043046414343
+            ],
+            [
+              -123.0034613,
+              49.2504297
+            ],
+            [
+              -123.0034527,
+              49.2504236
+            ],
+            [
+              -123.0034541,
+              49.2504226
+            ],
+            [
+              -123.0034626,
+              49.2504282
+            ],
+            [
+              -123.0034654,
+              49.250427
+            ],
+            [
+              -123.00344258858249,
+              49.2504114603444
+            ],
+            [
+              -123.0034603,
+              49.2503961
+            ],
+            [
+              -123.0034883,
+              49.2504158
+            ],
+            [
+              -123.0034621,
+              49.2504318
+            ],
+            [
+              -123.00346007547202,
+              49.25043046414343
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M320",
+        "use": "SHAFT",
+        "kind": "utility",
+        "building": "sw2",
+        "level": 3,
+        "source": "bsw0203.pdf p1",
+        "trace_quality": "point_symbol"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.0033336,
+          49.2504617
+        ]
+      }
+    }
+  ]
+}

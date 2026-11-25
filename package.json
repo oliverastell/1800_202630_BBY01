@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node server/src/index.js",
-    "import:rooms": "node server/scripts/import-rooms.js",
-    "import:dining": "node server/scripts/import-dining.js"
+    "dev": "vite",
+    "import:rooms": "node tooling/import-rooms.js",
+    "import:dining": "node tooling/scripts/import-dining.js"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

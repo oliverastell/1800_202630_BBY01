@@ -1,0 +1,882 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "111",
+        "use": "STOR-INST",
+        "kind": "storage",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0017843,
+              49.25353727
+            ],
+            [
+              -123.00167594,
+              49.25353712
+            ],
+            [
+              -123.00167608,
+              49.25349375
+            ],
+            [
+              -123.00178444,
+              49.2534939
+            ],
+            [
+              -123.0017843,
+              49.25353727
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "110",
+        "use": "STOR-INST",
+        "kind": "storage",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00167594,
+              49.25353712
+            ],
+            [
+              -123.00162215,
+              49.25353705
+            ],
+            [
+              -123.00162229,
+              49.25349367
+            ],
+            [
+              -123.00167608,
+              49.25349375
+            ],
+            [
+              -123.00167594,
+              49.25353712
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101F",
+        "use": "VESTIBULE",
+        "kind": "vestibule",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "open_boundary_estimate",
+        "tracing_note": "Vestibule opens directly into shop; its southern boundary is estimated"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00162137,
+              49.25353705
+            ],
+            [
+              -123.00146311,
+              49.25353683
+            ],
+            [
+              -123.00146323,
+              49.2535006
+            ],
+            [
+              -123.00162148,
+              49.25350082
+            ],
+            [
+              -123.00162137,
+              49.25353705
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101G",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00146311,
+              49.25353683
+            ],
+            [
+              -123.00133448,
+              49.25353665
+            ],
+            [
+              -123.0013346,
+              49.25350042
+            ],
+            [
+              -123.00146323,
+              49.2535006
+            ],
+            [
+              -123.00146311,
+              49.25353683
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101H",
+        "use": "STOR-INST",
+        "kind": "storage",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00154295,
+              49.25319708
+            ],
+            [
+              -123.0014876,
+              49.253197
+            ],
+            [
+              -123.00148767,
+              49.25317506
+            ],
+            [
+              -123.00154302,
+              49.25317514
+            ],
+            [
+              -123.00154295,
+              49.25319708
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101Z",
+        "use": "VESTIBULE",
+        "kind": "vestibule",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "open_boundary_estimate",
+        "tracing_note": "Unwalled vestibule area"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0015438,
+              49.25317463
+            ],
+            [
+              -123.00148689,
+              49.25317455
+            ],
+            [
+              -123.00148693,
+              49.25316332
+            ],
+            [
+              -123.00154384,
+              49.2531634
+            ],
+            [
+              -123.0015438,
+              49.25317463
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101C",
+        "use": "WASHUP",
+        "kind": "utility",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "open_boundary_estimate",
+        "tracing_note": "Wash-up space has open internal edge"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00166155,
+              49.25316357
+            ],
+            [
+              -123.0015836,
+              49.25316346
+            ],
+            [
+              -123.00158367,
+              49.25313896
+            ],
+            [
+              -123.00166163,
+              49.25313907
+            ],
+            [
+              -123.00166155,
+              49.25316357
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101B",
+        "use": "WASHUP",
+        "kind": "utility",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "open_boundary_estimate",
+        "tracing_note": "Wash-up space has open internal edge"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00153916,
+              49.2531634
+            ],
+            [
+              -123.0014269,
+              49.25316324
+            ],
+            [
+              -123.00142698,
+              49.25313875
+            ],
+            [
+              -123.00153924,
+              49.2531389
+            ],
+            [
+              -123.00153916,
+              49.2531634
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "105",
+        "use": "VESTIBULE",
+        "kind": "vestibule",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00158281,
+              49.25316397
+            ],
+            [
+              -123.00153994,
+              49.25316391
+            ],
+            [
+              -123.00154015,
+              49.2530991
+            ],
+            [
+              -123.00158302,
+              49.25309916
+            ],
+            [
+              -123.00158281,
+              49.25316397
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "108",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00176766,
+              49.25313718
+            ],
+            [
+              -123.00171933,
+              49.25313711
+            ],
+            [
+              -123.00171945,
+              49.25309986
+            ],
+            [
+              -123.00176778,
+              49.25309993
+            ],
+            [
+              -123.00176766,
+              49.25313718
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "107",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00171855,
+              49.25313711
+            ],
+            [
+              -123.00164683,
+              49.25313701
+            ],
+            [
+              -123.00164695,
+              49.25309976
+            ],
+            [
+              -123.00171867,
+              49.25309986
+            ],
+            [
+              -123.00171855,
+              49.25313711
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "106",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00164605,
+              49.25313701
+            ],
+            [
+              -123.00158368,
+              49.25313692
+            ],
+            [
+              -123.0015838,
+              49.25309967
+            ],
+            [
+              -123.00164617,
+              49.25309976
+            ],
+            [
+              -123.00164605,
+              49.25313701
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "104",
+        "use": "WASH-MH",
+        "kind": "washroom",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00153847,
+              49.25313584
+            ],
+            [
+              -123.00147766,
+              49.25313576
+            ],
+            [
+              -123.00147778,
+              49.25310054
+            ],
+            [
+              -123.00153858,
+              49.25310063
+            ],
+            [
+              -123.00153847,
+              49.25313584
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "103",
+        "use": "WASH-FH",
+        "kind": "washroom",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0014761,
+              49.25313575
+            ],
+            [
+              -123.00142777,
+              49.25313569
+            ],
+            [
+              -123.00142789,
+              49.25310048
+            ],
+            [
+              -123.00147622,
+              49.25310054
+            ],
+            [
+              -123.0014761,
+              49.25313575
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "102",
+        "use": "STOR-GEN",
+        "kind": "storage",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00142621,
+              49.2531367
+            ],
+            [
+              -123.00135215,
+              49.2531366
+            ],
+            [
+              -123.00135227,
+              49.25309986
+            ],
+            [
+              -123.00142633,
+              49.25309996
+            ],
+            [
+              -123.00142621,
+              49.2531367
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "101",
+        "use": "SHOP-TRADE",
+        "kind": "workshop",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "tracing_note": "Open industrial shop; internal peninsula is a partition rather than a separate enclosed room"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00142621,
+              49.25313772
+            ],
+            [
+              -123.0014262,
+              49.25313824
+            ],
+            [
+              -123.00133577,
+              49.25313811
+            ],
+            [
+              -123.0013346,
+              49.25350042
+            ],
+            [
+              -123.00146323,
+              49.2535006
+            ],
+            [
+              -123.00162148,
+              49.25350082
+            ],
+            [
+              -123.00162151,
+              49.25349265
+            ],
+            [
+              -123.00178522,
+              49.25349288
+            ],
+            [
+              -123.00178636,
+              49.25313822
+            ],
+            [
+              -123.0015829,
+              49.25313794
+            ],
+            [
+              -123.00158281,
+              49.25316397
+            ],
+            [
+              -123.00154384,
+              49.25316391
+            ],
+            [
+              -123.0015438,
+              49.25317463
+            ],
+            [
+              -123.00148689,
+              49.25317455
+            ],
+            [
+              -123.00148693,
+              49.25316332
+            ],
+            [
+              -123.0014269,
+              49.25316324
+            ],
+            [
+              -123.00142698,
+              49.25313875
+            ],
+            [
+              -123.00153924,
+              49.2531389
+            ],
+            [
+              -123.00153916,
+              49.2531634
+            ],
+            [
+              -123.00153994,
+              49.2531634
+            ],
+            [
+              -123.00154002,
+              49.25313788
+            ],
+            [
+              -123.00142621,
+              49.25313772
+            ]
+          ],
+          [
+            [
+              -123.00154302,
+              49.25317514
+            ],
+            [
+              -123.00154295,
+              49.25319708
+            ],
+            [
+              -123.0014876,
+              49.253197
+            ],
+            [
+              -123.00148767,
+              49.25317506
+            ],
+            [
+              -123.00154302,
+              49.25317514
+            ]
+          ],
+          [
+            [
+              -123.00166163,
+              49.25313907
+            ],
+            [
+              -123.00166155,
+              49.25316357
+            ],
+            [
+              -123.0015836,
+              49.25316346
+            ],
+            [
+              -123.00158367,
+              49.25313896
+            ],
+            [
+              -123.00166163,
+              49.25313907
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S151",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00095491,
+              49.25351265
+            ],
+            [
+              -123.00091593,
+              49.2535126
+            ],
+            [
+              -123.00091612,
+              49.2534534
+            ],
+            [
+              -123.0009551,
+              49.25345346
+            ],
+            [
+              -123.00095491,
+              49.25351265
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "151",
+        "use": "ELEC",
+        "kind": "utility",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00097141,
+              49.25323405
+            ],
+            [
+              -123.00093866,
+              49.253234
+            ],
+            [
+              -123.00093873,
+              49.25321308
+            ],
+            [
+              -123.00097147,
+              49.25321313
+            ],
+            [
+              -123.00097141,
+              49.25323405
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "152",
+        "use": "MECH",
+        "kind": "mechanical",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00130513,
+              49.25321359
+            ],
+            [
+              -123.00122951,
+              49.25321349
+            ],
+            [
+              -123.00122974,
+              49.25314256
+            ],
+            [
+              -123.00130536,
+              49.25314266
+            ],
+            [
+              -123.00130513,
+              49.25321359
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S152",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne2",
+        "level": 1,
+        "tracing_confidence": "vector_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00122801,
+              49.25319511
+            ],
+            [
+              -123.00119137,
+              49.25319506
+            ],
+            [
+              -123.00119155,
+              49.25313842
+            ],
+            [
+              -123.00122819,
+              49.25313847
+            ],
+            [
+              -123.00122801,
+              49.25319511
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

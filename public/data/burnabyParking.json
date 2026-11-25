@@ -1,0 +1,269 @@
+[
+  {
+    "id": "lot-a",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-b",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-c",
+    "details": [
+      "Reserved tenant parking · 24/7"
+    ]
+  },
+  {
+    "id": "lot-d",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-e",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-f",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-g",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-h",
+    "details": [
+      "Reserved for student townhouse residents · 24/7",
+      "Register for a permit through the Student Housing Office."
+    ]
+  },
+  {
+    "id": "lot-j",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-k",
+    "details": [
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-l",
+    "details": [
+      "Economy parking · open 24/7",
+      "Student rate: $5.75/day",
+      "Pay at the Lot L parking meter."
+    ]
+  },
+  {
+    "id": "lot-m",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-n",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-q",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-r",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "lot-s",
+    "details": [
+      "Economy parking · open 24/7",
+      "Student rate: $5.75/day",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "lot-t",
+    "details": [
+      "Student and public parking · open 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "p5",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "p7",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00",
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "p8",
+    "details": [
+      "Staff parking only · 24/7"
+    ]
+  },
+  {
+    "id": "p12",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m."
+    ]
+  },
+  {
+    "id": "p15",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m."
+    ]
+  },
+  {
+    "id": "p20",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "p21",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "p22",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "p24",
+    "details": [
+      "Staff parking only · 24/7"
+    ]
+  },
+  {
+    "id": "p25",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "p26",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Designated tenant spaces · 24/7"
+    ]
+  },
+  {
+    "id": "p27",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "p28",
+    "details": [
+      "Staff parking weekdays, 6 a.m.–4:30 p.m.",
+      "Student and public parking weekdays, 4:30 p.m.–6 a.m., and all weekend.",
+      "Designated tenant spaces · 24/7",
+      "Public rate: $4.00/hour or $10.25/day",
+      "Student rate: Weekly: $34.00"
+    ]
+  },
+  {
+    "id": "p29",
+    "details": [
+      "Staff parking only · 24/7"
+    ]
+  },
+  {
+    "id": "service-vehicle-lot",
+    "details": [
+      "Contractor parking requires a digital permit through a BCIT liaison."
+    ]
+  },
+  {
+    "id": "v6",
+    "details": [
+      "Hourly visitor parking · open 24/7",
+      "Public rate: $4.50/hour, $14.00 daily to 10 p.m.",
+      "Optional EV charging included."
+    ]
+  }
+]
