@@ -46,11 +46,10 @@ function renderVisibility(state) {
   const diningAtLocation = new Map();
   for (const record of state.records) {
     const floorId = record.buildingId === state.buildingId ? state.floorId : state.defaultFloorId;
-    const filter = record.type === "washroom" ? "washroom" : "dining";
-    const hidden = !state.enabled.has(filter) || (record.floorId != null && record.floorId !== floorId);
+    const hidden = !state.enabled.has(record.filter) || (record.floorId != null && record.floorId !== floorId);
     record.marker.getElement().hidden = hidden;
     if (hidden && record.marker.getPopup()?.isOpen()) record.marker.togglePopup();
-    if (!hidden && record.type !== "washroom") {
+    if (!hidden && record.filter === "dining") {
       const key = record.marker.getLngLat().toArray().join(",");
       if (!diningAtLocation.has(key)) diningAtLocation.set(key, []);
       diningAtLocation.get(key).push(record.marker);
@@ -64,7 +63,7 @@ function renderVisibility(state) {
 function createMarker(record, type, coordinates) {
   const isWashroom = type === "washroom";
   const element = document.createElement("button");
-  const label = [record.name || `Washroom ${record.roomId || ""}`, record.category,
+  const label = type === "parking" ? record.name : [record.name || `Washroom ${record.roomId || ""}`, record.category,
     record.buildingId.toUpperCase(), record.floorId]
     .filter(Boolean).join(" · ");
   element.className = isWashroom ? "washroom-marker" : "dining-marker";
@@ -76,7 +75,7 @@ function createMarker(record, type, coordinates) {
     element.innerHTML = washroomIcon;
   } else {
     const icon = document.createElement("img");
-    icon.src = diningIcons[type];
+    icon.src = type === "parking" ? "/img/parking-icon.svg" : diningIcons[type];
     icon.alt = "";
     icon.width = 18;
     icon.height = 18;
@@ -87,6 +86,26 @@ function createMarker(record, type, coordinates) {
   marker.setPopup(new Popup({
     offset: 18, focusAfterOpen: false, className: "filter-pin-popup",
   }).setText(label));
+  if (type === "parking") {
+    const content = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = label;
+    content.append(title);
+    const details = Array.isArray(record.details)
+      ? record.details.filter(detail => typeof detail === "string" && detail.trim())
+      : [];
+    if (details.length) {
+      const list = document.createElement("ul");
+      list.className = "mb-0 ps-3";
+      for (const detail of details) {
+        const item = document.createElement("li");
+        item.textContent = detail;
+        list.append(item);
+      }
+      content.append(list);
+    }
+    marker.getPopup().setDOMContent(content);
+  }
   enablePinHold(element, () => {
     if (!marker.getPopup().isOpen()) marker.togglePopup();
   });
@@ -99,8 +118,36 @@ function createMarker(record, type, coordinates) {
 }
 
 // Load each collection independently so one failed read cannot hide the other.
-export function setupMapFilters(campusMap) {
-  return Promise.all(["washrooms", "dining"].map(name => loadMarkers(campusMap, name)));
+export function setupMapFilters(campusMap, buildingsReady) {
+  return Promise.all([
+    loadMarkers(campusMap, "washrooms"),
+    loadMarkers(campusMap, "dining"),
+    loadParkingMarkers(campusMap, buildingsReady),
+  ]);
+}
+
+function attachMarker({ map, trackPopup }, marker) {
+  const popup = marker.addTo(map).getPopup();
+  popup.on("open", () => map.fire("filterpinopen"));
+  trackPopup(popup);
+}
+
+async function loadParkingMarkers(campusMap, buildingsReady) {
+  const { map, mapReady } = campusMap;
+  try {
+    const [buildings] = await Promise.all([buildingsReady, mapReady]);
+    const state = stateFor(map);
+    for (const building of buildings) {
+      if (typeof building.type !== "string" || building.type.trim().toLowerCase() !== "parking") continue;
+      const [latitude, longitude] = building.center;
+      const marker = createMarker(building, "parking", [longitude, latitude]);
+      attachMarker(campusMap, marker);
+      state.records.push({ filter: "parking", marker });
+    }
+    renderVisibility(state);
+  } catch (error) {
+    console.error("Could not load parking markers:", error);
+  }
 }
 
 async function loadMarkers({ map, mapReady, trackPopup }, collectionName) {
@@ -125,11 +172,10 @@ async function loadMarkers({ map, mapReady, trackPopup }, collectionName) {
         console.warn(`Skipping invalid map marker ${doc.ref.path}`);
         return;
       }
-      const marker = createMarker(record, type, [longitude, latitude]).addTo(map);
-      const popup = marker.getPopup();
-      popup.on("open", () => map.fire("filterpinopen"));
-      trackPopup(popup);
-      state.records.push({ collectionName, type, buildingId: record.buildingId, floorId: record.floorId, marker });
+      const marker = createMarker(record, type, [longitude, latitude]);
+      attachMarker({ map, trackPopup }, marker);
+      const filter = collectionName === "washrooms" ? "washroom" : "dining";
+      state.records.push({ collectionName, filter, buildingId: record.buildingId, floorId: record.floorId, marker });
     });
     renderVisibility(state);
   } catch (error) {

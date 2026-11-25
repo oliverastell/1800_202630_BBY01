@@ -4,14 +4,16 @@ import { setupSearch } from "./search.js";
 
 import { setupLocationDetails } from "./locationDetails.js";
 import { setupMapFilters } from "./mapFilters.js";
+import { loadBuildings } from "./buildings.js";
 import {redirectToWelcomeIfNecessary} from "./redirectToWelcome.js";
 
 const campusMap = createCampusMap();
-setupMapFilters(campusMap);
+const buildingsReady = loadBuildings();
+setupMapFilters(campusMap, buildingsReady);
 
 const userLocation = setupLocation(campusMap.map);
 const locationDetails = setupLocationDetails({ ...campusMap, ...userLocation });
-setupSearch(campusMap, locationDetails);
+setupSearch(campusMap, locationDetails, buildingsReady);
 
 
 redirectToWelcomeIfNecessary()

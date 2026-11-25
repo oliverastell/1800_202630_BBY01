@@ -1,0 +1,676 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "100",
+        "use": "LAB-DRFT",
+        "kind": "lab",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00257695,
+              49.25306265
+            ],
+            [
+              -123.00240855,
+              49.25306255
+            ],
+            [
+              -123.0024095,
+              49.25299652
+            ],
+            [
+              -123.00253325,
+              49.25299659
+            ],
+            [
+              -123.00253304,
+              49.25301143
+            ],
+            [
+              -123.00257769,
+              49.25301146
+            ],
+            [
+              -123.00257695,
+              49.25306265
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "100A",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00257769,
+              49.25301146
+            ],
+            [
+              -123.00253304,
+              49.25301143
+            ],
+            [
+              -123.00253325,
+              49.25299659
+            ],
+            [
+              -123.0025779,
+              49.25299662
+            ],
+            [
+              -123.00257769,
+              49.25301146
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "110",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0025779,
+              49.25299662
+            ],
+            [
+              -123.00249642,
+              49.25299657
+            ],
+            [
+              -123.0024969,
+              49.25296276
+            ],
+            [
+              -123.00257839,
+              49.25296281
+            ],
+            [
+              -123.0025779,
+              49.25299662
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M140",
+        "use": "SFT-DUCT",
+        "kind": "shaft",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00249642,
+              49.25299657
+            ],
+            [
+              -123.0024624,
+              49.25299655
+            ],
+            [
+              -123.0024625,
+              49.25298977
+            ],
+            [
+              -123.00249651,
+              49.25298979
+            ],
+            [
+              -123.00249642,
+              49.25299657
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "140B",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00249651,
+              49.25298979
+            ],
+            [
+              -123.0024625,
+              49.25298977
+            ],
+            [
+              -123.00246317,
+              49.25294331
+            ],
+            [
+              -123.00249718,
+              49.25294333
+            ],
+            [
+              -123.00249651,
+              49.25298979
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "120",
+        "use": "PREP",
+        "kind": "prep",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0024625,
+              49.25298977
+            ],
+            [
+              -123.0024096,
+              49.25298974
+            ],
+            [
+              -123.00240976,
+              49.25297886
+            ],
+            [
+              -123.00246266,
+              49.25297889
+            ],
+            [
+              -123.0024625,
+              49.25298977
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "140",
+        "use": "PREP",
+        "kind": "prep",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00246266,
+              49.25297889
+            ],
+            [
+              -123.00240976,
+              49.25297886
+            ],
+            [
+              -123.0024105,
+              49.25292746
+            ],
+            [
+              -123.0024634,
+              49.25292749
+            ],
+            [
+              -123.00246266,
+              49.25297889
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "145",
+        "use": "ELEC",
+        "kind": "utility",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00249718,
+              49.25294333
+            ],
+            [
+              -123.00246766,
+              49.25294331
+            ],
+            [
+              -123.00246774,
+              49.25293742
+            ],
+            [
+              -123.00249727,
+              49.25293744
+            ],
+            [
+              -123.00249718,
+              49.25294333
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "130A",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "estimated_small_space",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00249727,
+              49.25293744
+            ],
+            [
+              -123.00248236,
+              49.25293743
+            ],
+            [
+              -123.0024825,
+              49.2529275
+            ],
+            [
+              -123.00249741,
+              49.25292751
+            ],
+            [
+              -123.00249727,
+              49.25293744
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "130B",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "label_uncertain",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00248236,
+              49.25293743
+            ],
+            [
+              -123.00246774,
+              49.25293742
+            ],
+            [
+              -123.00246788,
+              49.25292749
+            ],
+            [
+              -123.0024825,
+              49.2529275
+            ],
+            [
+              -123.00248236,
+              49.25293743
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "130",
+        "use": "LOADING",
+        "kind": "loading",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00257839,
+              49.25296281
+            ],
+            [
+              -123.0024969,
+              49.25296276
+            ],
+            [
+              -123.00249788,
+              49.25289468
+            ],
+            [
+              -123.00257937,
+              49.25289473
+            ],
+            [
+              -123.00257839,
+              49.25296281
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "150",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00257937,
+              49.25289473
+            ],
+            [
+              -123.00251655,
+              49.25289469
+            ],
+            [
+              -123.0025167,
+              49.25288451
+            ],
+            [
+              -123.00257952,
+              49.25288455
+            ],
+            [
+              -123.00257937,
+              49.25289473
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "155",
+        "use": "WROOM",
+        "kind": "washroom",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00257952,
+              49.25288455
+            ],
+            [
+              -123.0025167,
+              49.25288451
+            ],
+            [
+              -123.00251694,
+              49.25286774
+            ],
+            [
+              -123.00257976,
+              49.25286777
+            ],
+            [
+              -123.00257952,
+              49.25288455
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "175",
+        "use": "MECH",
+        "kind": "mechanical",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00257976,
+              49.25286777
+            ],
+            [
+              -123.00251694,
+              49.25286774
+            ],
+            [
+              -123.00251703,
+              49.25286142
+            ],
+            [
+              -123.00257985,
+              49.25286146
+            ],
+            [
+              -123.00257976,
+              49.25286777
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "150A",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00251655,
+              49.25289469
+            ],
+            [
+              -123.00249788,
+              49.25289468
+            ],
+            [
+              -123.00249836,
+              49.25286141
+            ],
+            [
+              -123.00251703,
+              49.25286142
+            ],
+            [
+              -123.00251655,
+              49.25289469
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "160",
+        "use": "LAB-CS",
+        "kind": "lab",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00249741,
+              49.25292751
+            ],
+            [
+              -123.0024105,
+              49.25292746
+            ],
+            [
+              -123.00241145,
+              49.25286136
+            ],
+            [
+              -123.00249836,
+              49.25286141
+            ],
+            [
+              -123.00249741,
+              49.25292751
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "190",
+        "use": "CLASS",
+        "kind": "classroom",
+        "building": "nw7",
+        "level": 1,
+        "tracing_confidence": "wall_guided",
+        "georeferencing": "footprint_fit_nonuniform"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00257985,
+              49.25286146
+            ],
+            [
+              -123.00241145,
+              49.25286136
+            ],
+            [
+              -123.00241195,
+              49.25282655
+            ],
+            [
+              -123.00258035,
+              49.25282665
+            ],
+            [
+              -123.00257985,
+              49.25286146
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

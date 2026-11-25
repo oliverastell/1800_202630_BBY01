@@ -1,0 +1,1913 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S4007",
+        "use": "STAIRS 7",
+        "kind": "stair",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00330326,
+              49.25240446
+            ],
+            [
+              -123.00313969,
+              49.25240483
+            ],
+            [
+              -123.00313957,
+              49.25236205
+            ],
+            [
+              -123.00330313,
+              49.25236167
+            ],
+            [
+              -123.00330326,
+              49.25240446
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4041",
+        "use": "STUDY LOUNGE",
+        "kind": "lounge",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "open_plan_estimate"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00338605,
+              49.25236073
+            ],
+            [
+              -123.00313956,
+              49.2523613
+            ],
+            [
+              -123.00313943,
+              49.25231476
+            ],
+            [
+              -123.00324053,
+              49.25231452
+            ],
+            [
+              -123.00324047,
+              49.25229576
+            ],
+            [
+              -123.00338587,
+              49.25229542
+            ],
+            [
+              -123.00338605,
+              49.25236073
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000F",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "open_plan_estimate"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00324053,
+              49.25231452
+            ],
+            [
+              -123.00313943,
+              49.25231476
+            ],
+            [
+              -123.00313938,
+              49.25229599
+            ],
+            [
+              -123.00324047,
+              49.25229576
+            ],
+            [
+              -123.00324053,
+              49.25231452
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4060",
+        "use": "TRANSFUSION LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00313741,
+              49.25240334
+            ],
+            [
+              -123.00294204,
+              49.25240379
+            ],
+            [
+              -123.00294182,
+              49.25232722
+            ],
+            [
+              -123.0031372,
+              49.25232677
+            ],
+            [
+              -123.00313741,
+              49.25240334
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4062",
+        "use": "LAB PREP",
+        "kind": "lab_prep",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0031372,
+              49.25232677
+            ],
+            [
+              -123.00294182,
+              49.25232722
+            ],
+            [
+              -123.00294166,
+              49.25227092
+            ],
+            [
+              -123.00313704,
+              49.25227047
+            ],
+            [
+              -123.0031372,
+              49.25232677
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4066",
+        "use": "HEMATOLOGY LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00313704,
+              49.25227047
+            ],
+            [
+              -123.00294166,
+              49.25227092
+            ],
+            [
+              -123.00294144,
+              49.25219136
+            ],
+            [
+              -123.00313681,
+              49.25219091
+            ],
+            [
+              -123.00313704,
+              49.25227047
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4070",
+        "use": "LAB PREP",
+        "kind": "lab_prep",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00313681,
+              49.25219091
+            ],
+            [
+              -123.00294144,
+              49.25219136
+            ],
+            [
+              -123.00294136,
+              49.25216358
+            ],
+            [
+              -123.00313673,
+              49.25216313
+            ],
+            [
+              -123.00313681,
+              49.25219091
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4074",
+        "use": "CHEMISTRY LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00313673,
+              49.25216313
+            ],
+            [
+              -123.00294136,
+              49.25216358
+            ],
+            [
+              -123.00294114,
+              49.25208627
+            ],
+            [
+              -123.00313651,
+              49.25208582
+            ],
+            [
+              -123.00313673,
+              49.25216313
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4035",
+        "use": "PROJECT BENCH",
+        "kind": "workshop",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00355057,
+              49.25229504
+            ],
+            [
+              -123.003387,
+              49.25229542
+            ],
+            [
+              -123.00338688,
+              49.25225338
+            ],
+            [
+              -123.00355045,
+              49.25225301
+            ],
+            [
+              -123.00355057,
+              49.25229504
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4033",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00355045,
+              49.25225226
+            ],
+            [
+              -123.00352092,
+              49.25225232
+            ],
+            [
+              -123.00352086,
+              49.25223056
+            ],
+            [
+              -123.00355039,
+              49.25223049
+            ],
+            [
+              -123.00355045,
+              49.25225226
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4031",
+        "use": "WORKSHOP",
+        "kind": "workshop",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00352092,
+              49.25225232
+            ],
+            [
+              -123.00338688,
+              49.25225263
+            ],
+            [
+              -123.00338674,
+              49.25220234
+            ],
+            [
+              -123.00355031,
+              49.25220196
+            ],
+            [
+              -123.00355039,
+              49.25223049
+            ],
+            [
+              -123.00352086,
+              49.25223056
+            ],
+            [
+              -123.00352092,
+              49.25225232
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4025",
+        "use": "LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00355031,
+              49.25220121
+            ],
+            [
+              -123.00338674,
+              49.25220159
+            ],
+            [
+              -123.00338641,
+              49.25208449
+            ],
+            [
+              -123.00354998,
+              49.25208411
+            ],
+            [
+              -123.00355031,
+              49.25220121
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4021",
+        "use": "LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00354997,
+              49.25208186
+            ],
+            [
+              -123.0033864,
+              49.25208224
+            ],
+            [
+              -123.00338618,
+              49.25200417
+            ],
+            [
+              -123.00354975,
+              49.2520038
+            ],
+            [
+              -123.00354997,
+              49.25208186
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000E",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00338587,
+              49.25229542
+            ],
+            [
+              -123.0033552,
+              49.25229549
+            ],
+            [
+              -123.0033547,
+              49.25212059
+            ],
+            [
+              -123.00338537,
+              49.25212052
+            ],
+            [
+              -123.00338587,
+              49.25229542
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4030",
+        "use": "ELEC ROOM",
+        "kind": "electrical",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00335292,
+              49.25229475
+            ],
+            [
+              -123.00324047,
+              49.25229501
+            ],
+            [
+              -123.00324038,
+              49.25226273
+            ],
+            [
+              -123.00335283,
+              49.25226247
+            ],
+            [
+              -123.00335292,
+              49.25229475
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4028",
+        "use": "LAB PREP",
+        "kind": "lab_prep",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00335283,
+              49.25226247
+            ],
+            [
+              -123.00324038,
+              49.25226273
+            ],
+            [
+              -123.00324028,
+              49.2522282
+            ],
+            [
+              -123.00335274,
+              49.25222794
+            ],
+            [
+              -123.00335283,
+              49.25226247
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4052",
+        "use": "VESTIBULE",
+        "kind": "vestibule",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0032382,
+              49.25229426
+            ],
+            [
+              -123.00318368,
+              49.25229439
+            ],
+            [
+              -123.00318362,
+              49.25227337
+            ],
+            [
+              -123.00323814,
+              49.25227324
+            ],
+            [
+              -123.0032382,
+              49.25229426
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S4003",
+        "use": "STAIRS 3",
+        "kind": "stair",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00323814,
+              49.25227324
+            ],
+            [
+              -123.00318362,
+              49.25227337
+            ],
+            [
+              -123.00318338,
+              49.2521908
+            ],
+            [
+              -123.00323791,
+              49.25219067
+            ],
+            [
+              -123.00323814,
+              49.25227324
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4005",
+        "use": "WASH-RM-U",
+        "kind": "washroom",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "manual_approximation"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00329023,
+              49.25221683
+            ],
+            [
+              -123.00323798,
+              49.25221695
+            ],
+            [
+              -123.00323779,
+              49.25215014
+            ],
+            [
+              -123.00329004,
+              49.25215002
+            ],
+            [
+              -123.00329023,
+              49.25221683
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4009",
+        "use": "WASH-RM-U1",
+        "kind": "washroom",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "manual_approximation"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0033527,
+              49.25221593
+            ],
+            [
+              -123.00329023,
+              49.25221607
+            ],
+            [
+              -123.00328996,
+              49.25212149
+            ],
+            [
+              -123.00335243,
+              49.25212135
+            ],
+            [
+              -123.0033527,
+              49.25221593
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4011",
+        "use": "JANITOR",
+        "kind": "janitor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00329004,
+              49.25215002
+            ],
+            [
+              -123.00323893,
+              49.25215014
+            ],
+            [
+              -123.00323885,
+              49.25212161
+            ],
+            [
+              -123.00328996,
+              49.25212149
+            ],
+            [
+              -123.00329004,
+              49.25215002
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4003",
+        "use": "COMM ROOM",
+        "kind": "communications",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0032379,
+              49.25218992
+            ],
+            [
+              -123.00318452,
+              49.25219005
+            ],
+            [
+              -123.00318432,
+              49.25212174
+            ],
+            [
+              -123.00323771,
+              49.25212161
+            ],
+            [
+              -123.0032379,
+              49.25218992
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000C",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00338537,
+              49.25212052
+            ],
+            [
+              -123.00318432,
+              49.25212099
+            ],
+            [
+              -123.00318422,
+              49.25208496
+            ],
+            [
+              -123.00338527,
+              49.25208449
+            ],
+            [
+              -123.00338537,
+              49.25212052
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000B",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "open_plan_estimate"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00318361,
+              49.25227262
+            ],
+            [
+              -123.00313818,
+              49.25227272
+            ],
+            [
+              -123.00313742,
+              49.25200475
+            ],
+            [
+              -123.00318286,
+              49.25200464
+            ],
+            [
+              -123.00318361,
+              49.25227262
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000D",
+        "use": "VESTIBULE",
+        "kind": "vestibule",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00335109,
+              49.25204854
+            ],
+            [
+              -123.00327045,
+              49.25204873
+            ],
+            [
+              -123.00327032,
+              49.25200444
+            ],
+            [
+              -123.00335097,
+              49.25200425
+            ],
+            [
+              -123.00335109,
+              49.25204854
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S4001",
+        "use": "STAIRS 1",
+        "kind": "stair",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00327045,
+              49.25204873
+            ],
+            [
+              -123.00318412,
+              49.25204893
+            ],
+            [
+              -123.00318399,
+              49.25200464
+            ],
+            [
+              -123.00327032,
+              49.25200444
+            ],
+            [
+              -123.00327045,
+              49.25204873
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000X",
+        "use": "MECH SHAFT",
+        "kind": "shaft",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00335119,
+              49.25208382
+            ],
+            [
+              -123.00327282,
+              49.252084
+            ],
+            [
+              -123.00327272,
+              49.25204947
+            ],
+            [
+              -123.0033511,
+              49.25204929
+            ],
+            [
+              -123.00335119,
+              49.25208382
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000Y",
+        "use": "ELEV 1",
+        "kind": "elevator",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00327054,
+              49.25208401
+            ],
+            [
+              -123.00322738,
+              49.25208411
+            ],
+            [
+              -123.00322728,
+              49.25204958
+            ],
+            [
+              -123.00327045,
+              49.25204948
+            ],
+            [
+              -123.00327054,
+              49.25208401
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000Z",
+        "use": "ELEV 2",
+        "kind": "elevator",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00322738,
+              49.25208411
+            ],
+            [
+              -123.00318422,
+              49.25208421
+            ],
+            [
+              -123.00318412,
+              49.25204968
+            ],
+            [
+              -123.00322728,
+              49.25204958
+            ],
+            [
+              -123.00322738,
+              49.25208411
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4109",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00354975,
+              49.25200304
+            ],
+            [
+              -123.0033521,
+              49.2520035
+            ],
+            [
+              -123.00335204,
+              49.25198248
+            ],
+            [
+              -123.00354969,
+              49.25198203
+            ],
+            [
+              -123.00354975,
+              49.25200304
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000A",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00335097,
+              49.2520035
+            ],
+            [
+              -123.00313742,
+              49.252004
+            ],
+            [
+              -123.00313736,
+              49.25198298
+            ],
+            [
+              -123.00335091,
+              49.25198249
+            ],
+            [
+              -123.00335097,
+              49.2520035
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4113",
+        "use": "MEETING ROOM",
+        "kind": "meeting",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00354968,
+              49.25198128
+            ],
+            [
+              -123.00348948,
+              49.25198142
+            ],
+            [
+              -123.00348939,
+              49.25194989
+            ],
+            [
+              -123.0035496,
+              49.25194975
+            ],
+            [
+              -123.00354968,
+              49.25198128
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4110",
+        "use": "MEETING ROOM",
+        "kind": "meeting",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00348948,
+              49.25198142
+            ],
+            [
+              -123.0034361,
+              49.25198154
+            ],
+            [
+              -123.00343601,
+              49.25195001
+            ],
+            [
+              -123.00348939,
+              49.25194989
+            ],
+            [
+              -123.00348948,
+              49.25198142
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4112",
+        "use": "STAFF ROOM",
+        "kind": "office",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00354959,
+              49.251949
+            ],
+            [
+              -123.00343601,
+              49.25194926
+            ],
+            [
+              -123.0034358,
+              49.2518757
+            ],
+            [
+              -123.00354939,
+              49.25187544
+            ],
+            [
+              -123.00354959,
+              49.251949
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4100",
+        "use": "MICROBIOLOGY LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00343496,
+              49.25198154
+            ],
+            [
+              -123.00330206,
+              49.25198185
+            ],
+            [
+              -123.00330176,
+              49.25187601
+            ],
+            [
+              -123.00343466,
+              49.2518757
+            ],
+            [
+              -123.00343496,
+              49.25198154
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4102",
+        "use": "LAB PREP",
+        "kind": "lab_prep",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00330088,
+              49.25196684
+            ],
+            [
+              -123.00324295,
+              49.25196697
+            ],
+            [
+              -123.00324282,
+              49.25191818
+            ],
+            [
+              -123.00330075,
+              49.25191805
+            ],
+            [
+              -123.00330088,
+              49.25196684
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4096",
+        "use": "LAB PREP",
+        "kind": "lab_prep",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00324175,
+              49.2519422
+            ],
+            [
+              -123.00321676,
+              49.25194226
+            ],
+            [
+              -123.00321661,
+              49.25188972
+            ],
+            [
+              -123.0032416,
+              49.25188966
+            ],
+            [
+              -123.00324175,
+              49.2519422
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4090",
+        "use": "MOLECULAR LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00317711,
+              49.25198214
+            ],
+            [
+              -123.00307375,
+              49.25198237
+            ],
+            [
+              -123.00307345,
+              49.25187653
+            ],
+            [
+              -123.00321543,
+              49.25187621
+            ],
+            [
+              -123.00321569,
+              49.25196703
+            ],
+            [
+              -123.00317707,
+              49.25196712
+            ],
+            [
+              -123.00317711,
+              49.25198214
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4094",
+        "use": "VESTIBULE",
+        "kind": "vestibule",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00330093,
+              49.25198185
+            ],
+            [
+              -123.00324186,
+              49.25198199
+            ],
+            [
+              -123.00324182,
+              49.25196772
+            ],
+            [
+              -123.00330089,
+              49.25196759
+            ],
+            [
+              -123.00330093,
+              49.25198185
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4093",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00324072,
+              49.25198199
+            ],
+            [
+              -123.00317825,
+              49.25198213
+            ],
+            [
+              -123.00317821,
+              49.25196787
+            ],
+            [
+              -123.00324068,
+              49.25196773
+            ],
+            [
+              -123.00324072,
+              49.25198199
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4078",
+        "use": "CHROMOSOME LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00313651,
+              49.25208507
+            ],
+            [
+              -123.00303428,
+              49.2520853
+            ],
+            [
+              -123.00303406,
+              49.25200498
+            ],
+            [
+              -123.00307381,
+              49.25200489
+            ],
+            [
+              -123.00307389,
+              49.25203192
+            ],
+            [
+              -123.00313636,
+              49.25203177
+            ],
+            [
+              -123.00313651,
+              49.25208507
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4081",
+        "use": "MICROSCOPY LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00303315,
+              49.2520853
+            ],
+            [
+              -123.00294114,
+              49.25208552
+            ],
+            [
+              -123.00294091,
+              49.2520052
+            ],
+            [
+              -123.00303292,
+              49.25200499
+            ],
+            [
+              -123.00303315,
+              49.2520853
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4085",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00313636,
+              49.25203102
+            ],
+            [
+              -123.00307502,
+              49.25203116
+            ],
+            [
+              -123.00307495,
+              49.25200564
+            ],
+            [
+              -123.00313629,
+              49.2520055
+            ],
+            [
+              -123.00313636,
+              49.25203102
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4080",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00313628,
+              49.252004
+            ],
+            [
+              -123.00294091,
+              49.25200445
+            ],
+            [
+              -123.00294085,
+              49.25198343
+            ],
+            [
+              -123.00313622,
+              49.25198298
+            ],
+            [
+              -123.00313628,
+              49.252004
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4084",
+        "use": "LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00307261,
+              49.25198238
+            ],
+            [
+              -123.00303286,
+              49.25198247
+            ],
+            [
+              -123.00303265,
+              49.25191041
+            ],
+            [
+              -123.00307241,
+              49.25191031
+            ],
+            [
+              -123.00307261,
+              49.25198238
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4082",
+        "use": "LAB",
+        "kind": "lab",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00303172,
+              49.25198247
+            ],
+            [
+              -123.00294085,
+              49.25198268
+            ],
+            [
+              -123.00294065,
+              49.25191062
+            ],
+            [
+              -123.00303152,
+              49.25191041
+            ],
+            [
+              -123.00303172,
+              49.25198247
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4092",
+        "use": "LAB PREP",
+        "kind": "lab_prep",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "wall_guided"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00303151,
+              49.25190966
+            ],
+            [
+              -123.00294064,
+              49.25190987
+            ],
+            [
+              -123.00294055,
+              49.25187684
+            ],
+            [
+              -123.00303142,
+              49.25187663
+            ],
+            [
+              -123.00303151,
+              49.25190966
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000Ea",
+        "use": "CLOSET",
+        "kind": "storage",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "estimated_marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.00337102,
+          49.25226543
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000Eb",
+        "use": "CLOSET",
+        "kind": "storage",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "estimated_marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.00336124,
+          49.25201999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4000Bc",
+        "use": "CLOSET",
+        "kind": "storage",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "estimated_marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.00315184,
+          49.25228395
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4080Ba",
+        "use": "CLOSET",
+        "kind": "storage",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "estimated_marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.00315115,
+          49.25203849
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4080Bb",
+        "use": "CLOSET",
+        "kind": "storage",
+        "building": "nw4",
+        "level": 4,
+        "tracing_confidence": "estimated_marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.00315119,
+          49.25205351
+        ]
+      }
+    }
+  ]
+}

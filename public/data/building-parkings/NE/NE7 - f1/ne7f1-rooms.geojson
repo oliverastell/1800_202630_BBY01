@@ -1,0 +1,457 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "145",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector wall outline; 145D removed as separate room"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99838617,
+              49.25366616
+            ],
+            [
+              -122.99835407,
+              49.2536661
+            ],
+            [
+              -122.99835404,
+              49.25367172
+            ],
+            [
+              -122.99835198,
+              49.25367172
+            ],
+            [
+              -122.9983521,
+              49.2536472
+            ],
+            [
+              -122.99825458,
+              49.253647
+            ],
+            [
+              -122.99825421,
+              49.25372252
+            ],
+            [
+              -122.99838589,
+              49.2537228
+            ],
+            [
+              -122.99838617,
+              49.25366616
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "145D",
+        "use": "MECH",
+        "kind": "mechanical",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector rectangle"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99835408,
+              49.25366474
+            ],
+            [
+              -122.99835416,
+              49.25364721
+            ],
+            [
+              -122.99838626,
+              49.25364727
+            ],
+            [
+              -122.99838618,
+              49.25366481
+            ],
+            [
+              -122.99835408,
+              49.25366474
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "145A",
+        "use": "WASH-ENV",
+        "kind": "washroom",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "point_for_open_zone",
+        "source_pdf": "bne0701.pdf",
+        "note": "Point for open wash-up alcove; no clear fully enclosed polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.99837962,
+          49.2536768
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "145B",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector quadrilateral"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99838796,
+              49.25372281
+            ],
+            [
+              -122.99838823,
+              49.25366617
+            ],
+            [
+              -122.99840833,
+              49.25366621
+            ],
+            [
+              -122.99840872,
+              49.25372285
+            ],
+            [
+              -122.99838796,
+              49.25372281
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "144B",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector rectangle"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99841079,
+              49.25372285
+            ],
+            [
+              -122.99841116,
+              49.25364733
+            ],
+            [
+              -122.99847607,
+              49.25364746
+            ],
+            [
+              -122.9984757,
+              49.25372299
+            ],
+            [
+              -122.99841079,
+              49.25372285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "144",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector stepped room outline"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99853236,
+              49.25372311
+            ],
+            [
+              -122.99853259,
+              49.25367546
+            ],
+            [
+              -122.99849548,
+              49.25367538
+            ],
+            [
+              -122.99849562,
+              49.2536475
+            ],
+            [
+              -122.99847814,
+              49.25364747
+            ],
+            [
+              -122.99847777,
+              49.25372299
+            ],
+            [
+              -122.99853236,
+              49.25372311
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "144A",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector rectangle"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99849755,
+              49.25367403
+            ],
+            [
+              -122.99849768,
+              49.25364751
+            ],
+            [
+              -122.99853273,
+              49.25364758
+            ],
+            [
+              -122.9985326,
+              49.25367411
+            ],
+            [
+              -122.99849755,
+              49.25367403
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "143",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector stepped room outline"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99865874,
+              49.25372337
+            ],
+            [
+              -122.99865897,
+              49.25367573
+            ],
+            [
+              -122.99861979,
+              49.25367564
+            ],
+            [
+              -122.99861993,
+              49.25364776
+            ],
+            [
+              -122.9985348,
+              49.25364759
+            ],
+            [
+              -122.99853443,
+              49.25372311
+            ],
+            [
+              -122.99865874,
+              49.25372337
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "143A",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector rectangle"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99862186,
+              49.2536743
+            ],
+            [
+              -122.99862199,
+              49.25364777
+            ],
+            [
+              -122.99865911,
+              49.25364785
+            ],
+            [
+              -122.99865898,
+              49.25367437
+            ],
+            [
+              -122.99862186,
+              49.2536743
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "142",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector rectangle"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.9986608,
+              49.25372338
+            ],
+            [
+              -122.99866117,
+              49.25364785
+            ],
+            [
+              -122.9987827,
+              49.25364811
+            ],
+            [
+              -122.99878233,
+              49.25372363
+            ],
+            [
+              -122.9986608,
+              49.25372338
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "141",
+        "use": "SHOP-FAC",
+        "kind": "workshop",
+        "building": "ne7",
+        "level": 1,
+        "tracing_confidence": "vector_exact",
+        "source_pdf": "bne0701.pdf",
+        "note": "PDF vector rectangle"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.9987844,
+              49.25372364
+            ],
+            [
+              -122.99878477,
+              49.25364811
+            ],
+            [
+              -122.99891114,
+              49.25364838
+            ],
+            [
+              -122.99891077,
+              49.2537239
+            ],
+            [
+              -122.9987844,
+              49.25372364
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { loadBuildings, highlightBuilding, findBuildingAt, findBuildingByText, isInside, toLngLat, buildings } from "./buildings.js";
+import { highlightBuilding, findBuildingAt, findBuildingByText, isInside, toLngLat, buildings } from "./buildings.js";
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
@@ -8,7 +8,7 @@ import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
 import { setMapFilter } from "./mapFilters.js";
 import { enableMapHold, trackRecentTouch } from "./mobileInteractions.js";
 
-export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails) {
+export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails, buildingLoad) {
   const searchMenu = document.getElementById("searchMenu");
   const searchField = document.getElementById("searchField");
   const closeSearchButton = document.getElementById("closeSearchMenu");
@@ -31,7 +31,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   const searchingText = document.getElementById("searchMenuSearching");
   const searchingText2 = document.getElementById("searchMenuSearching2");
   let buildingsLoadError = false;
-  const buildingsReady = loadBuildings().catch(error => {
+  const buildingsReady = buildingLoad.catch(error => {
     buildingsLoadError = true;
     searchStatus.textContent = "Buildings could not be loaded. Please reload to try again.";
     console.error("Error loading buildings:", error);

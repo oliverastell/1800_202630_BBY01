@@ -1,0 +1,598 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S222",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.998993788,
+              49.25334633
+            ],
+            [
+              -122.998993788,
+              49.253335798
+            ],
+            [
+              -122.999092765,
+              49.253335798
+            ],
+            [
+              -122.999092765,
+              49.25334633
+            ],
+            [
+              -122.998993788,
+              49.25334633
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "222",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.998994485,
+              49.253334425
+            ],
+            [
+              -122.998994485,
+              49.253308783
+            ],
+            [
+              -122.999034912,
+              49.253308783
+            ],
+            [
+              -122.999034912,
+              49.253334425
+            ],
+            [
+              -122.998994485,
+              49.253334425
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "220",
+        "use": "LUNCH",
+        "kind": "lounge",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.998994485,
+              49.253307409
+            ],
+            [
+              -122.998994485,
+              49.253230485
+            ],
+            [
+              -122.999034912,
+              49.253230485
+            ],
+            [
+              -122.999034912,
+              49.253307409
+            ],
+            [
+              -122.998994485,
+              49.253307409
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "210",
+        "use": "OFFICE",
+        "kind": "office",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.998994485,
+              49.253229111
+            ],
+            [
+              -122.998994485,
+              49.253199349
+            ],
+            [
+              -122.999034912,
+              49.253199349
+            ],
+            [
+              -122.999034912,
+              49.253229111
+            ],
+            [
+              -122.998994485,
+              49.253229111
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "218",
+        "use": "OFFICE-OPE",
+        "kind": "office",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.998994485,
+              49.253197975
+            ],
+            [
+              -122.998994485,
+              49.253148981
+            ],
+            [
+              -122.999092068,
+              49.253148981
+            ],
+            [
+              -122.999092068,
+              49.253197975
+            ],
+            [
+              -122.998994485,
+              49.253197975
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "221",
+        "use": "OFFICE-OPE",
+        "kind": "office",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999037004,
+              49.253334425
+            ],
+            [
+              -122.999037004,
+              49.253239185
+            ],
+            [
+              -122.999091371,
+              49.253239185
+            ],
+            [
+              -122.999091371,
+              49.253334425
+            ],
+            [
+              -122.999037004,
+              49.253334425
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "218A",
+        "use": "OFFICE-OPE",
+        "kind": "office",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999037004,
+              49.253237811
+            ],
+            [
+              -122.999037004,
+              49.253199349
+            ],
+            [
+              -122.999092068,
+              49.253199349
+            ],
+            [
+              -122.999092068,
+              49.253237811
+            ],
+            [
+              -122.999037004,
+              49.253237811
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S218",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "approximate",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999095553,
+              49.253225448
+            ],
+            [
+              -122.999095553,
+              49.253189733
+            ],
+            [
+              -122.99911507,
+              49.253189733
+            ],
+            [
+              -122.99911507,
+              49.253225448
+            ],
+            [
+              -122.999095553,
+              49.253225448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "201",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99915968,
+              49.253381587
+            ],
+            [
+              -122.99915968,
+              49.253214459
+            ],
+            [
+              -122.999171529,
+              49.253214459
+            ],
+            [
+              -122.999171529,
+              49.253381587
+            ],
+            [
+              -122.99915968,
+              49.253381587
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "204",
+        "use": "WLD-MACH",
+        "kind": "workshop",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999175014,
+              49.253376092
+            ],
+            [
+              -122.999175014,
+              49.253336256
+            ],
+            [
+              -122.999383424,
+              49.253336256
+            ],
+            [
+              -122.999383424,
+              49.253376092
+            ],
+            [
+              -122.999175014,
+              49.253376092
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "203",
+        "use": "WLD-MACH",
+        "kind": "workshop",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999175014,
+              49.253334883
+            ],
+            [
+              -122.999175014,
+              49.253280394
+            ],
+            [
+              -122.999383424,
+              49.253280394
+            ],
+            [
+              -122.999383424,
+              49.253334883
+            ],
+            [
+              -122.999175014,
+              49.253334883
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "202",
+        "use": "WLD-MACH",
+        "kind": "workshop",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999175014,
+              49.253257958
+            ],
+            [
+              -122.999175014,
+              49.253235064
+            ],
+            [
+              -122.999383424,
+              49.253235064
+            ],
+            [
+              -122.999383424,
+              49.253257958
+            ],
+            [
+              -122.999175014,
+              49.253257958
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S201",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "approximate",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999175711,
+              49.253279021
+            ],
+            [
+              -122.999175711,
+              49.253259789
+            ],
+            [
+              -122.999216138,
+              49.253259789
+            ],
+            [
+              -122.999216138,
+              49.253279021
+            ],
+            [
+              -122.999175711,
+              49.253279021
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S207",
+        "use": "STAIR",
+        "kind": "stair",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.99929072,
+              49.253146692
+            ],
+            [
+              -122.99929072,
+              49.253102277
+            ],
+            [
+              -122.999324874,
+              49.253102277
+            ],
+            [
+              -122.999324874,
+              49.253146692
+            ],
+            [
+              -122.99929072,
+              49.253146692
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "207",
+        "use": "CLASS",
+        "kind": "classroom",
+        "building": "ne8",
+        "level": 2,
+        "tracing_confidence": "wall_guided",
+        "source_plan": "bne0802.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.999327662,
+              49.253146692
+            ],
+            [
+              -122.999327662,
+              49.253024436
+            ],
+            [
+              -122.999381333,
+              49.253024436
+            ],
+            [
+              -122.999381333,
+              49.253097698
+            ],
+            [
+              -122.999368089,
+              49.253097698
+            ],
+            [
+              -122.999368089,
+              49.253146692
+            ],
+            [
+              -122.999327662,
+              49.253146692
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

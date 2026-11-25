@@ -1,0 +1,488 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "217",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "vector_guided",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00005844,
+              49.25364585
+            ],
+            [
+              -123.00005844,
+              49.25366373
+            ],
+            [
+              -123.00003876,
+              49.25366373
+            ],
+            [
+              -123.00003876,
+              49.2536642
+            ],
+            [
+              -123.00001135,
+              49.2536642
+            ],
+            [
+              -123.00001135,
+              49.25364585
+            ],
+            [
+              -123.00005844,
+              49.25364585
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "215",
+        "use": "RESOURCE",
+        "kind": "resource",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "vector_guided",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00005623,
+              49.25367878
+            ],
+            [
+              -123.00005623,
+              49.25369669
+            ],
+            [
+              -123.00005761,
+              49.25369669
+            ],
+            [
+              -123.00005761,
+              49.25371069
+            ],
+            [
+              -123.00003766,
+              49.25371069
+            ],
+            [
+              -123.00003766,
+              49.25367878
+            ],
+            [
+              -123.00005623,
+              49.25367878
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "214",
+        "use": "WROOM-U",
+        "kind": "washroom",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "vector_guided",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00005789,
+              49.25371196
+            ],
+            [
+              -123.00005789,
+              49.25373132
+            ],
+            [
+              -123.00004623,
+              49.25373132
+            ],
+            [
+              -123.0000376,
+              49.25372629
+            ],
+            [
+              -123.0000376,
+              49.25371196
+            ],
+            [
+              -123.00005789,
+              49.25371196
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "213",
+        "use": "BEDROOM",
+        "kind": "bedroom",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "vector_guided",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.000058,
+              49.25373237
+            ],
+            [
+              -123.000058,
+              49.25376265
+            ],
+            [
+              -123.00001195,
+              49.25376265
+            ],
+            [
+              -123.00001195,
+              49.2537535
+            ],
+            [
+              -123.00001113,
+              49.2537535
+            ],
+            [
+              -123.00001113,
+              49.25373204
+            ],
+            [
+              -123.00002445,
+              49.25373204
+            ],
+            [
+              -123.00003688,
+              49.2537269
+            ],
+            [
+              -123.00004501,
+              49.25373237
+            ],
+            [
+              -123.000058,
+              49.25373237
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CORRIDOR",
+        "use": "CORRIDOR",
+        "kind": "corridor",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "wall_guided_open_area",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00003716,
+              49.25366481
+            ],
+            [
+              -123.00003716,
+              49.25369155
+            ],
+            [
+              -123.00002312,
+              49.25369155
+            ],
+            [
+              -123.00001052,
+              49.25369163
+            ],
+            [
+              -123.00001052,
+              49.25366481
+            ],
+            [
+              -123.00003716,
+              49.25366481
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S200",
+        "use": "STAIRWAY",
+        "kind": "stair",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "vector_guided",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0000365,
+              49.25369246
+            ],
+            [
+              -123.0000365,
+              49.25371992
+            ],
+            [
+              -123.00002389,
+              49.25371992
+            ],
+            [
+              -123.00002389,
+              49.25369246
+            ],
+            [
+              -123.0000365,
+              49.25369246
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "215A",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "open_plan_estimate",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.0000229,
+              49.25369181
+            ],
+            [
+              -123.0000229,
+              49.25372209
+            ],
+            [
+              -123.00001046,
+              49.25372209
+            ],
+            [
+              -123.00001046,
+              49.25369181
+            ],
+            [
+              -123.0000229,
+              49.25369181
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "213A",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "open_plan_estimate",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00002318,
+              49.25372238
+            ],
+            [
+              -123.00002318,
+              49.25373172
+            ],
+            [
+              -123.00001057,
+              49.25373172
+            ],
+            [
+              -123.00001057,
+              49.25372238
+            ],
+            [
+              -123.00002318,
+              49.25372238
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "211",
+        "use": "CLASS-INDT",
+        "kind": "classroom",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "vector_guided",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00000825,
+              49.25365446
+            ],
+            [
+              -123.00000825,
+              49.25372285
+            ],
+            [
+              -122.99996724,
+              49.25372285
+            ],
+            [
+              -122.99996724,
+              49.25365446
+            ],
+            [
+              -123.00000825,
+              49.25365446
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "212",
+        "use": "BEDROOM",
+        "kind": "bedroom",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "vector_guided",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -123.00000095,
+              49.25372372
+            ],
+            [
+              -123.00000095,
+              49.25373204
+            ],
+            [
+              -123.00000825,
+              49.25373204
+            ],
+            [
+              -123.00000825,
+              49.2537531
+            ],
+            [
+              -122.99996724,
+              49.2537531
+            ],
+            [
+              -122.99996724,
+              49.25372372
+            ],
+            [
+              -123.00000095,
+              49.25372372
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "212A",
+        "use": "STORAGE",
+        "kind": "storage",
+        "building": "ne3",
+        "level": 2,
+        "footprint_section": "annex",
+        "tracing_confidence": "label_only_no_enclosed_boundary",
+        "alignment_method": "annex_shape_preserving_similarity",
+        "source_pdf": "bne0302.pdf"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.99997111,
+          49.25371605
+        ]
+      }
+    }
+  ]
+}
