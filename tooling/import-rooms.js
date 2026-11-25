@@ -24,7 +24,7 @@ async function main() {
     throw new Error("Use a building ID such as sw1 and a floor ID such as f1.");
   }
   const level = Number(floor.slice(1));
-  const source = values.file ?? new URL("../data/sw1f1-rooms.geojson", import.meta.url);
+  const source = values.file ?? new URL("../public/data/sw1f1-rooms.geojson", import.meta.url);
   const geojson = JSON.parse(await readFile(source, "utf8"));
   if (geojson.type !== "FeatureCollection" || !geojson.features?.length) {
     throw new Error("Expected a nonempty GeoJSON FeatureCollection.");

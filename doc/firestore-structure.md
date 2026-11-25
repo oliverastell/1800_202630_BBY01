@@ -21,7 +21,7 @@ Login credentials are managed by Firebase Authentication, not these collections.
 
 ## Buildings
 
-Path: `buildings/{buildingId}`. Read by `client/src/buildings.js`.
+Path: `buildings/{buildingId}`. Read by `../src`.
 
 | Field | Type | Purpose |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ Personal bookmark renames never update this document or its shared aliases.
 ## Floors
 
 Path: `buildings/{buildingId}/floors/f{level}`. Read by
-`client/src/floorPlan.js`. Each floor is one document, not a room subcollection.
+`../src`. Each floor is one document, not a room subcollection.
 Two formats are supported; when `rooms` is an array, it takes priority over
 `features`.
 
@@ -65,7 +65,7 @@ converted to GeoJSON `[longitude, latitude]` coordinates for the map.
 
 ### Imported GeoJSON format
 
-Written by `server/scripts/import-rooms.js`:
+Written by `../tooling`:
 
 | Field | Type | Purpose |
 | --- | --- | --- |
@@ -83,11 +83,11 @@ arrays directly nested inside arrays. Coordinates use GeoJSON
 `[longitude, latitude]` order. The reader parses the string and displays Point
 and Polygon geometry. Imports merge fields into existing documents and add the
 level to the parent building's `floorLevels`; they do not create its name,
-center, or footprint. See [room import instructions](../server/scripts/README.md).
+center, or footprint. See [room import instructions](../tooling/README.md).
 
 ## Washrooms
 
-Path: `washrooms/{washroomId}`. Read by `client/src/mapFilters.js`.
+Path: `washrooms/{washroomId}`. Read by `../src`.
 
 | Field | Type | Purpose |
 | --- | --- | --- |
@@ -104,7 +104,7 @@ Records with invalid building/floor identifiers or coordinates are skipped.
 
 ## Dining
 
-Path: `dining/{venueId}`. Read by `client/src/mapFilters.js`.
+Path: `dining/{venueId}`. Read by `../src`.
 
 | Field | Type | Purpose |
 | --- | --- | --- |
@@ -117,7 +117,7 @@ Path: `dining/{venueId}`. Read by `client/src/mapFilters.js`.
 ## Personal bookmarks
 
 Path: `users/{uid}/bookmarks/{searchTarget}`. Managed by
-`client/src/bookmarks.js`.
+`../src`.
 
 | Field | Type | Purpose |
 | --- | --- | --- |
@@ -162,7 +162,7 @@ and original stable key. No shared document is changed by this operation.
 ## Recent searches
 
 Path: `users/{uid}/recentSearches/{searchTarget}`. Managed by
-`client/src/search.js`.
+`../src`.
 
 | Field | Type | Purpose |
 | --- | --- | --- |

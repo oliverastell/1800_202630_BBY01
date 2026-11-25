@@ -5,8 +5,8 @@ import { confirmAction, promptRename } from "./alerts.js";
 
 const button = document.getElementById("bookmark-button")
 const popup = document.getElementById("bookmark-popup")
-const offIconPath = "/res/img/bookmark-icon.svg"
-const onIconPath = "/res/img/bookmark-icon-filled.svg"
+const offIconPath = "/img/bookmark-icon.svg"
+const onIconPath = "/img/bookmark-icon-filled.svg"
 
 // create a list for bookmarked items
 const list = document.createElement("ul")

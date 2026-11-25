@@ -59,20 +59,16 @@ Once the application is running:
 
 ```
 1800_202630_BBY01/
-├── node_modules/  <-- all libraries are exposed to client
+├── app/    
+│   └── html/   <-- must be individually exposed in vite.config.js
 │
-├── client/     <-- all files in client are automatically exposed
-│   ├── html/
-│   ├── res/    <-- localhost:8000/res/
-│   │   ├── css/ 
-│   │   ├── font/
-│   │   └── img/
-│   └── src/    <-- /client/src/
+├── public/     <-- exposed to client├── css/ 
+│   ├── css/
+│   ├── data/
+│   └── img/
 │
-├── server/     <-- not exposed to client
-│   ├── data/   
-│   └── src/    
-│       └── index.js   <-- ran on server start
+├── src/      <-- exposed to client
+├── tooling/  <-- not exposed to client
 │
 ├── .env  <-- anything prefixed with VITE_ is exposed to the client (do not push to github)
 ├── package.json

@@ -9,8 +9,8 @@ const washroomIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height=
   <path d="M4 7h6v7H8.5v7h-3v-7H4zM15 7h4l3 9h-3.5v5h-3v-5H12z"/>
 </svg>`;
 const diningIcons = {
-  cafe: new URL("../res/img/cafe-icon.svg", import.meta.url).href,
-  restaurant: new URL("../res/img/restaurant-icon.svg", import.meta.url).href,
+  cafe: new URL("/img/cafe-icon.svg", import.meta.url).href,
+  restaurant: new URL("/img/restaurant-icon.svg", import.meta.url).href,
 };
 
 function stateFor(map) {
