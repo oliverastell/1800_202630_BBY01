@@ -1,15 +1,18 @@
 import {defineConfig} from "vite";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 
 export default defineConfig({
-    root: './client',
-    envDir: '..',
-    server: {
-        fs: {
-            allow: [
-                fileURLToPath(new URL('./client', import.meta.url)),
-                fileURLToPath(new URL('./node_modules', import.meta.url))
-            ]
-        }
+    root: resolve(import.meta.dirname, "app/html"),
+    publicDir: resolve(import.meta.dirname, "public"),
+    envDir: import.meta.dirname,
+    resolve: {
+        alias: {
+            "/src": resolve(import.meta.dirname, "src")
+        },
+    },
+    input: {
+        index: resolve(import.meta.dirname, 'app/html/index.html'),
+        welcome: resolve(import.meta.dirname, 'app/html/welcome.html'),
+        login: resolve(import.meta.dirname, 'app/html/login.html'),
     }
 });

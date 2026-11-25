@@ -30,7 +30,7 @@ onAuthReady(async (user) => {
             bookmarkButton.setAttribute("class", "btn border-0 position-absolute top-50 end-0 translate-middle-y z-1 bookmark-toggle");
             bookmarkButton.setAttribute("style", "padding-right:30px");
             let bookmarkIcon = document.createElement("img");
-            bookmarkIcon.setAttribute("src", "../res/img/bookmark-icon.svg");
+            bookmarkIcon.setAttribute("src", "/img/bookmark-icon.svg");
             bookmarkIcon.setAttribute("alt", "Bookmark Icon");
             bookmarkIcon.addEventListener("click", function() {
                 bookmarkT(bookmarkButton);

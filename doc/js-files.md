@@ -1,6 +1,6 @@
 # JavaScript file guide
 
-Most app code is in `client/src/`.
+Most app code is in `../src`.
 
 | File | What it does |
 | --- | --- |
@@ -22,6 +22,6 @@ Other JavaScript files:
 
 | File | What it does |
 | --- | --- |
-| `server/src/index.js` | Starts the server and serves pages and data files. |
-| `server/scripts/import-rooms.js` | Validates room GeoJSON and imports it into a Firestore floor document with Firebase Admin credentials. Supports custom building/floor/file/project options and a dry run. Stores nested coordinates as JSON strings. See [import instructions](../server/scripts/README.md) for Windows, macOS, and Linux setup. |
+| `../tooling` | Starts the server and serves pages and data files. |
+| `../tooling` | Validates room GeoJSON and imports it into a Firestore floor document with Firebase Admin credentials. Supports custom building/floor/file/project options and a dry run. Stores nested coordinates as JSON strings. See [import instructions](../tooling/README.md) for Windows, macOS, and Linux setup. |
 | `vite.config.js` | Configures Vite for running and building the client. |

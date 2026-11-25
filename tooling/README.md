@@ -3,7 +3,7 @@
 ## Prerequisites (all platforms)
 
 Use Node.js 22 or later and npm. Run commands from the project root (the folder
-containing `package.json`), not from `server/scripts/`. Check your installation:
+containing `../package.json`), not from `..`. Check your installation:
 
 ```sh
 node --version
@@ -12,14 +12,14 @@ npm install
 ```
 
 Real imports also require `firebase-admin`. It is currently not listed in
-`package.json`; install it locally before importing:
+`../package.json`; install it locally before importing:
 
 ```sh
 npm install --no-save firebase-admin
 ```
 
 Have your room GeoJSON file ready. The default path is
-`server/data/sw1f1-rooms.geojson`, but that file may not be included in your
+`../public/data`, but that file may not be included in your
 checkout. If it is missing, supply your own file with `--file` (examples below).
 
 ## Preview before importing
@@ -82,7 +82,7 @@ on macOS/Linux or `Remove-Item Env:GOOGLE_APPLICATION_CREDENTIALS` in PowerShell
 ### Project selection
 
 The project ID defaults to `GOOGLE_CLOUD_PROJECT`, then
-`VITE_FIREBASE_PROJECT_ID` in the root `.env`. You can override it explicitly:
+`VITE_FIREBASE_PROJECT_ID` in the root `../.env`. You can override it explicitly:
 
 ```powershell
 npm run import:rooms -- --project your-firebase-project-id
@@ -94,7 +94,7 @@ The explicit `--project` option takes priority over both environment variables.
 
 ## Stored data and app behavior
 
-The default input is `server/data/sw1f1-rooms.geojson`. The script atomically
+The default input is `../public/data`. The script atomically
 creates/updates `buildings/sw1` and `buildings/sw1/floors/f1`. The floor contains
 `building`, `level`, `type`, `name`, `featureCount`, `features`, and `updatedAt`.
 All 273 source features (including points) are retained with their properties.
@@ -115,7 +115,7 @@ const geojson = {
 };
 ```
 
-The app's `client/src/floorPlan.js` already decodes this format. It also supports
+The app's `../src` already decodes this format. It also supports
 the newer `rooms` array with GeoPoint `center` and `points` fields. This importer
 writes `features`, not `rooms`; if a floor document contains both, the app prefers
 `rooms`, so importing features will not update the displayed rooms data.

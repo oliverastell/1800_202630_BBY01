@@ -3,6 +3,7 @@ const skipSignup = document.getElementById("skip-signup");
 
 
 loginButton.addEventListener("click", () => {
+    localStorage.setItem("last-welcomed", Date.now().toString())
     window.location.href = "/login"
 })
 

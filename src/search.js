@@ -57,7 +57,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       bookmarkButton.setAttribute("type", "button");
       bookmarkButton.setAttribute("class", "btn border-0 rounded-circle flex-shrink-0 p-0 bookmark-toggle recent-search-action");
       let bookmarkIcon = document.createElement("img");
-      bookmarkIcon.setAttribute("src", "/res/img/bookmark-icon.svg");
+      bookmarkIcon.setAttribute("src", "/img/bookmark-icon.svg");
       bookmarkIcon.setAttribute("alt", "Bookmark Icon");
       bookmarkIcon.setAttribute("width", "20");
       bookmarkIcon.setAttribute("height", "24");

@@ -367,7 +367,7 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
     document.getElementById("selectedLatitude").textContent = details.latitude;
     document.getElementById("selectedLongitude").textContent = details.longitude;
-    locationBookmarkButton.querySelector("img").src = "/res/img/bookmark-icon-filled.svg";
+    locationBookmarkButton.querySelector("img").src = "/img/bookmark-icon-filled.svg";
     locationBookmarkButton.setAttribute("aria-pressed", "true");
     locationBookmarkButton.setAttribute("aria-label", "Location bookmarked");
     locationBookmarkButton.disabled = false;
@@ -446,7 +446,7 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
       element.title = name;
       element.setAttribute("aria-label", `Open bookmark: ${name}`);
       const icon = document.createElement("img");
-      icon.src = "/res/img/bookmark-icon-filled.svg";
+      icon.src = "/img/bookmark-icon-filled.svg";
       icon.alt = "";
       element.append(icon);
       const marker = addMarker([longitude, latitude], name, bookmarkLayer, { element, anchor: "center" });
@@ -515,7 +515,7 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     locationBookmarkButton.disabled = false;
     locationBookmarkButton.setAttribute("aria-pressed", "false");
     locationBookmarkButton.setAttribute("aria-label", "Bookmark this location");
-    locationBookmarkButton.querySelector("img").src = "/res/img/bookmark-icon.svg";
+    locationBookmarkButton.querySelector("img").src = "/img/bookmark-icon.svg";
     syncLocationBookmark(locationBookmarkButton, locationTitle.textContent);
     try {
       const number = label === "Selected location" ? await getNextMarkedLocationNumber() : null;
