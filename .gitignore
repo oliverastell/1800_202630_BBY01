@@ -1,6 +1,13 @@
 .DS_Store
 *.logs
 node_modules/
+/dist/
 .vscode/
 .idea/
 .env
+./firebase/
+
+/public/data/building-parkings/
+/public/data/burnabyBuildings.json
+/public/data/burnabyParking.json
+/public/data/SW1-block.geojson

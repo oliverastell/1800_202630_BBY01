@@ -7,34 +7,19 @@
   <link rel="icon" type="image/x-icon" href="/img/BCIT-logo.ico">
 </head>
 <body>
-  <div id="welcome" class="position-relative h-100 w-100 bg-light rounded-4 z-3">
-    <!-- Main content goes here -->
-    <!-- This is the welcome on the landing page, with a login/signup button -->
-    <div class="container">
-      <div class=" px-4 py-5 my-5 text-center">
-        <img class="d-block mx-auto mb-4" src="/img/bcit-logo.png" alt="" width="72" height="57">
-        <h1 class="display-5 fw-bold">Welcome to BCIT Campus Map!</h1>
-        <div class="col-lg-6 mx-auto">
-          <p class="lead mb-4">The revolutionary tool for navigating the BCIT Burnaby campus.</p>
-          <h2>Start using today!</h2>
-
-          <div class="d-flex flex-row gap-3 justify-content-center">
-            <div class="d-grid justify-content-sm-center">
-              <!-- Make this button clickable, using onclick event listener -->
-              <button id="login-or-signup" type="button"
-                      class="btn btn-info btn-lg">Login/Signup</button>
-            </div>
-
-            <div class="d-grid justify-content-sm-center">
-              <!-- Make this button clickable, using onclick event listener -->
-              <button id="skip-signup" type="button"
-                      class="btn btn-secondary btn-lg">Skip Signup</button>
-            </div>
-          </div>
+  <main id="welcome" class="min-vh-100 d-flex align-items-center justify-content-center bg-body-tertiary px-3 py-5">
+    <div class="card col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 rounded-4 shadow-sm text-center">
+      <div class="card-body px-4 py-5 p-lg-5">
+        <img class="d-block mx-auto mb-4 object-fit-contain" src="/img/bcit-logo.png" alt="" width="72" height="57">
+        <h1 class="display-5 fw-bold lh-sm mb-3">Welcome to <span class="d-block">BCIT BBY Campus Map</span></h1>
+        <p class="lead text-body-secondary mb-4">Find your way around the BCIT Burnaby campus.</p>
+        <div class="d-grid d-sm-flex justify-content-sm-center gap-3">
+          <button id="login-or-signup" class="btn btn-primary btn-lg" type="button">Login/Signup</button>
+          <button id="skip-signup" class="btn btn-outline-secondary btn-lg" type="button">Skip Signup</button>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script type="module" src="/src/welcome.js"></script>
   <script type="module" src="/src/app.js"></script>
