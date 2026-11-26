@@ -41,9 +41,21 @@ Once the application is running:
 2. Search for a room or building, or tap a building on the map.
 3. Switch floors, bookmark a location, or apply the washroom and dining filters.
 
-To use the app on a hosted website:
+### Preview the production build
+
+Run `npm run build` from the project root to generate `dist/`, then run
+`npm run preview` and open `http://localhost:4173`. The build uses the `VITE_`
+values from your local environment configuration, including `VITE_MAPTILER_KEY`
+for the map. Firebase Hosting is configured to serve `dist/` with clean URLs for
+`/welcome` and `/login`.
 ---
  
+## Building and Parking Data
+
+The BCIT Burnaby building and parking datasets are freely available in this [Google Drive folder](https://drive.google.com/drive/folders/1W55cYYx5R-Rs6P5gKE4yxkJ23p3xxQmm?usp=sharing).
+
+---
+
 ## Project Structure
  
 ```

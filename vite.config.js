@@ -10,9 +10,15 @@ export default defineConfig({
             "/src": resolve(import.meta.dirname, "src")
         },
     },
-    input: {
-        index: resolve(import.meta.dirname, 'app/html/index.html'),
-        welcome: resolve(import.meta.dirname, 'app/html/welcome.html'),
-        login: resolve(import.meta.dirname, 'app/html/login.html'),
-    }
+    build: {
+        outDir: resolve(import.meta.dirname, "dist"),
+        emptyOutDir: true,
+        rolldownOptions: {
+            input: {
+                index: resolve(import.meta.dirname, "app/html/index.html"),
+                welcome: resolve(import.meta.dirname, "app/html/welcome.html"),
+                login: resolve(import.meta.dirname, "app/html/login.html"),
+            },
+        },
+    },
 });
