@@ -7,7 +7,7 @@ An all-in-one interactive map for the BCIT Burnaby campus. Students can search f
 ---
  
 ## Features
- 
+
 * Sign up, log in, and log out with Firebase Authentication
 * Search for rooms and buildings with autocomplete suggestions and a Recents list
 * Tap a building to open a details panel with a room search bar, or tap and hold the map to drop a pin
@@ -27,7 +27,8 @@ An all-in-one interactive map for the BCIT Burnaby campus. Students can search f
 ---
  
 ## Usage
- 
+Via website: [BCIT BBY Campus Map](https://bcit-campus-map.web.app/)
+
 To run the application locally:
  
 1. Clone the repository.
@@ -40,10 +41,24 @@ Once the application is running:
 1. Skip registration or log in to unlock bookmarks and recent searches.
 2. Search for a room or building, or tap a building on the map.
 3. Switch floors, bookmark a location, or apply the washroom and dining filters.
+---
 
-To use the app on a hosted website:
+## Preview the production build
+
+Run `npm run build` from the project root to generate `dist/`, then run
+`npm run preview` and open `http://localhost:4173`. The build uses the `VITE_`
+values from your local environment configuration, including `VITE_MAPTILER_KEY`
+for the map. Firebase Hosting is configured to serve `dist/` with clean URLs for
+`/welcome` and `/login`.
+
 ---
  
+## Building and Parking Data
+
+The BCIT Burnaby building and parking datasets are freely available in this [Google Drive folder](https://drive.google.com/drive/folders/1W55cYYx5R-Rs6P5gKE4yxkJ23p3xxQmm?usp=sharing).
+
+---
+
 ## Project Structure
  
 ```
@@ -78,7 +93,7 @@ To use the app on a hosted website:
 ## Acknowledgments
  
 * Thanks to our client, Carly (COMP 1800 instructor), for weekly feedback that shaped the project.
-* Floor plans and room data were compiled from BCIT's AutoCAD floor plan PDFs and the BCIT Wayfinding Portal.
+* Floor plans and room data were compiled from [BCIT's AutoCAD floor plan PDFs](https://www.bcit.ca/facilities/campus-maps/floor-plans/) and the [BCIT Wayfinding Portal.](https://experience.arcgis.com/experience/724c4dc67eed40fdbe8e5bbc358e8c55/)
 * Code snippets were adapted from resources such as [Stack Overflow](https://stackoverflow.com/) and [MDN Web Docs](https://developer.mozilla.org/).
 ---
  
@@ -86,7 +101,7 @@ To use the app on a hosted website:
  
 ### Limitations
 
-* Filters currently cover washrooms and dining areas only.
+* Filters currently cover washrooms, parking, and dining areas only.
 * Accessibility features can be further improved.
 ### Future Work
 
