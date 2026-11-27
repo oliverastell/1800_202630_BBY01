@@ -60,6 +60,24 @@ function renderVisibility(state) {
   }
 }
 
+function placeTypeLabel(record, type) {
+  if (type === "washroom") return "Washroom";
+  if (type === "parking") return "Parking lot";
+  const kind = type === "cafe" ? "Café" : "Restaurant";
+  return typeof record.category === "string" && record.category.trim() ? `${kind} · ${record.category.trim()}` : kind;
+}
+
+function placeDetails(record, type) {
+  const details = Array.isArray(record.details)
+    ? record.details.filter(detail => typeof detail === "string" && detail.trim()).map(detail => detail.trim())
+    : [];
+  if (type !== "parking" && typeof record.buildingId === "string") {
+    const floor = typeof record.floorId === "string" ? `, floor ${record.floorId.replace(/^f/, "")}` : "";
+    details.unshift(`${record.buildingId.toUpperCase()}${floor}`);
+  }
+  return details;
+}
+
 function createMarker(record, type, coordinates) {
   const isWashroom = type === "washroom";
   const element = document.createElement("button");
@@ -106,13 +124,20 @@ function createMarker(record, type, coordinates) {
     }
     marker.getPopup().setDOMContent(content);
   }
-  enablePinHold(element, () => {
-    if (!marker.getPopup().isOpen()) marker.togglePopup();
-  });
+  // Clicking (or holding, on touch screens) opens the place in the details sheet.
+  const name = type === "parking" ? record.name
+    : record.name || `Washroom ${record.roomId || ""}`.trim();
+  const showPlace = () => window.dispatchEvent(new CustomEvent("show-map-place", { detail: {
+    marker, name, type: placeTypeLabel(record, type), details: placeDetails(record, type),
+    buildingId: type === "parking" ? record.id : record.buildingId,
+    floorId: type === "parking" ? null : record.floorId ?? null,
+    isBuilding: type === "parking",
+  } }));
+  enablePinHold(element, showPlace);
   element.addEventListener("keypress", event => event.stopImmediatePropagation(), true);
   element.addEventListener("click", event => {
     event.stopPropagation();
-    marker.togglePopup();
+    showPlace();
   });
   return marker;
 }
@@ -127,9 +152,7 @@ export function setupMapFilters(campusMap, buildingsReady) {
 }
 
 function attachMarker({ map, trackPopup }, marker) {
-  const popup = marker.addTo(map).getPopup();
-  popup.on("open", () => map.fire("filterpinopen"));
-  trackPopup(popup);
+  trackPopup(marker.addTo(map).getPopup());
 }
 
 async function loadParkingMarkers(campusMap, buildingsReady) {

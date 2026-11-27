@@ -15,6 +15,37 @@
   min-height: 44px;
 }
 
+/* Filter chips stay on one line and scroll sideways instead of wrapping. */
+.map-filter-bar {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  padding-top: 2px; /* room for the chips' shadow */
+  --fade-left: 0px;
+  --fade-right: 0px;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-left), #000 calc(100% - var(--fade-right)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade-left), #000 calc(100% - var(--fade-right)), transparent);
+}
+
+.map-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.map-filter-bar .btn {
+  scroll-snap-align: start;
+  scroll-margin-inline: 1rem;
+}
+
+/* Fade an edge only when there are more chips past it (set by search.js). */
+.map-filter-bar.more-left {
+  --fade-left: 1.5rem;
+}
+
+.map-filter-bar.more-right {
+  --fade-right: 2rem;
+}
+
 #mapCanvasDiv {
   left: 0;
 }
@@ -133,11 +164,26 @@
   }
 
   #map .filter-pin-popup {
-    top: 4.5rem;
+    top: max(6rem, 25%);
     left: 50%;
     width: max-content;
     max-width: calc(100% - 2rem) !important;
     transform: translateX(-50%) !important;
+  }
+
+  #map .filter-pin-popup .maplibregl-popup-content {
+    padding: .75rem 3rem .75rem 1rem;
+    font-size: 1rem;
+  }
+
+  #map .filter-pin-popup .maplibregl-popup-close-button {
+    top: 0;
+    right: 0;
+    width: 44px;
+    height: 44px;
+    font-size: 1.75rem;
+    line-height: 1;
+    border-radius: 0 .25rem 0 .5rem;
   }
 
   #map .filter-pin-popup .maplibregl-popup-tip {

@@ -3,8 +3,8 @@ import { auth } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { LngLatBounds } from "maplibre-gl";
 import { buildings, findBuildingAt, highlightBuilding } from "./buildings.js";
-import { bookmarkForBuilding } from "./personalNames.js";
-import { loadFloorFeatures, showBuildingFloor } from "./floorPlan.js";
+import { bookmarkForBuilding } from "./bookmarkNames.js";
+import { loadFloorFeatures, roomAnchor, showBuildingFloor } from "./floorPlan.js";
 import { setDefaultFilterFloor } from "./mapFilters.js";
 import { findWalkingRoute } from "./walkingRoute.js";
 
@@ -239,6 +239,11 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
       floorPlanButton.focus({ preventScroll: true });
     }
   });
+  // isStyleLoaded() turns false while a map source is updating (e.g. right after the
+  // previous highlight is cleared), which would skip the next highlight. Only the
+  // initial map load matters here.
+  let mapLoaded = false;
+  mapReady.then(() => { mapLoaded = true; });
   let selectedMarker = null;
   let selectedBookmark = null;
   let selectionVersion = 0;
@@ -360,7 +365,7 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     const level = getDefaultFloor(building);
     setFloorBuilding(building, level);
     setDirectionsBuilding(building);
-    if (map.isStyleLoaded()) highlightBuilding(map, building ?? null, level);
+    if (mapLoaded) highlightBuilding(map, building ?? null, level);
     setLocationPopupOpen(true);
     locationTitle.textContent = details.name;
     setLocationMetadata(building);
@@ -380,8 +385,17 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     syncLocationBookmark(locationBookmarkButton, details.name);
   }
 
+  // Remove the building highlight and floor plan drawn for the current selection.
+  function clearMapSelection() {
+    if (mapLoaded) highlightBuilding(map, null, getDefaultFloor());
+  }
+
   function close() {
+    // Clear the selection first so the popup close handlers below do not re-enter close().
+    selectedMarker = null;
+    selectedBookmark = null;
     setFloorBuilding(null);
+    clearMapSelection();
     setDirectionsBuilding(null);
     selectionVersion++;
 
@@ -389,8 +403,6 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     setSheetExpanded(false);
     clearMarkers(pinLayer);
     closePopup();
-    selectedMarker = null;
-    selectedBookmark = null;
   }
   const bookmarkPinFilter = document.getElementById("bookmarkPinFilter");
   let bookmarkPinsVisible = true;
@@ -451,6 +463,10 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
       element.append(icon);
       const marker = addMarker([longitude, latitude], name, bookmarkLayer, { element, anchor: "center" });
       marker.getPopup().setDOMContent(savedLocationPopup(details, marker));
+      // Closing the selected bookmark's popup ends the selection, like a dropped pin.
+      marker.getPopup().on("close", () => {
+        if (selectedMarker === marker) close();
+      });
       // Let the native button's click handle keyboard activation as well.
       element.addEventListener("keypress", event => event.stopImmediatePropagation(), true);
       element.addEventListener("click", event => {
@@ -471,7 +487,27 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
       savedPins.delete(key);
     }
   }
-  async function selectLocation(point, label = "Selected location", building = null, roomLevel = null) {
+  function endSelection(marker) {
+    if (selectedMarker !== marker) return;
+    selectionVersion++;
+    selectedMarker = null;
+    selectedBookmark = null;
+    setFloorBuilding(null);
+    clearMapSelection();
+    setLocationPopupOpen(false);
+  }
+
+  // Filter pins (washrooms, dining, parking) already exist on the map, so the
+  // selection reuses them instead of dropping a new pin; closing their popup ends it.
+  const placeMarkers = new WeakSet();
+  function usePlaceMarker(marker) {
+    if (placeMarkers.has(marker)) return;
+    placeMarkers.add(marker);
+    marker.getPopup().on("close", () => endSelection(marker));
+  }
+
+  // `place` (optional): { marker, type, details } for a filter pin.
+  async function selectLocation(point, label = "Selected location", building = null, roomLevel = null, place = null) {
     setDirectionsBuilding(building);
     setSheetExpanded(false);
     clearMarkers(pinLayer);
@@ -479,32 +515,39 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     const level = roomLevel ?? getDefaultFloor(building);
     setFloorBuilding(building, level);
     setLocationMetadata(building);
+    if (place) {
+      locationType.textContent = place.type ?? "";
+      locationTypeRow.hidden = !place.type;
+      locationDetails.replaceChildren(...detailListItems(place.details ?? []));
+      locationDetailsRow.hidden = !place.details?.length;
+    }
     const version = ++selectionVersion;
-    const content = building ? popupContent(label, building) : label;
-    const marker = addMarker([point.lng, point.lat], content, pinLayer);
-    marker.getElement().addEventListener("click", event => {
-      event.stopPropagation();
-      if (!marker.getPopup().isOpen()) marker.togglePopup();
-    });
-    marker.getPopup().on("close", () => {
-      if (!pinLayer.has(marker)) return;
-      pinLayer.delete(marker);
-      marker.remove();
-      if (selectedMarker === marker) {
-        selectionVersion++;
-        selectedMarker = null;
-        selectedBookmark = null;
-        setFloorBuilding(null);
-        setLocationPopupOpen(false);
-      }
-    });
+    let marker;
+    if (place) {
+      marker = place.marker;
+      usePlaceMarker(marker);
+    } else {
+      const content = building ? popupContent(label, building) : label;
+      marker = addMarker([point.lng, point.lat], content, pinLayer);
+      marker.getElement().addEventListener("click", event => {
+        event.stopPropagation();
+        if (!marker.getPopup().isOpen()) marker.togglePopup();
+      });
+      marker.getPopup().on("close", () => {
+        if (!pinLayer.has(marker)) return;
+        pinLayer.delete(marker);
+        marker.remove();
+        endSelection(marker);
+      });
+    }
     selectedMarker = marker;
     selectedBookmark = null;
-    if (map.isStyleLoaded()) highlightBuilding(map, building, level);
-    marker.togglePopup();
+    if (mapLoaded) highlightBuilding(map, building, level);
+    if (!marker.getPopup().isOpen()) marker.togglePopup();
     delete locationBookmarkButton.dataset.bookmarkKey;
     setLocationPopupOpen(true);
-    if (building && roomLevel === null) locationBookmarkButton.dataset.buildingId = building.id;
+    // A filter pin bookmarks its own spot, unless the place is the building itself (parking).
+    if (building && roomLevel === null && (!place || place.isBuilding)) locationBookmarkButton.dataset.buildingId = building.id;
     else delete locationBookmarkButton.dataset.buildingId;
     locationTitle.textContent = label === "Selected location" ? "Marked location " + getCachedMarkedLocationNumber() : label;
     document.getElementById("selectedLatitude").textContent = point.lat;
@@ -552,8 +595,7 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
         roomSearchStatus.textContent = "Room not found.";
         return;
       }
-      const [lng, lat] = room.properties.label_anchor ?? (room.geometry.type === "Point"
-        ? room.geometry.coordinates : room.geometry.coordinates[0][0]);
+      const [lng, lat] = roomAnchor(room);
       if (!Number.isFinite(lng) || !Number.isFinite(lat)) throw new Error("Invalid room coordinates");
       await selectLocation({ lng, lat }, building.name + " " + room.properties.name, building, level);
     } catch (error) {
@@ -591,6 +633,14 @@ export function setupLocationDetails({ map, mapReady, pinLayer, clearMarkers, ad
     showSavedLocation(saved.details, saved.marker);
     map.jumpTo({ center: saved.marker.getLngLat(), zoom: 18 });
     if (bookmarkPinsVisible) saved.marker.togglePopup();
+  });
+  window.addEventListener("show-map-place", ({ detail }) => {
+    const building = buildings.find(building => building.id === detail.buildingId) ?? null;
+    const floor = Number(String(detail.floorId ?? "").replace(/^f/, ""));
+    const level = Number.isInteger(floor) && floor > 0 ? floor : null;
+    const { lng, lat } = detail.marker.getLngLat();
+    selectLocation({ lng, lat }, detail.name, building, level,
+      { marker: detail.marker, type: detail.type, details: detail.details, isBuilding: detail.isBuilding });
   });
   window.addEventListener("location-bookmark-renamed", ({ detail }) => {
     if (locationBookmarkButton.dataset.bookmarkKey === detail.searchTarget) {

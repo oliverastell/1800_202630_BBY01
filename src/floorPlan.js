@@ -172,3 +172,70 @@ export function renderFloorPlan(container, features) {
   svg.append(...labels);
   container.replaceChildren(svg);
 }
+
+// Where a room's pin should go: the point deepest inside its shape (the "pole of
+// inaccessibility"), which is also where the map draws the room's number. The
+// stored centre or first corner can sit on a wall or outside an L-shaped room.
+export function roomAnchor(feature) {
+  const { type, coordinates } = feature.geometry;
+  if (type === "Point") return coordinates;
+  const rings = coordinates;
+  // Work in roughly metric units so wide and tall rooms are treated the same.
+  const scale = Math.cos(rings[0][0][1] * Math.PI / 180);
+  const projected = rings.map(ring => ring.map(([lng, lat]) => [lng * scale, lat]));
+  const [x, y] = poleOfInaccessibility(projected);
+  return [x / scale, y];
+}
+
+// Signed distance from a point to the polygon outline (positive inside).
+function pointToPolygonDistance(x, y, rings) {
+  let inside = false;
+  let minDistSq = Infinity;
+  for (const ring of rings) {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [ax, ay] = ring[i];
+      const [bx, by] = ring[j];
+      if ((ay > y) !== (by > y) && x < (bx - ax) * (y - ay) / (by - ay) + ax) inside = !inside;
+      let dx = bx - ax, dy = by - ay, px = ax, py = ay;
+      if (dx || dy) {
+        const t = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy)));
+        px = ax + dx * t;
+        py = ay + dy * t;
+      }
+      minDistSq = Math.min(minDistSq, (x - px) ** 2 + (y - py) ** 2);
+    }
+  }
+  return (inside ? 1 : -1) * Math.sqrt(minDistSq);
+}
+
+// Grid-refinement search (the "polylabel" algorithm) for the most interior point.
+function poleOfInaccessibility(rings) {
+  const xs = rings[0].map(point => point[0]);
+  const ys = rings[0].map(point => point[1]);
+  const minX = Math.min(...xs), minY = Math.min(...ys);
+  const width = Math.max(...xs) - minX, height = Math.max(...ys) - minY;
+  const size = Math.min(width, height);
+  if (!size) return [minX, minY];
+  const precision = size / 100;
+  const cell = (x, y, half) => {
+    const d = pointToPolygonDistance(x, y, rings);
+    return { x, y, half, d, max: d + half * Math.SQRT2 };
+  };
+
+  const queue = [];
+  for (let x = minX; x < minX + width; x += size) {
+    for (let y = minY; y < minY + height; y += size) queue.push(cell(x + size / 2, y + size / 2, size / 2));
+  }
+  let best = cell(minX + width / 2, minY + height / 2, 0);
+  while (queue.length) {
+    queue.sort((a, b) => b.max - a.max);
+    const current = queue.shift();
+    if (current.d > best.d) best = current;
+    if (current.max - best.d <= precision) continue;
+    const half = current.half / 2;
+    for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      queue.push(cell(current.x + sx * half, current.y + sy * half, half));
+    }
+  }
+  return [best.x, best.y];
+}

@@ -103,6 +103,7 @@ export function createCampusMap() {
   return {
     map, mapReady, pinLayer, markerLayer, clearMarkers, addMarker, trackPopup,
     getCampusBorder: () => campusBorder,
-    closePopup: () => { if (activePopup) activePopup.remove(); }
+    closePopup: () => { if (activePopup) activePopup.remove(); },
+    hasOpenPopup: () => activePopup !== null
   };
 }

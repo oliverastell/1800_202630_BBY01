@@ -33,7 +33,7 @@ signupForm.addEventListener("submit", function (event) {
     .then((userCredential) => {
       document.getElementById("signupMessage").textContent =
         "Account created successfully!";
-        window.location.href= "/";
+        window.location.replace("/");
     })
     .catch((error) => {
       document.getElementById("signupMessage").textContent =
@@ -51,7 +51,7 @@ loginForm.addEventListener("submit", function (event) {
 
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      window.location.href = "/";
+      window.location.replace("/");
     })
     .catch((error) => {
       document.getElementById("loginMessage").textContent =

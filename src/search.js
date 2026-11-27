@@ -4,11 +4,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { bookmarkT, getPersonalBookmarks } from "./bookmarks.js";
 import { confirmAction, showError } from "./alerts.js";
-import { bookmarkForBuilding, searchLocations } from "./personalNames.js";
+import { bookmarkForBuilding, searchLocations } from "./bookmarkNames.js";
 import { setMapFilter } from "./mapFilters.js";
 import { enableMapHold, trackRecentTouch } from "./mobileInteractions.js";
+import { loadFloorFeatures, roomAnchor } from "./floorPlan.js";
+import { setupBackButton } from "./backButton.js";
 
-export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup }, locationDetails, buildingLoad) {
+export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers, getCampusBorder, closePopup, hasOpenPopup }, locationDetails, buildingLoad) {
   const searchMenu = document.getElementById("searchMenu");
   const searchField = document.getElementById("searchField");
   const closeSearchButton = document.getElementById("closeSearchMenu");
@@ -133,6 +135,7 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
       if (!aboutLocation.inert) locationDetails.close();
       closePopup();
     }
+    if (!desktopSearch.matches && size === "half" && document.activeElement === searchField) searchField.blur();
     mobileSheetSize = size;
     sheetDrag = null;
     searchMenu.classList.remove("search-dragging");
@@ -186,7 +189,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     if (Math.abs(distance) >= 60) suppressSheetClick = true;
     if (distance >= 60 && mobileSheetSize === "closed") {
       setMobileSheetSize("half");
-      searchField.focus({ preventScroll: true });
     } else if (distance <= -60 && mobileSheetSize === "half") {
       closeMobileSearch();
     } else if (Math.abs(distance) < 60 || mobileSheetSize === "closed") {
@@ -347,6 +349,9 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     searchRecent(text)
   }
 
+  searchField.addEventListener("focus", () => {
+    if (!desktopSearch.matches && mobileSheetSize === "half") setMobileSheetSize("full");
+  });
   searchField.addEventListener("click", openMobileSearch);
   searchField.addEventListener("input", openMobileSearch);
   closeSearchButton.addEventListener("click", () => {
@@ -378,6 +383,27 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
   for (const button of document.querySelectorAll("[data-map-filter]")) {
     button.addEventListener("click", () => toggleMapFilter(button));
   }
+
+  // The filter chips scroll sideways; fade whichever edge has more chips past it.
+  const filterBar = document.querySelector(".map-filter-bar");
+  function updateFilterBarFades() {
+    const maxScroll = filterBar.scrollWidth - filterBar.clientWidth;
+    filterBar.classList.toggle("more-left", filterBar.scrollLeft > 1);
+    filterBar.classList.toggle("more-right", filterBar.scrollLeft < maxScroll - 1);
+  }
+  filterBar.addEventListener("scroll", updateFilterBarFades, { passive: true });
+  new ResizeObserver(updateFilterBarFades).observe(filterBar);
+  // Let a mouse wheel scroll the row sideways on desktop.
+  filterBar.addEventListener("wheel", event => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    if (filterBar.scrollWidth <= filterBar.clientWidth) return;
+    event.preventDefault();
+    filterBar.scrollLeft += event.deltaY;
+  }, { passive: false });
+  // Keep a chip fully in view after it is tapped.
+  filterBar.addEventListener("click", event => {
+    event.target.closest(".btn")?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+  });
   document.getElementById("bookmarkPinFilter").addEventListener("click", closeMobileSearch);
   document.getElementById("bookmark-button").addEventListener("click", () => {
     if (desktopSearch.matches) return;
@@ -391,7 +417,6 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     locationDetails.collapse();
     closeMobileSearch();
   }
-  map.on("filterpinopen", revealPinPopup);
   map.on("pinhold", revealPinPopup);
 
   window.addEventListener("show-bookmarked-location", async ({ detail }) => {
@@ -400,6 +425,22 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     await Promise.all([buildingsReady, mapReady]);
     const building = findBuildingAt({ lat: detail.latitude, lng: detail.longitude });
     highlightBuilding(map, building ?? null, locationDetails.getDefaultFloor(building));
+  });
+
+  // Back (e.g. Android's back gesture) closes open sheets/popups instead of leaving the map.
+  setupBackButton({
+    isOpen: () => (!desktopSearch.matches && searchMenu.classList.contains("search-open"))
+      || !aboutLocation.inert || hasOpenPopup(),
+    closeAll: () => {
+      closeMobileSearch();
+      if (!aboutLocation.inert) locationDetails.close();
+      closePopup();
+    },
+    watch: [
+      [searchMenu, { attributes: true, attributeFilter: ["class"] }],
+      [aboutLocation, { attributes: true, attributeFilter: ["class"] }],
+      [map.getContainer(), { childList: true }],
+    ],
   });
 
   Object.assign(window, {searchRecent,removeFromRecent,clearRecent})
@@ -427,11 +468,55 @@ export function setupSearch({ map, mapReady, pinLayer, markerLayer, clearMarkers
     selectMapPoint(lngLat);
   });
 
+  // Open spaces are too large for their centre to mean anything, so the pin stays put.
+  const openSpaceKinds = new Set(["corridor", "lobby", "atrium"]);
+
+  function ringContains(ring, { lng, lat }) {
+    return isInside([lat, lng], ring.map(([x, y]) => [y, x]));
+  }
+
+  function ringArea(ring) {
+    let area = 0;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      area += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
+    }
+    return Math.abs(area / 2);
+  }
+
+  // The named room under the point on the floor being shown, or null.
+  async function findRoomAt(building, level, lngLat) {
+    if (Array.isArray(building.floorLevels) && !building.floorLevels.includes(level)) return null;
+    const features = await loadFloorFeatures(building.id, level).catch(() => []);
+    const rooms = features.filter(feature => feature.geometry.type === "Polygon"
+      && String(feature.properties.name ?? "").trim()
+      && !openSpaceKinds.has(feature.properties.kind)
+      && ringContains(feature.geometry.coordinates[0], lngLat));
+    // Pick the smallest match in case shapes overlap.
+    return rooms.sort((a, b) => ringArea(a.geometry.coordinates[0]) - ringArea(b.geometry.coordinates[0]))[0] ?? null;
+  }
+
+  let mapPointRequest = 0;
   async function selectMapPoint(lngLat) {
+    const request = ++mapPointRequest;
     await Promise.all([buildingsReady, mapReady]);
     const { lat, lng } = lngLat;
     const building = findBuildingAt(lngLat);
-    if (building) { showBuilding(building); return; }
+    if (building) {
+      // Drop the pin where the user pointed (snapped to the room there, if any),
+      // while still highlighting the building and its floor plan.
+      const level = locationDetails.getDefaultFloor(building);
+      const room = await findRoomAt(building, level, lngLat);
+      if (request !== mapPointRequest) return;
+      clearMarkers(markerLayer);
+      if (room) {
+        const [roomLng, roomLat] = roomAnchor(room);
+        locationDetails.selectLocation({ lng: roomLng, lat: roomLat },
+          building.name + " " + String(room.properties.name).trim(), building, level);
+      } else {
+        locationDetails.selectLocation({ lng, lat }, building.name, building);
+      }
+      return;
+    }
     highlightBuilding(map, null, locationDetails.getDefaultFloor());
     if (!getCampusBorder() || !isInside([lat, lng], getCampusBorder())) {
       locationDetails.close();

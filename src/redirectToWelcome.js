@@ -13,5 +13,5 @@ export function redirectToWelcomeIfNecessary() {
     }
 
     console.log("User is not signed in. Go to welcome page.")
-    window.location.href = "/welcome"
+    window.location.replace("/welcome")
 }
